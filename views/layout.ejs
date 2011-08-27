@@ -1,86 +1,79 @@
-<html>
-<head>
-    <title>Twalks</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <head>
+        <title>Twalks</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script src="/javascripts/json2.js"></script>
-    <script src="/javascripts/underscore.js"></script>
-    <script src="/javascripts/backbone.js"></script>
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.1.min.css">
+        <link href="http://fonts.googleapis.com/css?family=Leckerli+One:400normal&amp;subset=all" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="/stylesheets/style.css">
 
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.1.min.css">
-    <link href="//fonts.googleapis.com/css?family=Leckerli+One:400normal&amp;subset=all" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="container">
 
-    <style>
-        body {
-            padding-top: 60px;
-        }
-        input[type="text"], input[type="password"], textarea, select, .uneditable-input {
-            height:26px !important;
-        }
-        #navigation h3 {
-            font-family:Leckerli One;
-            font-size:28px !important;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
+            <section id="navigation">
+                <div class="topbar-wrapper" style="z-index: 5;">
+                    <div class="topbar">
+                        <div class="fill">
+                            <div class="container">
+                                <h3><a href="#">Twalks</a></h3>
+                                <form id="search-form" action="">
+                                    <span class="glass"><i></i></span>
+                                    <input type="text" placeholder="Search">
+                                </form>
+                                <ul id="global-nav">
+                                    <li class="active"><a href="#">All events</a></li>
+                                    <li><a href="#">Current events</a></li>
+                                    <li><a href="#">Coming events</a></li>
+                                </ul>
+                                <ul class="nav secondary-nav">
+                                    <% if (everyauth.loggedIn) { %>
+                                        <li class="menu">
+                                            <a href="#" class="menu">
+                                                <%= everyauth.twitter.user.name %>
+                                            </a>
+                                            <ul class="menu-dropdown">
+                                                <li><a href="#">My events</a></li>
+                                                <li><a href="#">My sessions</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="/logout">Log out</a></li>
+                                            </ul>
+                                        </li>
+                                    <% } else { %>
+                                        <li>
+                                            <a href="/auth/twitter">log in</a>
+                                        </li>
+                                    <% } %>
 
-        <section id="navigation">
-            <div class="topbar-wrapper" style="z-index: 5;">
-                <div class="topbar">
-                    <div class="fill">
-                        <div class="container">
-                            <h3><a href="#">Twalks</a></h3>
-                            <ul>
-                                <li class="active"><a href="#">All events</a></li>
-                                <li><a href="#">Current events</a></li>
-                                <li><a href="#">Coming events</a></li>
-                            </ul>
-                            <form action="">
-                                <input type="text" placeholder="Search">
-                            </form>
-                            <ul class="nav secondary-nav">
-                                <% if (everyauth.loggedIn) { %>
-                                    <li class="menu">
-                                        <a href="#" class="menu">
-                                            <%= everyauth.twitter.user.name %>
-                                        </a>
-                                        <ul class="menu-dropdown">
-                                            <li><a href="#">My events</a></li>
-                                            <li><a href="#">My sessions</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="/logout">Log out</a></li>
-                                        </ul>
-                                    </li>
-                                <% } else { %>
-                                    <li>
-                                        <a href="/auth/twitter">log in</a>
-                                    </li>
-                                <% } %>
+                                </ul>
+                            </div>
+                        </div><!-- /fill -->
+                    </div><!-- /topbar -->
+                </div>
+            </section>
 
-                            </ul>
-                        </div>
-                    </div><!-- /fill -->
-                </div><!-- /topbar -->
-            </div>
-        </section>
+            <%- body %>
 
-        <%- body %>
+            <script type="text/javascript">
+                $(function() {
+                    $('.nav.secondary-nav a.menu').click(function(ev) {
+                        $(this).parent().toggleClass('open');
+                        ev.stopPropagation();
+                    });
 
-        <script type="text/javascript">
-            $(function() {
-                $('.nav.secondary-nav a.menu').click(function(ev) {
-                    $(this).parent().toggleClass('open');
-                    ev.stopPropagation();
+                    $('body').click(function() {
+                        $('.nav.secondary-nav li.menu').removeClass('open');
+                    });
                 });
+            </script>
+        </div>
 
-                $('body').click(function() {
-                    $('.nav.secondary-nav li.menu').removeClass('open');
-                });
-            });
-        </script>
-    </div>
-</body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script src="/javascripts/json2.js"></script>
+        <script src="/javascripts/underscore.js"></script>
+        <script src="/javascripts/backbone.js"></script>
+    </body>
 </html>

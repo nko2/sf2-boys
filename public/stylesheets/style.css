@@ -1,8 +1,62 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding-top: 60px;
 }
-
-a {
-  color: #00B7FF;
+#global-nav {
+    margin-left:8px;
+}
+#navigation h3 {
+    font-family:Leckerli One;
+}
+#search-form span.glass {
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    display: block;
+    right: 0;
+    padding: 7px 8px 5px 8px;
+}
+#search-form span.glass i {
+    background-image: url(https://si0.twimg.com/a/1314379019/phoenix/img/sprite-icons.png);
+    background-position: -224px -96px;
+    width: 14px;
+    height: 14px;
+    display: block;
+    font-size: 0;
+}
+#intro {
+    padding-top:15px;
+}
+#intro .columns {
+    min-height:64px;
+}
+#intro .columns h4 {
+    margin-top:10px;
+    margin-left:64px;
+    line-height:18px;
+}
+#intro .columns.search {
+    background:url(../images/search.png) no-repeat top left;
+    position:relative;
+}
+#intro .columns.search:before {
+    content:'';
+    display:block;
+    position:absolute;
+    top:-35px;
+    right:15px;
+    width:36px;
+    height:61px;
+    background:url(../images/arrow.png) no-repeat;
+}
+#intro .columns.create {
+    background:url(../images/create.png) no-repeat top left;
+}
+#intro .columns.tweet {
+    background:url(../images/tweet.png) no-repeat top left;
+}
+#intro .columns.view {
+    background:url(../images/view.png) no-repeat top left;
+}
+.hashtag {
+    color:#ccc;
 }
