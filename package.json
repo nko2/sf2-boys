@@ -9,5 +9,9 @@
     , "mongoose":   "2.0.1"
     , "promise":    "0.0.1"
     , "twitter":    "0.1.17"
+    , "nko":        "0.0.9"
+  }
+  , "scripts": {
+      "start" : "app.js"
   }
 }
