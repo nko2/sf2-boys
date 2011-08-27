@@ -28,6 +28,7 @@
         initialize: function() {
             _.bindAll(this, 'render');
             this.template = _.template($('#events-list-template').html());
+            this.collection.bind('reset', this.render);
         }
       , render: function() {
             var $list;
