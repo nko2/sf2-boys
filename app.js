@@ -24,7 +24,7 @@ var express   = require('express')
   , poller    = require('./lib/poller')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
-  , twitter   = require('twitter')
+  , Twitter   = require('twitter')
 ;
 
 everyauth.twitter
@@ -41,13 +41,13 @@ mongoose
 ;
 
 
-var app = module.exports = express.createServer();
-var twit = new twitter({
-    consumer_key: parameters.twitter.consumerKey,
-    consumer_secret: parameters.twitter.consumerSecret,
-    access_token_key: parameters.twitter.accessToken,
-    access_token_secret: parameters.twitter.accessTokenSecret
-});
+var app  = module.exports = express.createServer()
+  , twit = new Twitter({
+        consumer_key: parameters.twitter.consumerKey,
+        consumer_secret: parameters.twitter.consumerSecret,
+        access_token_key: parameters.twitter.accessToken,
+        access_token_secret: parameters.twitter.accessTokenSecret
+    });
 
 // start polling existing events
 schema.Event.find({}, function (err, events) {
