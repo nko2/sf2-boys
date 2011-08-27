@@ -1,31 +1,10 @@
 var mongoose = require('mongoose'),
     schema = require('../lib/schema.js');
 
-describe('talk', function(){
-    it('should be created properly with sample data', function() {
-        var TalkModel = mongoose.model('Talk');
-        var talk = new TalkModel();
-        talk.name = 'test talk';
-        talk.description = 'test talk description';
-        talk.speakers.push('steves');
-        talk.speakers.push('jmikola');
-
-        expect(talk.name).toEqual('test talk');
-        expect(talk.description).toEqual('test talk description');
-        expect(talk.speakers.length).toEqual(2);
-        expect(talk.speakers[0]).toEqual('steves');
-        expect(talk.speakers[1]).toEqual('jmikola');
-    });
-});
-
 describe('event', function(){
     it('should be created properly with sample data', function() {
         var startDate = new Date('2011-08-27 09:00:00');
         var endDate = new Date('2011-08-29 16:00:00');
-
-        var TalkModel = mongoose.model('Talk');
-        var talk = new TalkModel();
-        talk.name = 'test talk';
 
         var EventModel = mongoose.model('Event');
         var event = new EventModel();
@@ -35,7 +14,7 @@ describe('event', function(){
         event.imageUrl = 'http://www.example.com/test.png';
         event.description = 'test event description';
         event.location = 'New York, NY';
-        event.talks.push(talk);
+        event.talks.push({hash: 'test talk'});
 
         expect(event.name).toEqual('test event');
         expect(event.startsAt).toEqual(startDate);
@@ -44,7 +23,7 @@ describe('event', function(){
         expect(event.description).toEqual('test event description');
         expect(event.location).toEqual('New York, NY');
         expect(event.talks.length).toEqual(1);
-        expect(event.talks[0].name).toEqual('test talk');
+        expect(event.talks[0].hash).toEqual('test talk');
     });
 });
 
