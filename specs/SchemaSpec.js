@@ -14,7 +14,7 @@ describe('event', function(){
         event.imageUrl = 'http://www.example.com/test.png';
         event.description = 'test event description';
         event.location = 'New York, NY';
-        event.talks.push({hash: 'test talk'});
+        event.talks.push({name: 'test talk', hash: '#testtalk'});
 
         expect(event.name).toEqual('test event');
         expect(event.startsAt).toEqual(startDate);
@@ -23,7 +23,8 @@ describe('event', function(){
         expect(event.description).toEqual('test event description');
         expect(event.location).toEqual('New York, NY');
         expect(event.talks.length).toEqual(1);
-        expect(event.talks[0].hash).toEqual('test talk');
+        expect(event.talks[0].hash).toEqual('#testtalk');
+        expect(event.talks[0].name).toEqual('test talk');
     });
 });
 
