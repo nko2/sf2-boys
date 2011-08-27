@@ -10,6 +10,7 @@
         model:  Event
       , url:    '/events.json'
     });
+    window.eventsList = new Events();
 
     window.EventsListEventView = Backbone.View.extend({
         tagName: 'article'
@@ -44,4 +45,20 @@
             return this;
         }
     });
+
+    window.Twalks = Backbone.Router.extend({
+        routes: {
+            '': 'home'
+        }
+      , initialize: function() {
+            this.$container = $('#bb-content');
+            this.eventsListView = new EventsListView({ collection: window.eventsList });
+        }
+      , home: function() {
+            this.$container.empty();
+            this.$container.append(this.eventsListView.render().el);
+            window.eventsList.fetch();
+        }
+    });
+
 })(jQuery);

@@ -84,16 +84,9 @@
 
             <script type="text/javascript">
                 $(function(){
-                    var eventsList = new Events()
-                      , eventsListView = new EventsListView({ collection: eventsList });
+                    window.App = new Twalks();
+                    Backbone.history.start();
 
-                    // append view to the page
-                    $('#bb-content').append(eventsListView.render().el);
-
-                    // get data from server
-                    eventsList.fetch();
-
-                    // popup
                     $('.nav.secondary-nav a.menu').click(function(ev) {
                         $(this).parent().toggleClass('open');
                         ev.stopPropagation();
