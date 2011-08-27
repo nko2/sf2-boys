@@ -9,6 +9,7 @@ describe('event', function(){
         var EventModel = mongoose.model('Event');
         var event = new EventModel();
         event.name = 'test event';
+        event.createdBy = 'jmikola';
         event.startsAt = startDate;
         event.endsAt = endDate;
         event.imageUrl = 'http://www.example.com/test.png';
@@ -17,6 +18,7 @@ describe('event', function(){
         event.talks.push({name: 'test talk', hash: '#testtalk'});
 
         expect(event.name).toEqual('test event');
+        expect(event.createdBy).toEqual('jmikola');
         expect(event.startsAt).toEqual(startDate);
         expect(event.endsAt).toEqual(endDate);
         expect(event.imageUrl).toEqual('http://www.example.com/test.png');
