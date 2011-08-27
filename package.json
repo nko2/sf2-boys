@@ -7,6 +7,7 @@
     , "everyauth":  "0.2.18"
     , "ejs":        "0.4.3"
     , "mongoose":   "2.0.1"
+    , "promise":    "0.0.1"
     , "twitter":    "0.1.17"
   }
 }
