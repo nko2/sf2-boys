@@ -123,6 +123,31 @@
             </section>
 
             <div id="bb-content"></div>
+
+            <script type="text/javascrpt">
+                $(function(){
+                    var eventsList = new Events()
+                      , eventsListView = new EventsListView({ collection: eventsList });
+
+                    // append view to the page
+                    $('#bb-content').append(eventsListView.render().el);
+
+                    // get data from server
+                    eventsList.fetch();
+
+
+
+
+                    // popup
+                    $('.nav.secondary-nav a.menu').click(function(ev) {
+                        $(this).parent().toggleClass('open');
+                        ev.stopPropagation();
+                    });
+                    $('body').click(function() {
+                        $('.nav.secondary-nav li.menu').removeClass('open');
+                    });
+                });
+            </script>
         </div>
     </body>
 </html>

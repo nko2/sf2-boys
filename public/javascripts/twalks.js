@@ -44,21 +44,4 @@
             return this;
         }
     });
-
-    $(function(){
-        window.eventsList = new Events();
-        var eventsListView = new EventsListView({ collection: eventsList });
-        $('#bb-content').append(eventsListView.render().el);
-        eventsList.fetch();
-    });
-
-    //$(function(){
-    //    $('.nav.secondary-nav a.menu').click(function(ev) {
-    //        $(this).parent().toggleClass('open');
-    //        ev.stopPropagation();
-    //    });
-    //    $('body').click(function() {
-    //        $('.nav.secondary-nav li.menu').removeClass('open');
-    //    });
-    //});
 })(jQuery);
