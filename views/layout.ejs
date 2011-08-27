@@ -13,6 +13,62 @@
 
         <link rel="stylesheet" href="/stylesheets/style.css">
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script src="/javascripts/underscore.js"></script>
+        <script src="/javascripts/backbone.js"></script>
+        <script src="/javascripts/twalks.js"></script>
+
+        <script type="text/template" id="welcome-template">
+            <div id="intro" class="row">
+                <div class="span4 columns search">
+                    <h4>Search for an<br/>&nbsp;&nbsp;event</h4>
+                </div>
+                <div class="span4 columns create">
+                    <h4>or <a href="#">Log in</a> &amp; <a href="#">create<br/>&nbsp;&nbsp;a new one</a></h4>
+                </div>
+                <div class="span4 columns tweet">
+                    <h4>Tweet with event<br/>&nbsp;&nbsp;&amp; session <span class="hashtag">#tags</span></h4>
+                </div>
+                <div class="span4 columns view">
+                    <h4>Observe events<br/>&nbsp;&nbsp;&amp; sessions</h4>
+                </div>
+
+                <div class="logo">
+                    <h1>Twalks</h1>
+                    <h2>Making sense from your conference tweets</h2>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="events-list-event-template">
+            <header class="map">
+                <span class="time">
+                    {{ event.date }}<br/>
+                    <i>19:30</i>
+                </span>
+                <img src="http://maps.google.com/maps/api/staticmap?center={{ event.location }}&zoom=13&size=150x150&sensor=false" />
+            </header>
+            <section>
+                <h3>
+                    <a href="#">{{ event.name }}</a> <small>#{{ event.hash }}</small>
+                </h3>
+                <p>{{ event.description }}</p>
+                <ul class="infobar">
+                    <li class="time-precise">{{ event.date }}</li>
+                    <li class="people">23</li>
+                    <li class="tweets">120</li>
+                    <li class="author"><a href="#">@{{ event.createdBy }}</a></li>
+                </ul>
+            </section>
+        </script>
+
+        <script type="text/template" id="events-list-template">
+            <div id="events-list" class="row">
+                <section class="span16 columns list">
+                </section>
+            </div>
+        </script>
+
     </head>
     <body>
         <div class="container">
@@ -61,26 +117,7 @@
                 </div>
             </section>
 
-            <%- body %>
-
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-            <script src="/javascripts/json2.js"></script>
-            <script src="/javascripts/underscore.js"></script>
-            <script src="/javascripts/backbone.js"></script>
-            <script src="/javascripts/twalks.js"></script>
-
-            <script type="text/javascript">
-                $(function() {
-                    $('.nav.secondary-nav a.menu').click(function(ev) {
-                        $(this).parent().toggleClass('open');
-                        ev.stopPropagation();
-                    });
-
-                    $('body').click(function() {
-                        $('.nav.secondary-nav li.menu').removeClass('open');
-                    });
-                });
-            </script>
+            <div id="bb-content"></div>
         </div>
     </body>
 </html>
