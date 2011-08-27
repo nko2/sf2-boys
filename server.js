@@ -69,7 +69,7 @@ schema.Event.find({}, function (err, events) {
             }
         });
         poll.startPolling();
-    })
+    });
 });
 
 // Configuration
