@@ -106,8 +106,22 @@ app.get('/', function(req, res){
 
 app.get('/events.json', function(req, res){
     schema.Event.find({}, function (err, events) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
         res.end(JSON.stringify(events));
     });
+});
+
+app.get('/events/:id.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(event));
+    })
 });
 
 app.get('/events/1', function(req, res){
