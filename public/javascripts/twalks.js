@@ -37,11 +37,7 @@
             $list = this.$('.list');
 
             this.collection.each(function(event) {
-                var view = new EventsListEventView({
-                    model:       event
-                  , collection:  this.collection
-                });
-
+                var view = new EventsListEventView({ model: event });
                 $list.append(view.render().el);
             });
 
@@ -50,7 +46,10 @@
     });
 
     $(function(){
-        //$('#bb-content').append(view.render().el);
+        window.eventsList = new Events();
+        var eventsListView = new EventsListView({ collection: eventsList });
+        $('#bb-content').append(eventsListView.render().el);
+        eventsList.fetch();
     });
 
     //$(function(){

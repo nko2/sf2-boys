@@ -16,6 +16,7 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
         <script src="/javascripts/underscore.js"></script>
         <script src="/javascripts/backbone.js"></script>
+        <script src="/javascripts/date.format.js"></script>
         <script src="/javascripts/twalks.js"></script>
 
         <script type="text/template" id="welcome-template">
@@ -43,21 +44,25 @@
         <script type="text/template" id="events-list-event-template">
             <header class="map">
                 <span class="time">
-                    {{ event.date }}<br/>
-                    <i>19:30</i>
+                    {{ dateFormat(startsAt, 'd mmmm') }}<br/>
+                    <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
                 </span>
-                <img src="http://maps.google.com/maps/api/staticmap?center={{ event.location }}&zoom=13&size=150x150&sensor=false" />
+                <img src="http://maps.google.com/maps/api/staticmap?center={{ location }}&zoom=13&size=150x150&sensor=false" />
             </header>
             <section>
                 <h3>
-                    <a href="#">{{ event.name }}</a> <small>#{{ event.hash }}</small>
+                    <a href="#">{{ name }}</a> <small>{{ hash }}</small>
                 </h3>
-                <p>{{ event.description }}</p>
+                <p>{{ description }}</p>
                 <ul class="infobar">
-                    <li class="time-precise">{{ event.date }}</li>
+                    <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
                     <li class="people">23</li>
                     <li class="tweets">120</li>
-                    <li class="author"><a href="#">@{{ event.createdBy }}</a></li>
+                    <li class="author">
+                        {% _.each(authors, function(author) { %}
+                            <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
+                        {% }); %}
+                    </li>
                 </ul>
             </section>
         </script>

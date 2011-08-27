@@ -240,6 +240,12 @@ body {
 #events-list .infobar .author {
     background:url(../images/info-author.png) no-repeat top left;
 }
+#events-list .infobar .author a:after {
+    content:',';
+}
+#events-list .infobar .author a:last-child:after {
+    content:'';
+}
 #events-list .infobar .people {
     background:url(../images/info-people.png) no-repeat top left;
 }
