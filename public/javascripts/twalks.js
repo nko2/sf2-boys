@@ -48,13 +48,23 @@
 
     window.Twalks = Backbone.Router.extend({
         routes: {
-            '': 'home'
+            '':        'home'
+          , 'events':  'events'
         }
       , initialize: function() {
-            this.$container = $('#bb-content');
+            this.$container     = $('#bb-content');
+            this.$navigation    = $('#navigation');
             this.eventsListView = new EventsListView({ collection: window.eventsList });
         }
       , home: function() {
+            $('li.active', this.$navigation).removeClass('active');
+            this.$container.empty();
+            this.$container.append($('#welcome-template').html());
+        }
+      , events: function() {
+            $('li.active', this.$navigation).removeClass('active');
+            $('li.all-events', this.$navigation).addClass('active');
+
             this.$container.empty();
             this.$container.append(this.eventsListView.render().el);
             window.eventsList.fetch();
