@@ -1,4 +1,9 @@
 <h1>Title</h1>
 <p>
     Welcome to <%= title %>
+    <% if (everyauth.loggedIn) { %>
+        You're logged in as: <%= everyauth.twitter.user.name %>
+    <% } else { %>
+        <a href="/auth/twitter">log in</a>
+    <% } %>
 </p>
