@@ -57,17 +57,18 @@
             this.eventsListView = new EventsListView({ collection: window.eventsList });
         }
       , home: function() {
-            $('li.active', this.$navigation).removeClass('active');
-            this.$container.empty();
+            this.empty();
             this.$container.append($('#welcome-template').html());
         }
       , events: function() {
-            $('li.active', this.$navigation).removeClass('active');
+            this.empty();
             $('li.all-events', this.$navigation).addClass('active');
-
-            this.$container.empty();
             this.$container.append(this.eventsListView.render().el);
             window.eventsList.fetch();
+        }
+      , empty: function() {
+            $('li.active', this.$navigation).removeClass('active');
+            this.$container.empty();
         }
     });
 
