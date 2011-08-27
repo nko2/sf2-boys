@@ -84,4 +84,34 @@ describe('poller', function() {
 
         expect(started).toBeTruthy();
     });
+
+    it('can resume polling', function() {
+        var starts = 0, stops = 0;
+
+        poll.on('stop', function() {
+            stops++;
+        });
+
+        poll.on('start', function() {
+            starts++;
+        });
+
+        poll.startPolling();
+        expect(starts).toEqual(1);
+
+        poll.startPolling();
+        expect(starts).toEqual(1);
+
+        poll.stopPolling();
+        expect(stops).toEqual(1);
+
+        poll.stopPolling();
+        expect(stops).toEqual(1);
+
+        poll.startPolling();
+        expect(starts).toEqual(2);
+
+        poll.stopPolling();
+        expect(stops).toEqual(2);
+    });
 });
