@@ -8,14 +8,16 @@ require('nko')('UJuIrlX5JM5B0V/g');
  */
 var parameters = {
     twitter: {
-        consumerKey:       'DROXwWEJw3tXjU4YJpZLw',
-        consumerSecret:    'pwv1Nvlvi3PcQ9fwkojiUd933prElu60Iu8FNAonwcI',
-        accessToken:       '9881092-BZ6uQiCxPvq4qKhsNu4ptEl2jDXbH9O2HKfVnFDCkA',
-        accessTokenSecret: '6LNRCRMdg6LE2egHAZLFLcVUWxBDIvgaafG6LKCtec4'
+        consumerKey:       'DROXwWEJw3tXjU4YJpZLw'
+      , consumerSecret:    'pwv1Nvlvi3PcQ9fwkojiUd933prElu60Iu8FNAonwcI'
+      , accessToken:       '9881092-BZ6uQiCxPvq4qKhsNu4ptEl2jDXbH9O2HKfVnFDCkA'
+      , accessTokenSecret: '6LNRCRMdg6LE2egHAZLFLcVUWxBDIvgaafG6LKCtec4'
     },
     mongodb: {
-        user:     'user',
-        password: '111111'
+        user:     'user'
+      , password: '111111'
+      , server:   'staff.mongohq.com:10090'
+      , database: 'twalks'
     }
 };
 
@@ -42,7 +44,7 @@ everyauth.twitter
 ;
 
 mongoose
-    .connect('mongodb://'+parameters.mongodb.user+':'+parameters.mongodb.password+'@staff.mongohq.com:10090/twalks')
+    .connect('mongodb://'+parameters.mongodb.user+':'+parameters.mongodb.password+'@'+parameters.mongodb.server+'/'+parameters.mongodb.database)
 ;
 
 
@@ -61,7 +63,7 @@ schema.Event.find({}, function (err, events) {
         poll.on('data', function(response) {
             if (typeof response.results !== "undefined") {
                 response.results.forEach(function(tweet) {
-                    event.tweets.push({
+                    var tweet_doc = {
                         tweet_id: tweet.id_str,
                         tweet: tweet.text,
                         postedAt: new Date(tweet.created_at),
@@ -69,8 +71,21 @@ schema.Event.find({}, function (err, events) {
                         hashes: tweet.text.split(' ').filter(function(word) {
                                     return word[0] === "#";
                                 }).map(function(hashCandidate) {
-                                    return hashCandidate.replace(/[^0-9]/g, '');
+                                    return hashCandidate.replace(/[^A-z0-9]/g, '');
                                 })
+                    }
+                    event.tweets.push(tweet_doc);
+                    event.talks.forEach(function(talk) {
+                        var contains = false;
+                        for (var i in tweet_doc.hashes) {
+                            if (tweet_doc.hashes[i] === talk.hash) {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (contains) {
+                            talk.tweets.push(tweet_doc);
+                        }
                     });
                     event.save();
                 });
@@ -140,7 +155,7 @@ app.get('/events.json', function(req, res){
 });
 
 app.get('/form', function(req, res){
-    res.render('form', {});
+    res.render('form', { layout: 'staticLayout' });
 });
 
 everyauth.helpExpress(app);
