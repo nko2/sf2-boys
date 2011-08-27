@@ -10,7 +10,7 @@ $(function(){
     window.Talk = Backbone.Model.extend({});
 
     // Collections
-    window.EventList = Backbone.Collection.extend({
+    window.Events = Backbone.Collection.extend({
         model: Event,
       , url: '/events.json'
       , comparator: function(event) {
@@ -18,7 +18,7 @@ $(function(){
         }
     }
 
-    window.TalkList = Backbone.Collection.extend({
+    window.Talks = Backbone.Collection.extend({
         model: Talk
       , url: '/talks.json'
       , comparator: function(event) {
@@ -31,8 +31,5 @@ $(function(){
         tagName: 'li',
       , template: _.template($('#event-template').html())
     });
-
-    window.Events = new EventList;
-    window.Talks = new TalkList;
 });
 
