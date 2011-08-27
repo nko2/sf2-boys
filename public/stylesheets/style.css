@@ -1,5 +1,9 @@
+html {
+    background:none;
+}
 body {
-    padding-top: 60px;
+    background:url(../images/light-tile.gif);
+    padding-top:40px;
 }
 #global-nav {
     margin-left:8px;
@@ -23,8 +27,17 @@ body {
     display: block;
     font-size: 0;
 }
+#navigation li.twitter a strong {
+    font-weight:bold;
+    color:#fff;
+}
+#navigation li.twitter a em {
+    font-style: normal;
+    font-size: 10px;
+    margin-left: 4px;
+}
 #intro {
-    padding-top:15px;
+    padding-top:35px;
 }
 #intro .columns {
     min-height:64px;
@@ -59,4 +72,139 @@ body {
 }
 .hashtag {
     color:#ccc;
+}
+#events-list {
+    padding-top:20px;
+    padding-bottom:20px;
+}
+#events-list .list {
+    border-radius:5px;
+    padding:10px 0px;
+}
+#events-list .list article {
+    float:left;
+    position:relative;
+    padding:0px 10px;
+    margin-bottom:15px;
+    margin-left:70px;
+}
+#events-list .list article:last-child {
+    border:none;
+}
+#events-list .list article .time {
+    background:#fff;
+    opacity:0.8;
+    position:absolute;
+
+    top:44px;
+    left:44px;
+    font-size:14px;
+    color:#000;
+    font-family:Nothing You Could Do;
+
+    padding-top:25px;
+
+    width:100px;
+    height:75px;
+    border-radius:100px;
+    text-align:center;
+}
+#events-list .list article .time i {
+    font-weight:bold;
+    font-style:normal;
+    font-family:Arial;
+    font-size:24px;
+    color:#000;
+    width:80px;
+    margin-left:10px;
+    padding-top:10px;
+    margin-top:5px;
+    border-top:1px solid #EBEBEB;
+    display:block;
+}
+#events-list .list article .map {
+    margin-top:10px;
+    float:left;
+    height:150px;
+    margin-right:8px;
+    -webkit-box-shadow: 0px 0px 5px #CCC;
+    box-shadow: 0px 0px 5px #CCC;
+}
+#events-list .list article .map {
+    overflow:hidden;
+    border:8px solid #fff;
+    border-radius:160px;
+}
+#events-list .list article .map img {
+    border-radius:150px;
+}
+#events-list .list article section {
+    margin-top: 26px;
+    width: 415px;
+    min-height: 94px;
+    padding: 10px;
+    float: right;
+    background: white;
+    position: relative;
+    -webkit-box-shadow: 0px 0px 2px #CCC;
+    box-shadow: 0px 0px 2px #CCC;
+}
+#events-list .list article section:before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 53px;
+    left: -15px;
+    width: 30px;
+    height: 30px;
+    background: white;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-box-shadow: 0px 0px 2px #CCC;
+    box-shadow: 0px 0px 2px #CCC;
+}
+#events-list .list article section:after {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 48px;
+    left: 0px;
+    width: 30px;
+    height: 40px;
+    background: white;
+}
+#events-list .list article section * {
+    position:relative;
+    z-index: 2;
+}
+#events-list h3 a {
+    color:#000;
+}
+#events-list .infobar {
+    list-style:none;
+    margin:0px;
+    padding:0px;
+    font-size:11px;
+    color:#000 !important;
+}
+
+#events-list .infobar li {
+    float:left;
+    padding-left:18px;
+    margin-right:10px;
+}
+#events-list .infobar .time-precise {
+    background:url(../images/info-clock.png) no-repeat top left;
+}
+#events-list .infobar .author {
+    background:url(../images/info-author.png) no-repeat top left;
+}
+#events-list .infobar .people {
+    background:url(../images/info-people.png) no-repeat top left;
+}
+#events-list .infobar .tweets {
+    background:url(../images/info-tweets.png) no-repeat top left;
 }
