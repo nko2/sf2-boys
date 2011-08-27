@@ -68,6 +68,8 @@ schema.Event.find({}, function (err, events) {
                     doc.user     = tweet.from_user;
                     doc.hashes   = tweet.text.split(' ').filter(function(word) {
                         return word[0] === "#";
+                    }).map(function(hashCandidate) {
+                        return hashCandidate.replace(/[^0-9]/g, '');
                     });
                     doc.save();
                 });
@@ -104,8 +106,34 @@ app.get('/', function(req, res){
     res.render('welcome', {});
 });
 
-app.get('/events', function(req, res){
-    res.render('events', {});
+app.get('/events.json', function(req, res){
+    schema.Event.find({}, function (err, events) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(events));
+    });
+});
+
+app.get('/events/:id.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(event));
+    })
+});
+
+app.get('/tweets/:hash.json', function(req, res) {
+    schema.Tweet.find({hashes: '#'+req.params.hash}, function(err, tweets) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(tweets));
+    })
 });
 
 app.get('/events/1', function(req, res){
