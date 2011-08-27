@@ -58,4 +58,30 @@ describe('poller', function() {
             expect(emits).toEqual(1);
         });
     });
+
+    it('emits a "stop" event when requested to stop polling', function() {
+        var stopped = false;
+
+        poll.on('stop', function() {
+            stopped = true;
+        })
+
+        poll.startPolling();
+        poll.stopPolling();
+
+        expect(stopped).toBeTruthy();
+    });
+
+    it('emits a "start" event when requested to start polling', function() {
+        var started = false;
+
+        poll.on('start', function() {
+            started = true;
+        })
+
+        poll.startPolling();
+        poll.stopPolling();
+
+        expect(started).toBeTruthy();
+    });
 });
