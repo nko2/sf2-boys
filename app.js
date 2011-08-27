@@ -20,6 +20,8 @@ var parameters = {
 var express   = require('express')
   , everyauth = require('everyauth')
   , users     = require('./lib/users')
+  , poller    = require('./lib/poller')
+  , schema    = require('./lib/schema')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
   , twitter   = require('twitter')
@@ -46,6 +48,7 @@ var twit = new twitter({
     access_token_key: parameters.twitter.accessToken,
     access_token_secret: parameters.twitter.accessTokenSecret
 });
+var poller = poller.createPoller(twit, schema);
 
 // Configuration
 app.configure(function(){
@@ -79,3 +82,5 @@ app.get('/', function(req, res){
 everyauth.helpExpress(app);
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+poller.startPolling();
