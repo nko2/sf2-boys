@@ -30,5 +30,32 @@ describe('poller', function() {
         runs(function() {
             expect(twit.keyword).toEqual("#nko");
         });
-    })
+    });
+
+    it('stops polling when requested', function() {
+        var emits = 0;
+
+        poll.on('data', function(data) {
+            emits++;
+        });
+
+        poll.startPolling();
+
+        runs(function() {
+            expect(emits).toEqual(0);
+        });
+
+        waits(500);
+
+        runs(function() {
+            expect(emits).toEqual(1);
+            poll.stopPolling();
+        });
+
+        waits(500);
+
+        runs(function() {
+            expect(emits).toEqual(1);
+        });
+    });
 });
