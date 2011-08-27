@@ -25,7 +25,7 @@ describe('poller', function() {
             expect(twit.keyword).toBeUndefined()
         });
 
-        waits(500);
+        waits(2000);
 
         runs(function() {
             expect(twit.keyword).toEqual("#nko");
@@ -45,14 +45,14 @@ describe('poller', function() {
             expect(emits).toEqual(0);
         });
 
-        waits(500);
+        waits(2000);
 
         runs(function() {
             expect(emits).toEqual(1);
             poll.stopPolling();
         });
 
-        waits(500);
+        waits(2000);
 
         runs(function() {
             expect(emits).toEqual(1);
