@@ -61,17 +61,18 @@ schema.Event.find({}, function (err, events) {
         poll.on('data', function(response) {
             if (typeof response.results !== "undefined") {
                 response.results.forEach(function(tweet) {
-                    doc          = new schema.Tweet();
-                    doc.tweet_id = tweet.id_str;
-                    doc.tweet    = tweet.text;
-                    doc.postedAt = new Date(tweet.created_at);
-                    doc.user     = tweet.from_user;
-                    doc.hashes   = tweet.text.split(' ').filter(function(word) {
-                        return word[0] === "#";
-                    }).map(function(hashCandidate) {
-                        return hashCandidate.replace(/[^0-9]/g, '');
+                    event.tweets.push({
+                        tweet_id: tweet.id_str,
+                        tweet: tweet.text,
+                        postedAt: new Date(tweet.created_at),
+                        user: tweet.from_user,
+                        hashes: tweet.text.split(' ').filter(function(word) {
+                                    return word[0] === "#";
+                                }).map(function(hashCandidate) {
+                                    return hashCandidate.replace(/[^0-9]/g, '');
+                                })
                     });
-                    doc.save();
+                    event.save();
                 });
             }
         });
