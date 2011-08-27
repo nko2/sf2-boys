@@ -5,6 +5,19 @@ body {
     background:url(../images/light-tile.gif);
     padding-top:40px;
 }
+#intro .logo {
+    text-align:center;
+    margin-top:250px;
+}
+#intro .logo h1 {
+    font-family:Leckerli One;
+    font-size:128px;
+}
+#intro .logo h2 {
+    padding-top:15px;
+    font-family:"Comic Sans MS", cursive, sans-serif;
+    font-size:18px;
+}
 #global-nav {
     margin-left:8px;
 }
@@ -41,6 +54,10 @@ body {
 }
 #intro .columns {
     min-height:64px;
+    background-color:#fff !important;
+    background-position:top left;
+    background-repeat:no-repeat;
+    border-radius:10px;
 }
 #intro .columns h4 {
     margin-top:10px;
@@ -48,7 +65,7 @@ body {
     line-height:18px;
 }
 #intro .columns.search {
-    background:url(../images/search.png) no-repeat top left;
+    background-image:url(../images/search.png);
     position:relative;
 }
 #intro .columns.search:before {
@@ -62,16 +79,16 @@ body {
     background:url(../images/arrow.png) no-repeat;
 }
 #intro .columns.create {
-    background:url(../images/create.png) no-repeat top left;
+    background-image:url(../images/create.png);
 }
 #intro .columns.tweet {
-    background:url(../images/tweet.png) no-repeat top left;
+    background-image:url(../images/tweet.png);
 }
 #intro .columns.view {
-    background:url(../images/view.png) no-repeat top left;
+    background-image:url(../images/view.png);
 }
 .hashtag {
-    color:#ccc;
+    color:#bdbdbd;
 }
 #events-list {
     padding-top:20px;
