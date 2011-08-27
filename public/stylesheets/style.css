@@ -416,3 +416,34 @@ body {
 #tweets p {
     margin-left:56px;
 }
+#event-show .item article .map .time {
+    background:#fff;
+    opacity:0.9;
+    position:absolute;
+
+    top:70px;
+    left:70px;
+    font-size:28px;
+    color:#000;
+    font-family:Nothing You Could Do;
+
+    padding-top:75px;
+
+    width:200px;
+    height:125px;
+    border-radius:200px;
+    text-align:center;
+}
+#event-show .item article .map .time i {
+    font-weight:bold;
+    font-style:normal;
+    font-family:Arial;
+    font-size:44px;
+    color:#000;
+    width:180px;
+    margin-left:10px;
+    padding-top:20px;
+    margin-top:10px;
+    border-top:1px solid #000;
+    display:block;
+}
