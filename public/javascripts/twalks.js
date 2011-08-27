@@ -7,29 +7,32 @@ $(function(){
 
     // Models
     window.Event = Backbone.Model.extend({});
-    window.Session = Backbone.Model.extend({});
+    window.Talk = Backbone.Model.extend({});
 
+    // Collections
     window.EventList = Backbone.Collection.extend({
         model: Event,
-
-        url: '/events',
-
-        comparator: function(event) {
+      , url: '/events.json'
+      , comparator: function(event) {
             return event.get('startsAt');
-        },
+        }
     }
 
-    window.SessionList = Backbone.Collection.extend({
-        model: Session,
-
-        url: '/sessions',
-
-        comparator: function(event) {
+    window.TalkList = Backbone.Collection.extend({
+        model: Talk
+      , url: '/talks.json'
+      , comparator: function(event) {
             return event.get('name');
-        },
+        }
     }
+
+    // Views
+    window.EventView = Backbone.View.extend({
+        tagName: 'li',
+      , template: _.template($('#event-template').html())
+    });
 
     window.Events = new EventList;
-    window.Sessions = new SessionList;
+    window.Talks = new TalkList;
 });
 
