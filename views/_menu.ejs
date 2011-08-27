@@ -41,3 +41,15 @@
         </div><!-- /topbar -->
     </div>
 </section>
+
+<script type="text/javascript">
+    $(function(){
+        $('.nav.secondary-nav a.menu').click(function(ev) {
+            $(this).parent().toggleClass('open');
+            ev.stopPropagation();
+        });
+        $('body').click(function() {
+            $('.nav.secondary-nav li.menu').removeClass('open');
+        });
+    });
+</script>

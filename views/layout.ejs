@@ -92,15 +92,6 @@
 
                     // get data from server
                     eventsList.fetch();
-
-                    // popup
-                    $('.nav.secondary-nav a.menu').click(function(ev) {
-                        $(this).parent().toggleClass('open');
-                        ev.stopPropagation();
-                    });
-                    $('body').click(function() {
-                        $('.nav.secondary-nav li.menu').removeClass('open');
-                    });
                 });
             </script>
         </div>
