@@ -390,3 +390,29 @@ body {
 #event-show #talks td.name {
     width:60%;
 }
+#tweets .tweet .date {
+    position:absolute;
+    position: absolute;
+    top:0px;
+    right:0px;
+    font-size:10px;
+    color:#000;
+}
+#tweets .tweet {
+    position:relative;
+    border-bottom:1px solid #ebebeb;
+    margin-bottom:10px;
+}
+#tweets .tweet img {
+    position:absolute !important;
+    left:0px;
+    top:0px;
+}
+#tweets h5 {
+    line-height:1;
+    margin-bottom:5px;
+    margin-left:56px;
+}
+#tweets p {
+    margin-left:56px;
+}
