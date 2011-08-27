@@ -116,6 +116,10 @@ app.get('/events/1/1', function(req, res){
     res.render('talk', {});
 });
 
+app.get('/events.json', function(req, res){
+    res.send(schema.Event.getAll());
+});
+
 app.get('/form', function(req, res){
     res.render('form', {});
 });
