@@ -17,7 +17,7 @@ var parameters = {
         user:     'user',
         password: '111111'
     }
-}
+};
 
 /**
  * Module dependencies.
@@ -114,6 +114,10 @@ app.get('/events/1', function(req, res){
 
 app.get('/events/1/1', function(req, res){
     res.render('talk', {});
+});
+
+app.get('/form', function(req, res){
+    res.render('form', {});
 });
 
 everyauth.helpExpress(app);

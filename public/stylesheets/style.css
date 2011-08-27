@@ -58,6 +58,8 @@ body {
     background-position:top left;
     background-repeat:no-repeat;
     border-radius:10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
 }
 #intro .columns h4 {
     margin-top:10px;
@@ -96,6 +98,8 @@ body {
 }
 #events-list .list {
     border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
     padding:10px 0px;
 }
 #events-list .list article {
@@ -124,6 +128,8 @@ body {
     width:100px;
     height:75px;
     border-radius:100px;
+    -moz-border-radius:100px;
+    -webkit-border-radius:100px;
     text-align:center;
 }
 #event-show td.date {
@@ -157,10 +163,14 @@ body {
     overflow:hidden;
     border:8px solid #fff;
     border-radius:160px;
+    -moz-border-radius:160px;
+    -webkit-border-radius:160px;
     background:#fff;
 }
 #events-list .list article .map img {
     border-radius:150px;
+    -moz-border-radius:150px;
+    -webkit-border-radius:150px;
 }
 #events-list .list article > section {
     margin-top: 26px;
@@ -248,6 +258,8 @@ body {
 }
 #event-show .item {
     border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
     padding:10px 0px;
 }
 #event-show .item article {
@@ -271,10 +283,14 @@ body {
     overflow:hidden;
     border:8px solid #fff;
     border-radius:160px;
+    -moz-border-radius:160px;
+    -webkit-border-radius:160px;
     background:#fff;
 }
 #event-show .item article .map img {
     border-radius:150px;
+    -moz-border-radius:150px;
+    -webkit-border-radius:150px;
 }
 #event-show img.image {
     float:left;
@@ -449,6 +465,8 @@ body {
     width:200px;
     height:125px;
     border-radius:200px;
+    -webkit-border-radius:200px;
+    -moz-border-radius:200px;
     text-align:center;
 }
 #event-show .item article .map .time i {
@@ -463,4 +481,14 @@ body {
     margin-top:10px;
     border-top:1px solid #000;
     display:block;
+}
+#form .columns form {
+    padding:15px;
+    width:700px;
+    margin-left:120px;
+    margin-top:20px;
+    background:#fff;
+    border-radius:10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
 }
