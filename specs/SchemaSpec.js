@@ -1,20 +1,20 @@
 var mongoose = require('mongoose'),
     schema = require('../lib/schema.js');
 
-describe('session', function(){
+describe('talk', function(){
     it('should be created properly with sample data', function() {
-        var SessionModel = mongoose.model('Session');
-        var session = new SessionModel();
-        session.name = 'test session';
-        session.description = 'test session description';
-        session.speakers.push('steves');
-        session.speakers.push('jmikola');
+        var TalkModel = mongoose.model('Talk');
+        var talk = new TalkModel();
+        talk.name = 'test talk';
+        talk.description = 'test talk description';
+        talk.speakers.push('steves');
+        talk.speakers.push('jmikola');
 
-        expect(session.name).toEqual('test session');
-        expect(session.description).toEqual('test session description');
-        expect(session.speakers.length).toEqual(2);
-        expect(session.speakers[0]).toEqual('steves');
-        expect(session.speakers[1]).toEqual('jmikola');
+        expect(talk.name).toEqual('test talk');
+        expect(talk.description).toEqual('test talk description');
+        expect(talk.speakers.length).toEqual(2);
+        expect(talk.speakers[0]).toEqual('steves');
+        expect(talk.speakers[1]).toEqual('jmikola');
     });
 });
 
@@ -23,9 +23,9 @@ describe('event', function(){
         var startDate = new Date('2011-08-27 09:00:00');
         var endDate = new Date('2011-08-29 16:00:00');
 
-        var SessionModel = mongoose.model('Session');
-        var session = new SessionModel();
-        session.name = 'test session';
+        var TalkModel = mongoose.model('Talk');
+        var talk = new TalkModel();
+        talk.name = 'test talk';
 
         var EventModel = mongoose.model('Event');
         var event = new EventModel();
@@ -35,7 +35,7 @@ describe('event', function(){
         event.imageUrl = 'http://www.example.com/test.png';
         event.description = 'test event description';
         event.location = 'New York, NY';
-        event.sessions.push(session);
+        event.talks.push(talk);
 
         expect(event.name).toEqual('test event');
         expect(event.startsAt).toEqual(startDate);
@@ -43,8 +43,8 @@ describe('event', function(){
         expect(event.imageUrl).toEqual('http://www.example.com/test.png');
         expect(event.description).toEqual('test event description');
         expect(event.location).toEqual('New York, NY');
-        expect(event.sessions.length).toEqual(1);
-        expect(event.sessions[0].name).toEqual('test session');
+        expect(event.talks.length).toEqual(1);
+        expect(event.talks[0].name).toEqual('test talk');
     });
 });
 
