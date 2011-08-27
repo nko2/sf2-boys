@@ -15,7 +15,14 @@ describe('event', function(){
         event.imageUrl = 'http://www.example.com/test.png';
         event.description = 'test event description';
         event.location = 'New York, NY';
-        event.talks.push({name: 'test talk', hash: '#testtalk'});
+        event.tweets.push({tweet_id: 5, tweet: 'test'});
+        event.talks.push({
+              name: 'test talk'
+            , hash: '#testtalk'
+            , tweets: [{
+                tweet_id: 6
+              , tweet: 'another test'
+            }]});
 
         expect(event.name).toEqual('test event');
         expect(event.createdBy).toEqual('jmikola');
@@ -24,28 +31,14 @@ describe('event', function(){
         expect(event.imageUrl).toEqual('http://www.example.com/test.png');
         expect(event.description).toEqual('test event description');
         expect(event.location).toEqual('New York, NY');
+        expect(event.tweets.length).toEqual(1);
+        expect(event.tweets[0].tweet_id).toEqual(5);
+        expect(event.tweets[0].tweet).toEqual('test');
         expect(event.talks.length).toEqual(1);
         expect(event.talks[0].hash).toEqual('#testtalk');
         expect(event.talks[0].name).toEqual('test talk');
-    });
-});
-
-describe('tweet', function(){
-    it('should be created properly with sample data', function() {
-        var postedDate = new Date('2011-08-28 14:23:21');
-        var TweetModel = mongoose.model('Tweet');
-        var tweet = new TweetModel();
-        tweet.tweet = 'test tweet';
-        tweet.user = 'stevensurowiec';
-        tweet.postedAt = postedDate;
-        tweet.hashes.push('#nodeknockout');
-        tweet.hashes.push('#sf2_boys');
-
-        expect(tweet.tweet).toEqual('test tweet');
-        expect(tweet.user).toEqual('stevensurowiec');
-        expect(tweet.postedAt).toEqual(postedDate);
-        expect(tweet.hashes.length).toEqual(2);
-        expect(tweet.hashes[0]).toEqual('#nodeknockout');
-        expect(tweet.hashes[1]).toEqual('#sf2_boys');
+        expect(event.talks[0].tweets.length).toEqual(1);
+        expect(event.talks[0].tweets[0].tweet_id).toEqual(6);
+        expect(event.talks[0].tweets[0].tweet).toEqual('another test');
     });
 });
