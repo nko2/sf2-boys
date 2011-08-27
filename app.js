@@ -20,7 +20,7 @@ var parameters = {
 var express   = require('express')
   , everyauth = require('everyauth')
   , users     = require('./lib/users')
-  , mongo     = require('mongoskin')
+  , mongoose  = require('mongoose')
   , sys       = require('sys')
   , twitter   = require('twitter')
 ;
@@ -31,10 +31,15 @@ everyauth.twitter
     .findOrCreateUser(function(session, accessToken, accessTokenSecret, userData) {
         return users.createUserFromTwitterData(userData);
     })
-    .redirectPath('/');
+    .redirectPath('/')
+;
+
+mongoose
+    .connect('mongodb://'+parameters.mongodb.user+':'+parameters.mongodb.password+'@staff.mongohq.com:10090/twalks')
+;
+
 
 var app = module.exports = express.createServer();
-var db  = mongo.db('mongodb://'+parameters.mongodb.user+':'+parameters.mongodb.password+'@staff.mongohq.com:10090/twalks');
 var twit = new twitter({
     consumer_key: parameters.twitter.consumerKey,
     consumer_secret: parameters.twitter.consumerSecret,
