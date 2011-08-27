@@ -5,7 +5,7 @@ describe('poller', function() {
 
     beforeEach(function() {
         poll = poller.createPoller({
-            search: function(keyword, callback) {
+            search: function(keyword, params, callback) {
                 twit.keyword  = keyword;
                 twit.callback = callback;
                 callback('asd');
