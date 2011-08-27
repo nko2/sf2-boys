@@ -21,6 +21,7 @@ var express   = require('express')
   , everyauth = require('everyauth')
   , users     = require('./lib/users')
   , schema    = require('./lib/schema')
+  , poller    = require('./lib/poller')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
   , twitter   = require('twitter')
@@ -47,7 +48,29 @@ var twit = new twitter({
     access_token_key: parameters.twitter.accessToken,
     access_token_secret: parameters.twitter.accessTokenSecret
 });
-var poller = require('./lib/poller').createPoller(twit, schema);
+
+// start polling existing events
+schema.Event.find({}, function (err, events) {
+    events.forEach(function(event) {
+        var poll = poller.createPoller(twit, event.hash);
+        poll.on('data', function(response) {
+            if (typeof response.results !== "undefined") {
+                response.results.forEach(function(tweet) {
+                    doc          = new schema.Tweet();
+                    doc.tweet_id = tweet.id_str;
+                    doc.tweet    = tweet.text;
+                    doc.postedAt = new Date(tweet.created_at);
+                    doc.user     = tweet.from_user;
+                    doc.hashes   = tweet.text.split(' ').filter(function(word) {
+                        return word[0] === "#";
+                    });
+                    doc.save();
+                });
+            }
+        });
+        poll.startPolling();
+    })
+});
 
 // Configuration
 app.configure(function(){
@@ -81,5 +104,3 @@ app.get('/', function(req, res){
 everyauth.helpExpress(app);
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
-poller.startPolling();
