@@ -63,7 +63,7 @@ schema.Event.find({}, function (err, events) {
         poll.on('data', function(response) {
             if (typeof response.results !== "undefined") {
                 response.results.forEach(function(tweet) {
-                    event.tweets.push({
+                    var tweet_doc = {
                         tweet_id: tweet.id_str,
                         tweet: tweet.text,
                         postedAt: new Date(tweet.created_at),
@@ -71,8 +71,21 @@ schema.Event.find({}, function (err, events) {
                         hashes: tweet.text.split(' ').filter(function(word) {
                                     return word[0] === "#";
                                 }).map(function(hashCandidate) {
-                                    return hashCandidate.replace(/[^0-9]/g, '');
+                                    return hashCandidate.replace(/[^A-z0-9]/g, '');
                                 })
+                    }
+                    event.tweets.push(tweet_doc);
+                    event.talks.forEach(function(talk) {
+                        var contains = false;
+                        for (var i in tweet_doc.hashes) {
+                            if (tweet_doc.hashes[i] === talk.hash) {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (contains) {
+                            talk.tweets.push(tweet_doc);
+                        }
                     });
                     event.save();
                 });
