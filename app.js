@@ -20,7 +20,6 @@ var parameters = {
 var express   = require('express')
   , everyauth = require('everyauth')
   , users     = require('./lib/users')
-  , poller    = require('./lib/poller')
   , schema    = require('./lib/schema')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
@@ -48,7 +47,7 @@ var twit = new twitter({
     access_token_key: parameters.twitter.accessToken,
     access_token_secret: parameters.twitter.accessTokenSecret
 });
-var poller = poller.createPoller(twit, schema);
+var poller = require('./lib/poller').createPoller(twit, schema);
 
 // Configuration
 app.configure(function(){
