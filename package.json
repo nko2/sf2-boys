@@ -1,0 +1,11 @@
+{
+    "name":          "twalks"
+  , "version":       "0.0.1"
+  , "private":       true
+  , "dependencies":  {
+      "express":    "2.4.3"
+    , "everyauth":  "0.2.18"
+    , "ntwitter":   "0.2.2"
+    , "jade":       ">= 0.0.1"
+  }
+}
