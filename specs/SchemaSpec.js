@@ -12,6 +12,9 @@ describe('session', function(){
 
         expect(session.name).toEqual('test session');
         expect(session.description).toEqual('test session description');
+        expect(session.speakers.length).toEqual(2);
+        expect(session.speakers[0]).toEqual('steves');
+        expect(session.speakers[1]).toEqual('jmikola');
     });
 });
 
@@ -19,6 +22,10 @@ describe('event', function(){
     it('should be created properly with sample data', function() {
         var startDate = new Date('2011-08-27 09:00:00');
         var endDate = new Date('2011-08-29 16:00:00');
+
+        var SessionModel = mongoose.model('Session');
+        var session = new SessionModel();
+        session.name = 'test session';
 
         var EventModel = mongoose.model('Event');
         var event = new EventModel();
@@ -28,6 +35,7 @@ describe('event', function(){
         event.imageUrl = 'http://www.example.com/test.png';
         event.description = 'test event description';
         event.location = 'New York, NY';
+        event.sessions.push(session);
 
         expect(event.name).toEqual('test event');
         expect(event.startsAt).toEqual(startDate);
@@ -35,6 +43,8 @@ describe('event', function(){
         expect(event.imageUrl).toEqual('http://www.example.com/test.png');
         expect(event.description).toEqual('test event description');
         expect(event.location).toEqual('New York, NY');
+        expect(event.sessions.length).toEqual(1);
+        expect(event.sessions[0].name).toEqual('test session');
     });
 });
 
@@ -46,9 +56,14 @@ describe('tweet', function(){
         tweet.tweet = 'test tweet';
         tweet.user = 'stevensurowiec';
         tweet.postedAt = postedDate;
+        tweet.hashes.push('#nodeknockout');
+        tweet.hashes.push('#sf2_boys');
 
         expect(tweet.tweet).toEqual('test tweet');
         expect(tweet.user).toEqual('stevensurowiec');
         expect(tweet.postedAt).toEqual(postedDate);
+        expect(tweet.hashes.length).toEqual(2);
+        expect(tweet.hashes[0]).toEqual('#nodeknockout');
+        expect(tweet.hashes[1]).toEqual('#sf2_boys');
     });
 });
