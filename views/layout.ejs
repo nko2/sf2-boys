@@ -78,49 +78,7 @@
     <body>
         <div class="container">
 
-            <section id="navigation">
-                <div class="topbar-wrapper" style="z-index: 5;">
-                    <div class="topbar">
-                        <div class="fill">
-                            <div class="container">
-                                <h3><a href="#">Twalks</a></h3>
-                                <form id="search-form" action="">
-                                    <span class="glass"><i></i></span>
-                                    <input type="text" placeholder="Search">
-                                </form>
-                                <ul id="global-nav">
-                                    <li class="active"><a href="#">All events</a></li>
-                                    <li><a href="#">Current events</a></li>
-                                    <li><a href="#">Upcoming events</a></li>
-                                </ul>
-                                <ul class="nav secondary-nav">
-                                    <% if (everyauth.loggedIn) { %>
-                                        <li class="menu">
-                                            <a href="#" class="menu">
-                                                <%= everyauth.twitter.user.name %>
-                                            </a>
-                                            <ul class="menu-dropdown">
-                                                <li><a href="#">My events</a></li>
-                                                <li><a href="#">My sessions</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="/logout">Log out</a></li>
-                                            </ul>
-                                        </li>
-                                    <% } else { %>
-                                        <li class="twitter">
-                                            <a href="/auth/twitter">
-                                                <strong>Sign in</strong>
-                                                <em>with your twitter account</em>
-                                            </a>
-                                        </li>
-                                    <% } %>
-
-                                </ul>
-                            </div>
-                        </div><!-- /fill -->
-                    </div><!-- /topbar -->
-                </div>
-            </section>
+            <%- partial('menu') %>
 
             <div id="bb-content"></div>
 
