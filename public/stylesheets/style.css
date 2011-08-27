@@ -194,7 +194,7 @@ body {
 #events-list .infobar li {
     float:left;
     padding-left:18px;
-    margin-right:10px;
+    margin-right:15px;
 }
 #events-list .infobar .time-precise {
     background:url(../images/info-clock.png) no-repeat top left;
