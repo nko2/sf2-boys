@@ -142,7 +142,7 @@ app.get('/events.json', function(req, res){
 });
 
 app.get('/form', function(req, res){
-    res.render('form', {});
+    res.render('form', { layout: 'staticLayout' });
 });
 
 everyauth.helpExpress(app);
