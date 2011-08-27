@@ -127,16 +127,6 @@ app.get('/events/:id.json', function(req, res) {
     })
 });
 
-app.get('/tweets/:hash.json', function(req, res) {
-    schema.Tweet.find({hashes: '#'+req.params.hash}, function(err, tweets) {
-        res.contentType('json');
-        if (err) {
-            console.log(err);
-        }
-        res.end(JSON.stringify(tweets));
-    })
-});
-
 app.get('/events/1', function(req, res){
     res.render('event', {});
 });
