@@ -37,3 +37,18 @@ describe('event', function(){
         expect(event.location).toEqual('New York, NY');
     });
 });
+
+describe('tweet', function(){
+    it('should be created properly with sample data', function() {
+        var postedDate = new Date('2011-08-28 14:23:21');
+        var TweetModel = mongoose.model('Tweet');
+        var tweet = new TweetModel();
+        tweet.tweet = 'test tweet';
+        tweet.user = 'stevensurowiec';
+        tweet.postedAt = postedDate;
+
+        expect(tweet.tweet).toEqual('test tweet');
+        expect(tweet.user).toEqual('stevensurowiec');
+        expect(tweet.postedAt).toEqual(postedDate);
+    });
+});
