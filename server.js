@@ -111,6 +111,10 @@ app.get('/events/1/1', function(req, res){
     res.render('talk', {});
 });
 
+app.get('/events.json', function(req, res){
+    res.send(schema.Event.getAll());
+});
+
 everyauth.helpExpress(app);
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
