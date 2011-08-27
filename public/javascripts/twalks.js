@@ -1,4 +1,11 @@
 $(function(){
+    // Replace ERB-style delimiters for Underscore templates
+    _.templateSettings = {
+        interpolate: /\{\{(.+?)\}\}/g
+      , evaluate:    /\{\%(.+?)\%\}/g
+    };
+
+    // Models
     window.Event = Backbone.Model.extend({});
     window.Session = Backbone.Model.extend({});
 

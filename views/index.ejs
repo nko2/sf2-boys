@@ -65,3 +65,24 @@
         </article>
     </section>
 </div>
+
+<!-- Templates -->
+
+<script type="text/template" id="event-template">
+    <article>
+        <header class="map">
+            <span class="time">{{ startsAt }}</span>
+            <img src="http://maps.google.com/maps/api/staticmap?center=Minsk,+Belarus&zoom=13&size=150x150&sensor=false" />
+        </header>
+        <section>
+            <h3><a href="#">{{ name }}</a></h3>
+            <p>{{ description }}</p>
+            <ul class="infobar">
+                <li class="time-precise">{{ startsAt }}</li>
+                <li class="people">{{ numPeople }}</li>
+                <li class="tweets">{{ numTweets }}</li>
+                <li class="author">{{ createdBy }}</li>
+            </ul>
+        </section>
+    </article>
+</script>
