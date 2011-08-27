@@ -1,4 +1,9 @@
 /**
+ * deploy check-in
+ */
+require('nko')('UJuIrlX5JM5B0V/g');
+
+/**
  * Parameters
  */
 var parameters = {
