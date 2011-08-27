@@ -7,5 +7,6 @@
     , "everyauth":  "0.2.18"
     , "ntwitter":   "0.2.2"
     , "ejs":        "0.4.3"
+    , "mongoskin":  "0.1.3"
   }
 }
