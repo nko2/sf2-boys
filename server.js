@@ -12,7 +12,7 @@ var parameters = {
         user:     'user',
         password: '111111'
     }
-}
+};
 
 /**
  * Module dependencies.
@@ -69,7 +69,7 @@ schema.Event.find({}, function (err, events) {
             }
         });
         poll.startPolling();
-    })
+    });
 });
 
 // Configuration
