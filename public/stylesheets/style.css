@@ -109,6 +109,12 @@ body {
     border-radius:100px;
     text-align:center;
 }
+#event-show td.date {
+    color:#000;
+    background:url(../images/info-clock.png) no-repeat 0px 8px;
+    padding-left:20px;
+    text-align:left;
+}
 #events-list .list article .time i {
     font-weight:bold;
     font-style:normal;
@@ -134,11 +140,12 @@ body {
     overflow:hidden;
     border:8px solid #fff;
     border-radius:160px;
+    background:#fff;
 }
 #events-list .list article .map img {
     border-radius:150px;
 }
-#events-list .list article section {
+#events-list .list article > section {
     margin-top: 26px;
     width: 415px;
     min-height: 94px;
@@ -149,7 +156,7 @@ body {
     -webkit-box-shadow: 0px 0px 2px #CCC;
     box-shadow: 0px 0px 2px #CCC;
 }
-#events-list .list article section:before {
+#events-list .list article > section:before {
     content: '';
     display: block;
     position: absolute;
@@ -165,7 +172,7 @@ body {
     -webkit-box-shadow: 0px 0px 2px #CCC;
     box-shadow: 0px 0px 2px #CCC;
 }
-#events-list .list article section:after {
+#events-list .list article > section:after {
     content: '';
     display: block;
     position: absolute;
@@ -176,14 +183,14 @@ body {
     height: 40px;
     background: white;
 }
-#events-list .list article section * {
+#events-list .list article > section * {
     position:relative;
     z-index: 2;
 }
 #events-list h3 a {
     color:#000;
 }
-#events-list .list article section p {
+#events-list .list article > section p {
     max-height:52px;
     overflow:hidden;
 }
@@ -211,4 +218,175 @@ body {
 }
 #events-list .infobar .tweets {
     background:url(../images/info-tweets.png) no-repeat top left;
+}
+
+
+
+
+
+
+#event-show {
+    padding-top:20px;
+    padding-bottom:20px;
+}
+#event-show .item {
+    border-radius:5px;
+    padding:10px 0px;
+}
+#event-show .item article {
+    float:left;
+    position:relative;
+    padding:0px 10px;
+    margin-bottom:15px;
+}
+#event-show .item article:last-child {
+    border:none;
+}
+#event-show .item article .map {
+    margin-top:10px;
+    float:left;
+    height:300px;
+    margin-right:8px;
+    -webkit-box-shadow: 0px 0px 5px #CCC;
+    box-shadow: 0px 0px 5px #CCC;
+}
+#event-show .item article .map {
+    overflow:hidden;
+    border:8px solid #fff;
+    border-radius:160px;
+    background:#fff;
+}
+#event-show .item article .map img {
+    border-radius:150px;
+}
+#event-show img.image {
+    float:left;
+    border:5px solid #ebebeb;
+    margin-right:10px;
+    margin-bottom:10px;
+    max-width:90px;
+    max-height:90px;
+}
+#event-show .item article > section {
+    margin-top: 26px;
+    width: 570px;
+    min-height: 260px;
+    padding: 10px;
+    padding-bottom:0px;
+    float: right;
+    background: white;
+    position: relative;
+    -webkit-box-shadow: 0px 0px 2px #CCC;
+    box-shadow: 0px 0px 2px #CCC;
+}
+#event-show .item article > section:before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 123px;
+    left: -15px;
+    width: 30px;
+    height: 30px;
+    background: white;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-box-shadow: 0px 0px 2px #CCC;
+    box-shadow: 0px 0px 2px #CCC;
+}
+#event-show .item article > section:after {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 118px;
+    left: 0px;
+    width: 30px;
+    height: 40px;
+    background: white;
+}
+#event-show .item article > section * {
+    position:relative;
+    z-index: 2;
+}
+#event-show .item article > section p {
+    max-height:52px;
+    overflow:hidden;
+}
+#event-show .infobar {
+    float:left;
+    list-style:none;
+    margin:0px;
+    padding:0px;
+    font-size:12px;
+    color:#000 !important;
+    margin-bottom:10px;
+}
+#event-show h1 {
+    margin-bottom:5px;
+}
+#event-show hr {
+    clear:both;
+}
+
+#event-show .infobar li {
+    padding-left:18px;
+    margin-right:15px;
+}
+#event-show .infobar .time-precise {
+    background:url(../images/info-clock.png) no-repeat top left;
+}
+#event-show .infobar .author {
+    background:url(../images/info-author.png) no-repeat top left;
+}
+#event-show .infobar .people {
+    background:url(../images/info-people.png) no-repeat top left;
+}
+#event-show .infobar .place {
+    background:url(../images/info-airplane.png) no-repeat top left;
+}
+#event-show .infobar .tweets {
+    background:url(../images/info-tweets.png) no-repeat top left;
+}
+#event-show footer.lists {
+    border-top:1px solid #ebebeb;
+    background:whiteSmoke;
+    width:570px;
+    padding:10px;
+    margin-left:-10px;
+    margin-top:50px;
+}
+#event-show footer.lists .tabs {
+    margin-top:-46px;
+    border-color:#ebebeb;
+}
+#event-show footer.lists .tabs .active a {
+    background:whiteSmoke;
+}
+#event-show #talks h5 {
+    margin:0px;
+    padding:0px;
+    line-height:1;
+    font-size:12px;
+    font-weight:normal;
+}
+#event-show #talks td.name {
+    vertical-align:top;
+}
+#event-show #talks td.time {
+    vertical-align:top;
+}
+#event-show #talks td.tweets {
+    padding-left:18px;
+    vertical-align:top;
+    background:url(../images/info-tweets.png) no-repeat -1px 8px;
+}
+#event-show #talks td.author {
+    padding-left:18px;
+    vertical-align:top;
+    background:url(../images/info-author.png) no-repeat -1px 8px;
+}
+#event-show #talks td.name {
+    width:60%;
 }

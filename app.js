@@ -96,9 +96,15 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-    res.render('index', {
-        title:  'Express'
-    });
+    res.render('welcome', {});
+});
+
+app.get('/events', function(req, res){
+    res.render('events', {});
+});
+
+app.get('/events/1', function(req, res){
+    res.render('event', {});
 });
 
 everyauth.helpExpress(app);
