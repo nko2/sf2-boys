@@ -124,7 +124,7 @@
 
             <div id="bb-content"></div>
 
-            <script type="text/javascrpt">
+            <script type="text/javascript">
                 $(function(){
                     var eventsList = new Events()
                       , eventsListView = new EventsListView({ collection: eventsList });
@@ -134,9 +134,6 @@
 
                     // get data from server
                     eventsList.fetch();
-
-
-
 
                     // popup
                     $('.nav.secondary-nav a.menu').click(function(ev) {
