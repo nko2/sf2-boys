@@ -104,8 +104,10 @@ app.get('/', function(req, res){
     res.render('welcome', {});
 });
 
-app.get('/events', function(req, res){
-    res.render('events', {});
+app.get('/events.json', function(req, res){
+    schema.Event.find({}, function (err, events) {
+        res.end(JSON.stringify(events));
+    });
 });
 
 app.get('/events/1', function(req, res){
