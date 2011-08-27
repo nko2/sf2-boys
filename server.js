@@ -12,7 +12,7 @@ var parameters = {
         user:     'user',
         password: '111111'
     }
-}
+};
 
 /**
  * Module dependencies.
