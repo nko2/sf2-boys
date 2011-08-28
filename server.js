@@ -61,6 +61,8 @@ var app  = module.exports = express.createServer()
 var child, jobs = [];
 
 function startPolling() {
+    var restart = true;
+
     // Queue polling jobs for the poller script
     schema.Event.find({}, function (err, events) {
         events.forEach(function(event) {
@@ -81,24 +83,26 @@ function startPolling() {
     child = spawn('node', ['scripts/poller.js']);
 
     child.on('exit', function (code) {
-        jobs.forEach(function(job) {
-            job.status = 'old';
-            job.save();
-        });
-        startPolling();
+        if (restart) {
+            jobs.forEach(function(job) {
+                job.status = 'old';
+                job.save();
+            });
+            startPolling();
+        }
     });
 
-    process.on('exit', function(code) {
-        child.kill();
-    })
-
     process.on('SIGINT', function () {
+        restart = false;
         child.kill();
+        process.exit();
     });
 
     process.on('SIGTERM', function() {
+        restart = false;
         child.kill();
-    })
+        process.exit();
+    });
 }
 
 startPolling();
@@ -243,6 +247,20 @@ app.get('/events/:id.json', function(req, res) {
         event.tweets = [];
 
         res.json(event, 200);
+    });
+});
+
+app.get('/events/:id/assets/:type.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        if (err) {
+            console.log(err);
+            res.json({error: true}, 500);
+            return;
+        }
+
+        res.json(event.assets.filter(function(asset) {
+            return asset.type === req.params.type;
+        }), 200);
     });
 });
 
