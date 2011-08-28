@@ -76,14 +76,7 @@ schema.Event.find({}, function (err, events) {
                     }
                     event.tweets.push(tweet_doc);
                     event.talks.forEach(function(talk) {
-                        var contains = false;
-                        for (var i in tweet_doc.hashes) {
-                            if (tweet_doc.hashes[i] === talk.hash) {
-                                contains = true;
-                                break;
-                            }
-                        }
-                        if (contains) {
+                        if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1) {
                             talk.tweets.push(tweet_doc);
                         }
                     });

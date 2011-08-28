@@ -58,11 +58,7 @@
                     <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
                     <li class="people">23</li>
                     <li class="tweets">120</li>
-                    <li class="author">
-                        {% _.each(authors, function(author) { %}
-                            <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
-                        {% }); %}
-                    </li>
+                    <li class="author"><a href="https://twitter.com/{{ author }}">@{{ author }}</a></li>
                 </ul>
             </section>
         </script>
@@ -84,14 +80,16 @@
 
             <script type="text/javascript">
                 $(function(){
-                    var eventsList = new Events()
-                      , eventsListView = new EventsListView({ collection: eventsList });
+                    window.App = new Twalks();
+                    Backbone.history.start();
 
-                    // append view to the page
-                    $('#bb-content').append(eventsListView.render().el);
-
-                    // get data from server
-                    eventsList.fetch();
+                    $('.nav.secondary-nav a.menu').click(function(ev) {
+                        $(this).parent().toggleClass('open');
+                        ev.stopPropagation();
+                    });
+                    $('body').click(function() {
+                        $('.nav.secondary-nav li.menu').removeClass('open');
+                    });
                 });
             </script>
         </div>

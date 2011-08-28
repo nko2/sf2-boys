@@ -21,6 +21,9 @@ body {
 #global-nav {
     margin-left:8px;
 }
+#navigation h3 a:hover {
+    background:none;
+}
 #navigation h3 {
     font-family:Leckerli One;
 }

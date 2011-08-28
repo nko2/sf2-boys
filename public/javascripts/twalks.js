@@ -10,6 +10,7 @@
         model:  Event
       , url:    '/events.json'
     });
+    window.eventsList = new Events();
 
     window.EventsListEventView = Backbone.View.extend({
         tagName: 'article'
@@ -44,4 +45,31 @@
             return this;
         }
     });
+
+    window.Twalks = Backbone.Router.extend({
+        routes: {
+            '':        'home'
+          , 'events':  'events'
+        }
+      , initialize: function() {
+            this.$container     = $('#bb-content');
+            this.$navigation    = $('#navigation');
+            this.eventsListView = new EventsListView({ collection: window.eventsList });
+        }
+      , home: function() {
+            this.empty();
+            this.$container.append($('#welcome-template').html());
+        }
+      , events: function() {
+            this.empty();
+            $('li.all-events', this.$navigation).addClass('active');
+            this.$container.append(this.eventsListView.render().el);
+            window.eventsList.fetch();
+        }
+      , empty: function() {
+            $('li.active', this.$navigation).removeClass('active');
+            this.$container.empty();
+        }
+    });
+
 })(jQuery);
