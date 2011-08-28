@@ -83,11 +83,12 @@ function startPolling() {
     child = spawn('node', ['scripts/poller.js']);
 
     child.on('exit', function (code) {
+        jobs.forEach(function(job) {
+            job.status = 'old';
+            job.save();
+        });
+
         if (restart) {
-            jobs.forEach(function(job) {
-                job.status = 'old';
-                job.save();
-            });
             startPolling();
         }
     });
