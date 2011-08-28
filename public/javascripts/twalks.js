@@ -5,25 +5,6 @@
       , evaluate:    /\{\%(.+?)\%\}/g
     };
 
-    // Enable close button on alert messages
-    $('.alert-message a.close').live('click', function(ev) {
-        $(this).parent().remove();
-        ev.preventDefault();
-    });
-
-    var alertMessage = function(type, msg) {
-        if (-1 == ['error', 'info' , 'success', 'warning'].indexOf(type)) {
-            return;
-        }
-
-        $('<div class="alert-message"><a href="#" class="close">×</a><p></p></div>')
-            .addClass(type)
-            .children('p')
-                .text(msg)
-                .end()
-            .prependTo('#bb-content');
-    }
-
     // see: http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
     $.fn.serializeObject = function() {
         var o = {}
@@ -195,7 +176,6 @@
                     var errors = $.parseJSON(err.responseText)
                       , self   = this;
 
-                    //alertMessage('error', 'An error occurred');
                     _.each(errors, function(error, name) {
                         var field = this.$('form .' + name);
                         field.addClass('error');
@@ -228,6 +208,12 @@
             this.$navigation    = $('#navigation');
             this.$secondaryNav  = $('.secondary-nav', this.$navigation);
             this.eventsListView = new App.Views.EventsList({ collection: eventsCollection });
+            this.$errorNotif    = $('#error-notification');
+
+            var self = this;
+            $('#error-notification .close').click(function() {
+                self.$errorNotif.slideUp(200);
+            });
         }
       , home: function() {
             $('li.active', this.$navigation).removeClass('active');
@@ -263,8 +249,8 @@
                     });
                 }
               , error: function() {
-                    new Error({ message: 'Could not find that event.' });
-                    this.navigate('', true);
+                    self.hideProgressBar();
+                    self.navigate('', true);
                 }
             });
       }
@@ -279,7 +265,7 @@
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(self.eventsListView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Events list', 'fetching failed'); } });
         }
       , listMy: function() {
             this.showProgressBar();
@@ -295,7 +281,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('My events', 'fetching failed'); } });
         }
       , listCurrent: function() {
             this.showProgressBar();
@@ -311,7 +297,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Current events', 'fetching failed'); } });
         }
       , listUpcoming: function() {
             this.showProgressBar();
@@ -327,7 +313,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Upcoming events', 'fetching failed'); } });
         }
       , showEvent: function(id) {
             this.showProgressBar();
@@ -346,7 +332,11 @@
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Event', 'fetching failed'); } });
+        }
+      , displayErrorNotification: function(title, description) {
+            this.$errorNotif.find('p').empty().append('<strong>'+title+'</strong> '+description);
+            this.$errorNotif.slideDown(300);
         }
       , showProgressBar: function() {
             $('li.user', this.$secondaryNav).stop().hide();

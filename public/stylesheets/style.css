@@ -13,6 +13,13 @@ body {
     text-align:center;
     margin-top:250px;
 }
+#error-notification {
+    margin-top:-3px;
+    position:fixed;
+    width:910px;
+    z-index:5;
+    display:none;
+}
 #intro .logo h1 {
     font-family:Leckerli One;
     font-size:128px;
