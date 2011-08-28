@@ -144,7 +144,6 @@ app.post('/events/new.json', andRequireUser, function(req, res){
       , startsAt:    new Date(req.body.startsAtDate + ' ' + req.body.startsAtTime)
       , endsAt:      new Date(req.body.endsAtDate + ' ' + req.body.endsAtTime)
       , imageUrl:    req.body.imageUrl
-      , overview:    req.body.overview
       , location:    req.body.location
       , description: req.body.description
       , author:      req.session.auth.twitter.user.name
@@ -178,7 +177,6 @@ app.put('/events/:id.json', andRequireUser, function(req, res){
             event.set('startsAt'    , new Date(req.body.startsAtDate + ' ' + req.body.startsAtTime));
             event.set('endsAt'      , new Date(req.body.endsAtDate + ' ' + req.body.endsAtTime));
             event.set('imageUrl'    , req.body.imageUrl);
-            event.set('overview'    , req.body.overview);
             event.set('location'    , req.body.location);
             event.set('description' , req.body.description);
 
