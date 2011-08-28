@@ -204,18 +204,6 @@ app.get('/events/:id.json', function(req, res) {
     })
 });
 
-app.get('/events/1', function(req, res){
-    res.render('event', {});
-});
-
-app.get('/events/1/1', function(req, res){
-    res.render('talk', {});
-});
-
-app.get('/events.json', function(req, res){
-    res.send(schema.Event.getAll());
-});
-
 app.get('/currentEvents.json', function(req, res){
     schema.Event.getCurrent(function (err, events) {
         res.contentType('json');
