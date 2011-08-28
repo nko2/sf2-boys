@@ -21,6 +21,7 @@
                                 {% } else { %}
                                     <input type="text" name="hash" id="event_hash" size="30" value="{{ model.get('hash') }}">
                                 {% } %}
+                                <span class="help-block">We'll use this to find tweets about your event.</span>
                             </div>
                         </div>
                     </div>
@@ -29,7 +30,7 @@
                         <label for="event_location">Location</label>
                         <div class="input">
                             <input type="text" name="location" id="event_location" size="30" class="xlarge" value="{{ model.get('location') }}">
-                            <span class="help-inline">Text representation of location.</span>
+                            <span class="help-block">Text representation of location.</span>
                         </div>
                     </div>
 
@@ -42,7 +43,7 @@
                                 to
                                 <input type="text" name="endsAtDate" value="{{ dateFormat(model.get('endsAt'), 'yyyy-mm-dd') }}" class="small">
                                 <input type="text" name="endsAtTime" value="{{ dateFormat(model.get('endsAt'), 'h:MM') }}" class="mini">
-                                <span class="help-inline">All times are local to the location.</span>
+                                <span class="help-block">All times are local to the location.</span>
                             </div>
                         </div>
                     </div>
@@ -51,7 +52,7 @@
                         <label for="event_imageUrl">Image URL</label>
                         <div class="input">
                             <input type="text" name="imageUrl" id="event_imageUrl" size="30" class="xlarge" value="{{ model.get('imageUrl') }}">
-                            <span class="help-inline">Should be 90x90 image for better readability.</span>
+                            <span class="help-block">A 90×90 image works best for readability.</span>
                         </div>
                     </div>
 

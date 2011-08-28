@@ -205,7 +205,25 @@ app.get('/events.json', function(req, res){
         }
 
         var eventList = [];
-        events.forEach(function(event, i) {
+        events.sort(function(a, b) {
+            var now = new Date().getTime()
+              , aTime = a.endsAt.getTime()
+              , bTime = b.endsAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+
+            if (now < aTime && now > bTime) {
+                return 1;
+            }
+
+            if (now < bTime && now > aTime) {
+                return 1;
+            }
+
+            return aTime > bTime ? 1 : -1
+        }).forEach(function(event, i) {
             if (typeof req.query.q !== "undefined" &&
                 [  event.hash
                  , event.name
@@ -234,7 +252,15 @@ app.get('/events/my.json', andRequireUser, function(req, res) {
         }
 
         var eventList = [];
-        events.forEach(function(event, i) {
+        events.sort(function(a, b) {
+            var aTime = a.endsAt.getTime()
+              , bTime = b.endsAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+            return aTime > bTime ? -1 : 1
+        }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
@@ -254,7 +280,15 @@ app.get('/events/current.json', function(req, res){
         }
 
         var eventList = [];
-        events.forEach(function(event, i) {
+        events.sort(function(a, b) {
+            var aTime = a.endsAt.getTime()
+              , bTime = b.endsAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+            return aTime > bTime ? -1 : 1
+        }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
@@ -274,7 +308,15 @@ app.get('/events/upcoming.json', function(req, res){
         }
 
         var eventList = [];
-        events.forEach(function(event, i) {
+        events.sort(function(a, b) {
+            var aTime = a.endsAt.getTime()
+              , bTime = b.endsAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+            return aTime > bTime ? -1 : 1
+        }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
@@ -282,21 +324,6 @@ app.get('/events/upcoming.json', function(req, res){
         });
 
         res.json(eventList, 200);
-    });
-});
-
-app.get('/events/:id.json', function(req, res) {
-    schema.Event.findOne({_id: req.params.id}, function(err, event) {
-        if (err) {
-            console.log(err);
-            res.json({error: true}, 500);
-            return;
-        }
-
-        event.set("tweetsCount", event.tweets.length);
-        event.tweets = [];
-
-        res.json(event, 200);
     });
 });
 

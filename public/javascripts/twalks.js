@@ -5,6 +5,56 @@
       , evaluate:    /\{\%(.+?)\%\}/g
     };
 
+    // Enable close button on alert messages
+    $('.alert-message a.close').live('click', function(ev) {
+        $(this).parent().remove();
+        ev.preventDefault();
+    });
+
+    var alertMessage = function(type, msg) {
+        if (-1 == ['error', 'info' , 'success', 'warning'].indexOf(type)) {
+            return;
+        }
+
+        $('<div class="alert-message"><a href="#" class="close">×</a><p></p></div>')
+            .addClass(type)
+            .children('p')
+                .text(msg)
+                .end()
+            .prependTo('#bb-content');
+    }
+
+    var clearAlertMessages = function() {
+        $('#bb-content .alert-message').remove();
+    }
+
+    var fieldError = function(field, error) {
+        var pos = $(field).position()
+          , height = $(field).height()
+          , width = $(field).width()
+          , msg;
+
+        if ('required' == error.type) {
+            msg = 'The '+error.path+' is required.';
+        } else if ('regexp' == error.type) {
+            msg = 'The '+error.path+' is invalid.';
+        } else {
+            msg = 'Something is wrong with this field, but we\'re not sure why.';
+        }
+
+        $('<div class="twipsy right field-error"><div class="twipsy-arrow"></div><div class="twipsy-inner"></div>')
+            .children('.twipsy-inner')
+                .text(msg)
+                .end()
+            .insertAfter(field)
+            .css('top', pos.top)
+            .css('left', pos.left + width + 15);
+    }
+
+    var clearFieldErrors = function() {
+        $('#bb-content .field-error').remove();
+    }
+
     // see: http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
     $.fn.serializeObject = function() {
         var o = {}
@@ -229,6 +279,8 @@
             data.hash = '#' + data.hash;
             console.log(data);
             this.$('form .error').removeClass('error');
+            clearAlertMessages();
+            clearFieldErrors();
 
             this.model.save(data, {
                 success: function(model, err) {
@@ -239,12 +291,16 @@
                     window.App.router.navigate('events/' + model.get('_id'), true);
                 }
               , error: function(model, err) {
+                    alertMessage('error', 'Oops! There was a problem submitting this form. Please fix the errors below and try again.');
                     var errors = $.parseJSON(err.responseText)
                       , self   = this;
 
                     _.each(errors, function(error, name) {
-                        var field = this.$('form .' + name);
+                        var field = this.$('form .' + name)
+                          , lastInput = $(field).find(':input:last');
+
                         field.addClass('error');
+                        fieldError(lastInput, error);
                     });
                 }
             });
@@ -457,4 +513,22 @@
     });
 
     window.App = App;
+
+    String.prototype.parseTweet = function() {
+        var parsed =  this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+            return url.link(url);
+        });
+
+        parsed = parsed.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+            var username = u.replace("@","")
+            return u.link("http://twitter.com/" + username);
+        });
+
+        parsed =  parsed.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+            var tag = t.replace("#", "%23")
+            return t.link("http://search.twitter.com/search?q=" + tag);
+        });
+
+        return parsed;
+    }
 })(jQuery);
