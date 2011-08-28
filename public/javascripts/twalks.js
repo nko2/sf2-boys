@@ -174,6 +174,7 @@
         }
       , createEvent: function() {
             $('li.active', this.$navigation).removeClass('active');
+            $('li.new-event', this.$navigation).addClass('active');
 
             var self = this;
             this.hideAndEmptyContainer(function() {
