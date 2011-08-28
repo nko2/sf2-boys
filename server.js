@@ -57,7 +57,7 @@ var app  = module.exports = express.createServer()
         access_token_secret: parameters.twitter.accessTokenSecret
     });
 
-// queue polling jobs for the poller script
+// Queue polling jobs for the poller script
 schema.Event.find({}, function (err, events) {
     events.forEach(function(event) {
         schema.Job.count({status: 'run', id: event.id}, function(err, count) {

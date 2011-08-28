@@ -93,7 +93,7 @@ function processEvent(job, collection, event, eventsCollection) {
                                  })
                 };
 
-                // don't process an existing tweet
+                // don't process existing tweet
                 if (event.tweets.map(mapper('tweetId')).indexOf(tweet.tweetId) !== -1) {
                     return;
                 }
@@ -109,6 +109,7 @@ function processEvent(job, collection, event, eventsCollection) {
                 event.talks.forEach(function(talk) {
                     if (talk.tweets.map(mapper('tweetId')).indexOf(tweet.tweetId) !== -1 ||
                         tweet.hashes.indexOf(talk.hash) === -1) {
+                        eventsCollection.save(event);
                         return;
                     }
 
@@ -117,6 +118,8 @@ function processEvent(job, collection, event, eventsCollection) {
                     }
 
                     talk.tweets.push(tweet);
+
+                    eventsCollection.save(event);
 
                     relevantTalks.push(talk);
                 });
@@ -149,6 +152,8 @@ function processEvent(job, collection, event, eventsCollection) {
 
                     eventsCollection.save(event);
                 });
+
+                eventsCollection.save(event);
             });
         }
     });
