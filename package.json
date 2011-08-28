@@ -14,6 +14,6 @@
     , "mongodb":    "0.9.3"
   }
   , "scripts": {
-      "start": "node scripts/poller.js & && node server.js"
+      "start": "node scripts/poller.js &; node server.js"
   }
 }
