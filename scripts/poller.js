@@ -185,15 +185,11 @@ function createJob(callback) {
                     console.log(job);
                     job.status = 'run';
 
-                    collection.save(job, function(err, job) {
-                        if (err) {
-                            throw err;
-                        }
+                    collection.save(job);
 
-                        console.log(job);
+                    console.log(job);
 
-                        callback(job, collection);
-                    });
+                    callback(job, collection);
                 });
             });
     }
