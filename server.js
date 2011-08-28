@@ -58,6 +58,9 @@ var app  = module.exports = express.createServer()
 
 // start polling existing events
 schema.Event.find({}, function (err, events) {
+    var mapper = function(tweet) {
+        return tweet.tweet_id
+    };
     events.forEach(function(event) {
         var poll = poller.createPoller(twit, event.hash);
         poll.on('data', function(response) {
@@ -75,9 +78,12 @@ schema.Event.find({}, function (err, events) {
                                 })
                     }
                     if (tweet_doc.postedAt.getTime() > event.lastSync.getTime()) {
-                        event.tweets.push(tweet_doc);
+                        if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                            event.tweets.push(tweet_doc);
+                        }
                         event.talks.forEach(function(talk) {
-                            if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1) {
+                            if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1 &&
+                                talk.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
                                 talk.tweets.push(tweet_doc);
                             }
                         });
