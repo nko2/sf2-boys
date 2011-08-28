@@ -47,7 +47,7 @@
       , Routers: {}
       , Views: {}
       , init: function() {
-            new App.Routers.Events();
+            this.router = new App.Routers.Events();
             Backbone.history.start();
         }
     }
@@ -278,8 +278,6 @@
             this.validateString('name', data);
             this.validateString('hash', data);
             this.validateString('location', data);
-            this.validateString('imageUrl', data);
-            this.validateString('description', data);
 
             if (this.formValid) {
                 this.model.save(data, {
@@ -288,9 +286,10 @@
                         self.render();
                         self.delegateEvents();
 
-                        window.App.Routers.Events.navigate('#events/' + model.id, true);
+                        window.App.router.navigate('events/' + model.get('_id'), true);
                     }
-                  , error: function() {
+                  , error: function(error) {
+                      console.log(error);
                         alertMessage('error', 'An error occurred');
                     }
                 });
