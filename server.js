@@ -235,6 +235,46 @@ app.get('/events/my.json', andRequireUser, function(req, res) {
     })
 });
 
+app.get('/events/current.json', function(req, res){
+    schema.Event.getCurrent(function (err, events) {
+        if (err) {
+            console.log(err);
+            res.json({error: true}, 500);
+            return;
+        }
+
+        var eventList = [];
+        events.forEach(function(event, i) {
+            event.set("tweetsCount", event.tweets.length);
+            event.tweets = [];
+
+            eventList.push(event);
+        });
+
+        res.json(eventList, 200);
+    });
+});
+
+app.get('/events/upcoming.json', function(req, res){
+    schema.Event.getUpcoming(function (err, events) {
+        if (err) {
+            console.log(err);
+            res.json({error: true}, 500);
+            return;
+        }
+
+        var eventList = [];
+        events.forEach(function(event, i) {
+            event.set("tweetsCount", event.tweets.length);
+            event.tweets = [];
+
+            eventList.push(event);
+        });
+
+        res.json(eventList, 200);
+    });
+});
+
 app.get('/events/:id.json', function(req, res) {
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
         if (err) {
@@ -288,46 +328,6 @@ app.get('/events/:id/assets/:type.json', function(req, res) {
         res.json(event.assets.filter(function(asset) {
             return asset.type === req.params.type;
         }), 200);
-    });
-});
-
-app.get('/events/current.json', function(req, res){
-    schema.Event.getCurrent(function (err, events) {
-        if (err) {
-            console.log(err);
-            res.json({error: true}, 500);
-            return;
-        }
-
-        var eventList = [];
-        events.forEach(function(event, i) {
-            event.set("tweetsCount", event.tweets.length);
-            event.tweets = [];
-
-            eventList.push(event);
-        });
-
-        res.json(eventList, 200);
-    });
-});
-
-app.get('/events/upcoming.json', function(req, res){
-    schema.Event.getUpcoming(function (err, events) {
-        if (err) {
-            console.log(err);
-            res.json({error: true}, 500);
-            return;
-        }
-
-        var eventList = [];
-        events.forEach(function(event, i) {
-            event.set("tweetsCount", event.tweets.length);
-            event.tweets = [];
-
-            eventList.push(event);
-        });
-
-        res.json(eventList, 200);
     });
 });
 
