@@ -347,7 +347,7 @@ app.get('/events/:id/tweets.json', function(req, res) {
             if (aTime === bTime) {
                 return 0;
             }
-            return aTime > bTime ? 1 : -1
+            return aTime < bTime ? 1 : -1
         }), 200);
     });
 });
