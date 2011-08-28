@@ -57,6 +57,7 @@
             '':             'home'
           , 'events':       'events'
           , 'events/:id':   'event'
+          , 'current':      'current'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
@@ -84,6 +85,17 @@
 
             event.fetch({ url: '/events/'+id+'.json' , success: function() {
                 self.$container.append(view.render().el);
+            }});
+        }
+      , current: function() {
+            this.empty();
+            $('li.current-events', this.$navigation).addClass('active');
+
+            var event = new Event()
+              , self = this;
+
+            window.eventsList.fetch({ startsAt: { $lte: new Date }, endsAt: { $gte: new Date }, success: function() {
+                self.$container.append(self.eventsListView.render().el);
             }});
         }
       , empty: function() {
