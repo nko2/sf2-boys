@@ -192,6 +192,16 @@ app.get('/events.json', function(req, res){
     res.send(schema.Event.getAll());
 });
 
+app.get('/currentEvents.json', function(req, res){
+    schema.Event.getCurrent(function (err, events) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(events));
+    });
+});
+
 function andRequireUser(req, res, next) {
     req.loggedIn ? next() : next(new Error('Unauthorized'));
 }

@@ -27,6 +27,11 @@
       , url:   '/events.json'
     });
 
+    App.Collections.EventsCurrent = Backbone.Collection.extend({
+        model: App.Models.Event
+      , url:   '/currentEvents.json'
+    });
+
     App.Views.Event = Backbone.View.extend({
         initialize: function() {
             this.template = _.template($('#event-show-template').html());
@@ -107,9 +112,12 @@
             this.empty();
             $('li.current-events', this.$navigation).addClass('active');
 
-            var self = this;
-            eventsCollection.fetch({ success: function() {
-                self.$container.append(self.eventsListView.render().el);
+            var self = this
+              , collection = new App.Collections.EventsCurrent
+              , listView = new App.Views.EventsList({ collection: collection });
+
+            collection.fetch({ success: function() {
+                self.$container.append(listView.render().el);
             }});
         }
       , empty: function() {
