@@ -14,25 +14,29 @@
                         <li class="upcoming-events"><a href="/#upcoming">Upcoming events</a></li>
                     </ul>
                     <ul class="nav secondary-nav">
+                        <li class="progress">
+                            <span>loading...</span>
+                            <img src="/images/loading.gif" />
+                        </li>
                         <% if (everyauth.loggedIn) { %>
-                        <li class="menu">
-                        <a href="#" class="menu">
-                            <%= everyauth.twitter.user.name %>
-                        </a>
-                        <ul class="menu-dropdown">
-                            <li><a href="#">My events</a></li>
-                            <li><a href="#">My sessions</a></li>
-                            <li class="divider"></li>
-                            <li><a href="/logout">Log out</a></li>
-                        </ul>
-                        </li>
+                            <li class="user menu">
+                                <a href="javascript:void(0)" class="menu">
+                                    <%= everyauth.twitter.user.name %>
+                                </a>
+                                <ul class="menu-dropdown">
+                                    <li><a href="#">My events</a></li>
+                                    <li><a href="#">My sessions</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/logout">Log out</a></li>
+                                </ul>
+                            </li>
                         <% } else { %>
-                        <li class="twitter">
-                        <a href="/auth/twitter">
-                            <strong>Sign in</strong>
-                            <em>with your twitter account</em>
-                        </a>
-                        </li>
+                            <li class="user twitter">
+                                <a href="/auth/twitter">
+                                    <strong>Sign in</strong>
+                                    <em>with your twitter account</em>
+                                </a>
+                            </li>
                         <% } %>
 
                     </ul>

@@ -26,8 +26,8 @@
 
     // see: http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
     $.fn.serializeObject = function() {
-        var o = {};
-        var a = this.serializeArray();
+        var o = {}
+          , a = this.serializeArray();
         $.each(a, function() {
             if (o[this.name] !== undefined) {
                 if (!o[this.name].push) {
@@ -97,8 +97,8 @@
             return this;
         }
       , save: function() {
-            var self = this;
-            var msg = this.model.isNew() ? 'Successfully created!' : 'Saved!';
+            var self = this
+              , msg = this.model.isNew() ? 'Successfully created!' : 'Saved!';
 
             this.model.save(this.$('form').serializeObject(), {
                 success: function(model, res) {
@@ -150,64 +150,84 @@
 
     App.Routers.Events = Backbone.Router.extend({
         routes: {
-            '':             'home'
-          , 'event/new':    'createEvent'
-          , 'event/:id':    'editEvent'
-          , 'events':       'listEvents'
-          , 'events/:id':   'showEvent'
-          , 'current':      'current'
-          , 'upcoming':     'upcoming'
+            '':                 'home'
+          , 'events/new':       'createEvent'
+          , 'events/:id/edit':  'editEvent'
+          , 'events':           'listEvents'
+          , 'events/:id':       'showEvent'
+          , 'current':          'current'
+          , 'upcoming':         'upcoming'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
             this.$navigation    = $('#navigation');
+            this.$secondaryNav  = $('.secondary-nav', this.$navigation);
             this.eventsListView = new App.Views.EventsList({ collection: eventsCollection });
         }
       , home: function() {
-            this.empty();
-            this.$container.append($('#welcome-template').html());
+            $('li.active', this.$navigation).removeClass('active');
+
+            var self = this;
+            this.hideAndEmptyContainer(function() {
+                self.displayContainer($('#welcome-template').html());
+            });
         }
       , createEvent: function() {
-            this.empty();
-            var eventFormView = new App.Views.EventForm({ model: new App.Models.Event() });
-            this.$container.append(eventFormView.render().el);
+            var self = this;
+            this.hideAndEmptyContainer(function() {
+                var eventFormView = new App.Views.EventForm({ model: new App.Models.Event() });
+                self.displayContainer(eventFormView.render().el);
+            });
       }
       , editEvent: function(id) {
-            this.empty();
-            var event = new App.Models.Event({ id: id });
+            this.showProgressBar();
+
+            var event = new App.Models.Event({ id: id })
+              , self  = this;
 
             event.fetch({
                 success: function(model, res) {
                     var eventFormView = new App.Views.EventForm({ model: event });
-                    self.$container.append(eventFormView.render().el);
+                    self.hideAndEmptyContainer(function() {
+                        self.displayContainer(eventFormView.render().el);
+                    });
                 }
               , error: function() {
                     new Error({ message: 'Could not find that event.' });
-                    window.location.hash = '#';
+                    this.navigate('', true);
                 }
             });
       }
       , listEvents: function() {
-            this.empty();
+            this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
             $('li.all-events', this.$navigation).addClass('active');
 
             var self = this;
             eventsCollection.fetch({ success: function() {
-                self.$container.append(self.eventsListView.render().el);
+                self.hideAndEmptyContainer(function(){
+                    self.displayContainer(self.eventsListView.render().el);
+                });
             }});
         }
       , showEvent: function(id) {
-            this.empty();
+            this.showProgressBar();
+
             var event = new App.Models.Event()
               , view  = new App.Views.Event({ model: event })
               , self  = this;
 
             event.fetch({ url: '/events/'+id+'.json' , success: function() {
-                self.$container.append(view.render().el);
+                self.hideAndEmptyContainer(function(){
+                    self.displayContainer(view.render().el);
+                });
             }});
         }
       , current: function() {
-            this.empty();
+            this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
             $('li.current-events', this.$navigation).addClass('active');
 
             var self = this
@@ -215,11 +235,15 @@
               , listView = new App.Views.EventsList({ collection: collection });
 
             collection.fetch({ success: function() {
-                self.$container.append(listView.render().el);
+                self.hideAndEmptyContainer(function() {
+                    self.displayContainer(listView.render().el);
+                });
             }});
         }
       , upcoming: function() {
-            this.empty();
+            this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
             $('li.upcoming-events', this.$navigation).addClass('active');
 
             var self = this
@@ -227,12 +251,35 @@
               , listView = new App.Views.EventsList({ collection: collection });
 
             collection.fetch({ success: function() {
-                self.$container.append(listView.render().el);
+                self.hideAndEmptyContainer(function() {
+                    self.displayContainer(listView.render().el);
+                });
             }});
         }
-      , empty: function() {
-            $('li.active', this.$navigation).removeClass('active');
-            this.$container.empty();
+      , showProgressBar: function() {
+            $('li.user', this.$secondaryNav).stop().hide();
+            $('li.progress', this.$secondaryNav).stop().show();
+        }
+      , hideProgressBar: function() {
+            var progress = $('li.progress', this.$secondaryNav);
+
+            if (progress.is(':visible')) {
+                progress.stop().hide();
+                $('li.user', this.$secondaryNav).stop().show();
+            }
+        }
+      , hideAndEmptyContainer: function(func) {
+            var self = this;
+            this.$container.fadeOut(300, function() {
+                self.$container.empty();
+
+                if (func) { func(); }
+            });
+        }
+      , displayContainer: function(html) {
+            this.hideProgressBar();
+            this.$container.append(html);
+            this.$container.fadeIn(500);
         }
     });
 
