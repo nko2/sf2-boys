@@ -93,7 +93,7 @@ function processEvent(job, collection, event, eventsCollection) {
                                  })
                 };
 
-                // don't process an existing tweet
+                // don't process existing tweet
                 if (event.tweets.map(mapper('tweetId')).indexOf(tweet.tweetId) !== -1) {
                     return;
                 }
