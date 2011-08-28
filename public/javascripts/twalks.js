@@ -25,11 +25,6 @@
     App.Collections.Event = Backbone.Collection.extend({
         model: App.Models.Event
       , url:   '/events.json'
-      , current: function() {
-            return this.filter(function(event) {
-                return true;
-            });
-        }
     });
 
     App.Views.Event = Backbone.View.extend({
@@ -63,19 +58,6 @@
             $list = this.$('.list');
 
             this.collection.each(function(event) {
-                var view = new App.Views.EventsListEvent({ model: event });
-                $list.append(view.render().el);
-            });
-
-            return this;
-        }
-      , renderCollection: function(collection) {
-            var $list;
-
-            $(this.el).html(this.template({}));
-            $list = this.$('.list');
-
-            collection.each(function(event) {
                 var view = new App.Views.EventsListEvent({ model: event });
                 $list.append(view.render().el);
             });
@@ -124,8 +106,6 @@
       , current: function() {
             this.empty();
             $('li.current-events', this.$navigation).addClass('active');
-
-            console.log(window.eventsList.current());
 
             var self = this;
             eventsCollection.fetch({ success: function() {
