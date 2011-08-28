@@ -541,6 +541,10 @@ body {
     -moz-border-radius:10px;
 }
 
+div.input {
+    position: relative;
+}
+
 #flash {
     margin-top:20px;
 }

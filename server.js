@@ -132,10 +132,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-    res.render('frontend', {
-        flash:   req.flash()
-      , layout:  false
-    });
+    res.render('frontend', { layout:  false });
 });
 
 function andRequireUser(req, res, next) {
