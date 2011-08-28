@@ -3,7 +3,7 @@
         {% _.each(tweets, function(tweet) { %}
             <div class="tweet">
                 {% if (typeof tweet.avatarUrl !== 'undefined') { %}
-                    <img src="{{ tweet.avatarUrl }}"/>
+                    <img width="48px" height="48px" src="{{ tweet.avatarUrl }}"/>
                 {% } %}
                 {% if (typeof tweet.user !== 'undefined') { %}
                     <h5>{{ tweet.user }}</h5>
