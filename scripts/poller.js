@@ -13,6 +13,7 @@ var poller = require('../lib/poller')
   , Server = mongodb.Server
   ;
 
+// start poll
 var db = new Db('twalks', new Server('staff.mongohq.com', 10090, {}));
 db.open(function(err, client) {
     if (err) {
