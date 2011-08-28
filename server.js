@@ -250,6 +250,33 @@ app.get('/events/:id.json', function(req, res) {
     });
 });
 
+app.get('/events/:id.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        if (err) {
+            console.log(err);
+            res.json({error: true}, 500);
+            return;
+        }
+
+        event.set("tweetsCount", event.tweets.length);
+        event.tweets = [];
+
+        res.json(event, 200);
+    });
+});
+
+app.get('/events/:id/tweets.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        if (err) {
+            console.log(err);
+            res.json({error: true}, 500);
+            return;
+        }
+
+        res.json(event.tweets, 200);
+    });
+});
+
 app.get('/events/:id/assets/:type.json', function(req, res) {
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
         if (err) {
