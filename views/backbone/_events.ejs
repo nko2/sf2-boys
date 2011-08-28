@@ -1,0 +1,133 @@
+<script type="text/template" id="events-list-template">
+    <div id="events-list" class="row">
+        <section class="span16 columns list">
+        </section>
+    </div>
+</script>
+
+<script type="text/template" id="events-list-event-template">
+    <header class="map">
+        <span class="time">
+            {% if (typeof startsAt !== 'undefined') { %}
+                {{ dateFormat(startsAt, 'd mmmm') }}<br/>
+                <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
+            {% } else { %}
+                anytime
+            {% } %}
+        </span>
+        {% if (typeof location != 'undefined') { %}
+            <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&zoom=13&size=150x150&sensor=false" />
+        {% } else { %}
+            <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center=Unknown&zoom=13&size=150x150&sensor=false" />
+        {% } %}
+    </header>
+    <section>
+        <h3>
+            <a href="#events/{{ _id }}">
+                {% if (typeof name !== 'undefined') { %}
+                    {{ name }}
+                {% } else { %}
+                    Noname
+                {% } %}
+            </a>
+            {% if (typeof hash !== 'undefined') { %}
+                <small>{{ hash }}</small>
+            {% } %}
+        </h3>
+        <p>{{ description }}</p>
+        <ul class="infobar">
+            {% if (typeof startsAt !== 'undefined') { %}
+                <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
+            {% } %}
+            {% if (typeof participants !== 'undefined') { %}
+                <li class="people">{{ participants.length }}</li>
+            {% } %}
+            {% if (typeof tweetsCount !== 'undefined') { %}
+                <li class="tweets">{{ tweetsCount }}</li>
+            {% } %}
+            <li class="author">
+                {% if (typeof author !== 'undefined') { %}
+                    <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
+                {% } else { %}
+                    anonymous
+                {% } %}
+            </li>
+        </ul>
+    </section>
+</script>
+
+<script type="text/template" id="event-show-template">
+    <div id="event-show" class="row">
+        <section class="span16 columns item">
+            <article>
+                <header class="map">
+                {% if (typeof location != 'undefined') { %}
+                    <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&markers=size:mid|color:blue|{{ location }}&zoom=13&size=300x300&sensor=false" />
+                {% } else { %}
+                    <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center=Unknown&markers=size:mid|color:blue|Unknown&zoom=13&size=300x300&sensor=false" />
+                {% } %}
+                </header>
+                <section>
+                    <img width="90px" height="90px" class="image" src="{{ imageUrl }}" />
+                    <h1>
+                        {% if (typeof name != 'undefined') { %}
+                            {{ name }}
+                        {% } else { %}
+                            Noname
+                        {% } %}
+                        {% if (typeof hash != 'undefined') { %}
+                            <small>{{ hash }}</small>
+                        {% } %}
+                    </h1>
+                    <ul class="infobar">
+                        <li class="time-precise">
+                            {% if (typeof startsAt != 'undefined') { %}
+                                {{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}
+                            {% } else { %}
+                                xxxx-xx-xx, x:xx
+                            {% } %}
+                            &mdash;
+                            {% if (typeof endsAt != 'undefined') { %}
+                                {{ dateFormat(endsAt, 'yyyy-mm-dd, h:MM') }}
+                            {% } else { %}
+                                xxxx-xx-xx, x:xx
+                            {% } %}
+                        </li>
+                        {% if (typeof location != 'undefined') { %}
+                            <li class="place">
+                                {{ location }}
+                            </li>
+                        {% } %}
+                        <li class="author">
+                            {% if (typeof author != 'undefined') { %}
+                                <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
+                            {% } else { %}
+                                anonymous
+                            {% } %}
+                        </li>
+                    </ul>
+
+                    <hr />
+
+                    <p>
+                        {% if (typeof description != 'undefined') { %}
+                            {{ description }}
+                        {% } else { %}
+                            No description provided
+                        {% } %}
+                    </p>
+
+                    <footer class="lists">
+                        <ul class="tabs">
+                            <li class="talks"><a href="javascript:void(0)">Talks</a></li>
+                            <li class="tweets"><a href="javascript:void(0)">Tweets</a></li>
+                        </ul>
+
+                        <div class="event-footer-content"></div>
+
+                    </footer>
+                </section>
+            </article>
+        </section>
+    </div>
+</script>

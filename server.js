@@ -96,8 +96,9 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-    res.render('welcome', {
-        flash: req.flash()
+    res.render('frontend', {
+        flash:   req.flash()
+      , layout:  false
     });
 });
 
