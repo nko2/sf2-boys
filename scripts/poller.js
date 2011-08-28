@@ -55,8 +55,8 @@ function processEvent(job, collection, event, eventsCollection) {
     var poll = poller.createPoller(twit, event.hash);
 
     poll.on('data', function(res) {
-        console.log(res);
         if (typeof res.results !== "undefined") {
+            console.log(res);
             res.results.forEach(function(json) {
                 var tweet = {
                     tweetId   : json.id_str
@@ -79,6 +79,7 @@ function processEvent(job, collection, event, eventsCollection) {
 
                 // don't process existing tweet
                 if (event.tweets.map(mapper('tweetId')).indexOf(tweet.tweetId) !== -1) {
+                    console.log('tweet exists');
                     return;
                 }
 
@@ -87,6 +88,8 @@ function processEvent(job, collection, event, eventsCollection) {
                 }
 
                 event.tweets.push(tweet);
+
+                eventsCollection.save(event);
 
                 var relevantTalks = [];
 
