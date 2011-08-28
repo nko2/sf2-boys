@@ -295,7 +295,11 @@
                     window.App.router.navigate('events/' + model.get('_id'), true);
                 }
               , error: function(model, err) {
-                    console.log(err);
+                    if (403 == err.status) {
+                        alertMessage('warning', 'You must be signed in to submit this form. Please sign in using the link at the top right.');
+                        return;
+                    }
+
                     alertMessage('error', 'Oops! There was a problem submitting this form. Please fix the errors below and try again.');
                     var errors = $.parseJSON(err.responseText)
                       , self   = this;
@@ -437,7 +441,12 @@
                         self.displayContainer(listView.render().el);
                     });
                 }
-              , error: function(){
+              , error: function(model, err){
+                    if (403 == err.status) {
+                        alertMessage('warning', 'You must be signed in to view your events. Please sign in using the link at the top right.');
+                        return;
+                    }
+
                     alertMessage('warning', 'We encountered an error fetching your events.');
                 }
             });

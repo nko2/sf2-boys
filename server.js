@@ -136,7 +136,7 @@ app.get('/', function(req, res){
 });
 
 function andRequireUser(req, res, next) {
-    req.loggedIn ? next() : next(new Error('Unauthorized'));
+    req.loggedIn ? next() : res.send('Unauthorized', 403);
 }
 
 app.post('/events/new.json', andRequireUser, function(req, res){
