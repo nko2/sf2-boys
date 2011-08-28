@@ -216,10 +216,7 @@ app.get('/events.json', function(req, res){
 });
 
 function andRequireUser(req, res, next) {
-    req.loggedIn
-        ? next()
-        : next(new Error('Unauthorized'))
-    ;
+    req.loggedIn ? next() : next(new Error('Unauthorized'));
 }
 
 app.get('/form', andRequireUser, function(req, res){
