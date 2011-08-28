@@ -234,7 +234,6 @@ body {
     color:#000;
 }
 #events-list .list article > section p {
-    max-height:52px;
     min-height:52px;
     overflow:hidden;
 }
@@ -367,7 +366,6 @@ body {
     z-index: 2;
 }
 #event-show .item article > section p {
-    max-height:52px;
     min-height:52px;
     overflow:hidden;
 }
