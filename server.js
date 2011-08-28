@@ -109,6 +109,7 @@ schema.Event.find({}, function (err, events) {
                               , width        : (media.width || '')
                               , html         : (media.html || '')
                             });
+                            event.save();
                         });
                     }
                     event.talks.forEach(function(talk) {
@@ -140,6 +141,7 @@ schema.Event.find({}, function (err, events) {
                                   , width        : (media.width || '')
                                   , html         : (media.html || '')
                                 });
+                                event.save();
                             });
                             
                         }
