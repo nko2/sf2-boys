@@ -1,6 +1,16 @@
 html {
     background:none;
 }
+#photos a {
+    border:none !important;
+    text-decoration:none !important;
+}
+#photos img {
+    border:2px solid #000;
+    -webkit-box-shadow: 0px 0px 5px #CCC;
+    box-shadow: 0px 0px 5px #CCC;
+    margin-right:1px;
+}
 #event-show h3 {
     line-height:30px;
     margin-top:-10px;

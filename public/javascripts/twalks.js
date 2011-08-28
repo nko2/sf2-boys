@@ -31,7 +31,7 @@
             this.router = new App.Routers.Events();
             Backbone.history.start();
         }
-    }
+    };
 
     /**
      * :: Models
@@ -43,6 +43,8 @@
     });
 
     App.Models.Tweet = Backbone.Model.extend({});
+
+    App.Models.Asset = Backbone.Model.extend({});
 
     /**
      * :: Collections
@@ -74,6 +76,16 @@
         }
     });
 
+    App.Collections.EventPhotos = Backbone.Collection.extend({
+        model: App.Models.Asset
+      , url:   function() {
+            return '/events/' + this.eventId + '/assets/photo.json';
+        }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
+        }
+    });
+
     /**
      * :: Views
      */
@@ -81,6 +93,7 @@
         initialize: function(options) {
             this.talksCollection  = options.talksCollection;
             this.tweetsCollection = options.tweetsCollection;
+            this.photosCollection = options.photosCollection;
             this.template         = _.template($('#event-show-template').html());
         }
       , render: function() {
@@ -98,6 +111,16 @@
                     $tabsContent.empty().append(view.render().el);
                 }});
             }).click();
+
+            this.$('.tabs .photos a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.photosCollection.fetch({ success: function() {
+                    var view = new App.Views.PhotosList({ collection: self.photosCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            });
 
             return this;
         }
@@ -137,6 +160,17 @@
         }
       , render: function() {
             $(this.el).html(this.template({ 'tweets': this.collection.toJSON() }));
+
+            return this;
+        }
+    });
+
+    App.Views.PhotosList = App.Views.Event.extend({
+        initialize: function() {
+            this.template = _.template($('#photos-list-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template({ 'photos': this.collection.toJSON() }));
 
             return this;
         }
@@ -324,6 +358,7 @@
               , view  = new App.Views.Event({
                     model:             event
                   , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
+                  , photosCollection:  new App.Collections.EventPhotos([], { 'eventId': id })
                 })
               , self  = this
             ;
