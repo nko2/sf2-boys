@@ -357,6 +357,7 @@
 
             var self = this;
             this.hideAndEmptyContainer(function() {
+                document.title = 'Twalks';
                 self.displayContainer($('#welcome-template').html());
                 self.$searchInput.val('');
             });
@@ -367,6 +368,7 @@
 
             var self = this;
             this.hideAndEmptyContainer(function() {
+                document.title = 'New event :: Twalks';
                 var eventFormView = new App.Views.EventForm({ model: new App.Models.Event() });
                 self.displayContainer(eventFormView.render().el);
             });
@@ -383,6 +385,7 @@
                 success: function(model, res) {
                     var eventFormView = new App.Views.EventForm({ model: event });
                     self.hideAndEmptyContainer(function() {
+                        document.title = 'Edit '+model.get('name')+' :: Twalks';
                         self.displayContainer(eventFormView.render().el);
                     });
                 }
@@ -412,6 +415,7 @@
                         self.displayContainer(self.eventsListView.render().el);
                     } else {
                         self.hideAndEmptyContainer(function(){
+                            document.title = 'Events :: Twalks';
                             self.displayContainer(self.eventsListView.render().el);
                         });
                     }
@@ -434,6 +438,7 @@
             collection.fetch({
                 success: function() {
                     self.hideAndEmptyContainer(function() {
+                        document.title = 'My events :: Twalks';
                         self.displayContainer(listView.render().el);
                     });
                 }
@@ -455,6 +460,7 @@
             collection.fetch({
                 success: function() {
                     self.hideAndEmptyContainer(function() {
+                        document.title = 'Ongoing events :: Twalks';
                         self.displayContainer(listView.render().el);
                     });
                 }
@@ -476,6 +482,7 @@
             collection.fetch({
                 success: function() {
                     self.hideAndEmptyContainer(function() {
+                        document.title = 'Upcomming events :: Twalks';
                         self.displayContainer(listView.render().el);
                     });
                 }
@@ -502,6 +509,7 @@
             event.fetch({
                 success: function() {
                     self.hideAndEmptyContainer(function(){
+                        document.title = event.get('name') + ' :: Twalks';
                         self.displayContainer(view.render().el);
                     });
                 }
