@@ -128,7 +128,9 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-    res.render('welcome', {});
+    res.render('welcome', {
+        flash: req.flash()
+    });
 });
 
 app.get('/events.json', function(req, res){
@@ -163,7 +165,16 @@ app.get('/events.json', function(req, res){
     res.send(schema.Event.getAll());
 });
 
-app.get('/form', function(req, res){
+function andRequireUser(req, res, next) {
+    if (req.loggedIn) {
+        next();
+    }
+
+    req.flash('info', 'You must be signed in to continue.');
+    res.redirect('home');
+}
+
+app.get('/form', andRequireUser, function(req, res){
     res.render('form', { layout: 'staticLayout' });
 });
 
