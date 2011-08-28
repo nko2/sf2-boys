@@ -13,8 +13,9 @@
     , "embedly":    "0.3.4"
     , "mongodb":    "0.9.3"
     , "log":        "1.2.0"
+    , "forever":    "0.6.6"
   }
   , "scripts": {
-      "start": "node server.js > /dev/null 2>&1 &; node scripts/poller.js > /dev/null 2>&1 &"
+      "start": "forever start server.js; forever start scripts/poller.js"
   }
 }
