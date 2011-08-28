@@ -202,9 +202,7 @@ app.get('/events.json', function(req, res){
 
         var eventList = [];
         events.forEach(function(event, i) {
-            event.set("numberOfTalks", event.talks.length);
-            event.set("numberOfTweets", event.tweets.length);
-            event.talks = [];
+            event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
             eventList.push(event);
@@ -221,65 +219,10 @@ app.get('/events/:id.json', function(req, res) {
             console.log(err);
         }
 
-        event.set("numberOfTalks", event.talks.length);
-        event.set("numberOfTweets", event.tweets.length);
-        event.talks = [];
+        event.set("tweetsCount", event.tweets.length);
         event.tweets = [];
 
         res.end(JSON.stringify(event));
-    });
-});
-
-app.get('/events/:id/talks.json', function(req, res) {
-    schema.Event.findOne({_id: req.params.id}, function(err, event) {
-        res.contentType('json');
-        if (err) {
-            console.log(err);
-        }
-
-        var talksList = [];
-        event.talks.forEach(function(talk, i) {
-            talk.set("numberOfTweets", talk.tweets.length);
-            talk.tweets = [];
-
-            talksList.push(talk);
-        });
-
-
-        res.end(JSON.stringify(talksList));
-    });
-});
-
-app.get('/events/:id/talks/:num.json', function(req, res) {
-    schema.Event.findOne({_id: req.params.id}, function(err, event) {
-        res.contentType('json');
-        if (err) {
-            console.log(err);
-        }
-
-        talk = event.talks[req.params.num];
-        talk.set('num', req.params.num);
-        talk.set('event', {
-            '_id':       event._id
-          , 'name':      event.name
-          , 'hash':      event.hash
-          , 'location':  event.location
-        });
-
-        res.end(JSON.stringify(talk));
-    });
-});
-
-app.get('/events/:id/talks/:num/tweets.json', function(req, res) {
-    schema.Event.findOne({_id: req.params.id}, function(err, event) {
-        res.contentType('json');
-        if (err) {
-            console.log(err);
-        }
-
-        talk = event.talks[req.params.num];
-
-        res.end(JSON.stringify(talk.tweets));
     });
 });
 
@@ -303,9 +246,7 @@ app.get('/currentEvents.json', function(req, res){
 
         var eventList = [];
         events.forEach(function(event, i) {
-            event.set("numberOfTalks", event.talks.length);
-            event.set("numberOfTweets", event.tweets.length);
-            event.talks = [];
+            event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
             eventList.push(event);
@@ -324,9 +265,7 @@ app.get('/upcomingEvents.json', function(req, res){
 
         var eventList = [];
         events.forEach(function(event, i) {
-            event.set("numberOfTalks", event.talks.length);
-            event.set("numberOfTweets", event.tweets.length);
-            event.talks = [];
+            event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
             eventList.push(event);

@@ -61,15 +61,6 @@
         }
     });
 
-    App.Models.Talk = Backbone.Model.extend({
-        url: function() {
-            return '/events/' + this.eventId + '/talks/' + (this.isNew() ? 'new' : this.id) + '.json';
-        }
-      , initialize: function(attributes) {
-            this.eventId = attributes.eventId;
-        }
-    });
-
     App.Models.Tweet = Backbone.Model.extend({});
 
     /**
@@ -90,16 +81,6 @@
       , url:   '/upcomingEvents.json'
     });
 
-    App.Collections.Talks = Backbone.Collection.extend({
-        model: App.Models.Talk
-      , url:   function() {
-            return '/events/' + this.eventId + '/talks.json';
-        }
-      , initialize: function(models, options) {
-            this.eventId = options.eventId;
-        }
-    });
-
     App.Collections.EventTweets = Backbone.Collection.extend({
         model: App.Models.Tweet
       , url:   function() {
@@ -107,17 +88,6 @@
         }
       , initialize: function(models, options) {
             this.eventId = options.eventId;
-        }
-    });
-
-    App.Collections.TalkTweets = Backbone.Collection.extend({
-        model: App.Models.Tweet
-      , url:   function() {
-            return '/events/' + this.eventId + '/talks/' + this.talkId + '/tweets.json';
-        }
-      , initialize: function(models, options) {
-            this.eventId = options.eventId;
-            this.talkId  = options.talkId;
         }
     });
 
@@ -135,41 +105,6 @@
 
             var self         = this,
                 $tabsContent = this.$('.event-footer-content');
-
-            this.$('.tabs .talks a').click(function() {
-                self.$('.tabs li.active').removeClass('active');
-                $(this).parent().addClass('active');
-
-                self.talksCollection.fetch({ success: function() {
-                    var view = new App.Views.TalksList({ collection: self.talksCollection });
-                    $tabsContent.empty().append(view.render().el);
-                }});
-            }).click();
-
-            this.$('.tabs .tweets a').click(function() {
-                self.$('.tabs li.active').removeClass('active');
-                $(this).parent().addClass('active');
-
-                self.tweetsCollection.fetch({ success: function() {
-                    var view = new App.Views.TweetsList({ collection: self.tweetsCollection });
-                    $tabsContent.empty().append(view.render().el);
-                }});
-            });
-
-            return this;
-        }
-    });
-
-    App.Views.Talk = Backbone.View.extend({
-        initialize: function(options) {
-            this.tweetsCollection = options.tweetsCollection;
-            this.template         = _.template($('#talk-template').html());
-        }
-      , render: function() {
-            $(this.el).html(this.template(this.model.toJSON()));
-
-            var self         = this,
-                $tabsContent = this.$('.talk-footer-content');
 
             this.$('.tabs .tweets a').click(function() {
                 self.$('.tabs li.active').removeClass('active');
@@ -208,36 +143,6 @@
                 var view = new App.Views.EventsListEvent({ model: event });
                 $list.append(view.render().el);
             });
-
-            return this;
-        }
-    });
-
-    App.Views.TalksList = App.Views.Event.extend({
-        initialize: function() {
-            this.template = _.template($('#talks-list-template').html());
-        }
-      , render: function() {
-            var days = {}
-              , self = this;
-
-            this.collection
-                .sortBy(function(talk) {
-                    return talk.startsAt;
-                })
-                .forEach(function(talk) {
-                    var day  = dateFormat(talk.startsAt, 'd mmmm yyyy')
-                      , json = talk.toJSON();
-                    json.eventId = self.collection.eventId;
-
-                    if (!(day in days)) {
-                        days[day] = [];
-                    }
-
-                    days[day].push(json);
-                });
-
-            $(this.el).html(this.template({ 'days': days }));
 
             return this;
         }
@@ -312,7 +217,6 @@
           , 'events/:eventId/edit':             'editEvent'
           , 'events':                           'listEvents'
           , 'events/:eventId':                  'showEvent'
-          , 'events/:eventId/talks/:talkId':    'showTalk'
           , 'current':                          'current'
           , 'upcoming':                         'upcoming'
         }
@@ -382,35 +286,12 @@
             var event = new App.Models.Event({ 'id': id })
               , view  = new App.Views.Event({
                     model:             event
-                  , talksCollection:   new App.Collections.Talks([], { 'eventId': id })
                   , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
                 })
               , self  = this
             ;
 
             event.fetch({ success: function() {
-                self.hideAndEmptyContainer(function(){
-                    self.displayContainer(view.render().el);
-                });
-            }});
-        }
-      , showTalk: function(eventId, talkId) {
-            this.showProgressBar();
-
-            $('li.active', this.$navigation).removeClass('active');
-
-            var talk = new App.Models.Talk({ 'id': talkId, 'eventId': eventId })
-              , view = new App.Views.Talk({
-                    model:             talk
-                  , tweetsCollection:  new App.Collections.TalkTweets([], {
-                      'eventId':  eventId
-                    , 'talkId':   talkId
-                  })
-                })
-              , self  = this
-            ;
-
-            talk.fetch({ success: function() {
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
                 });

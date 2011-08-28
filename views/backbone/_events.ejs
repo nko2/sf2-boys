@@ -1,3 +1,24 @@
+<script type="text/template" id="tweets-list-template">
+    <section id="tweets">
+        {% _.each(tweets, function(tweet) { %}
+            <div class="tweet">
+                {% if (typeof tweet.avatarUrl !== 'undefined') { %}
+                    <img src="{{ tweet.avatarUrl }}"/>
+                {% } %}
+                {% if (typeof tweet.user !== 'undefined') { %}
+                    <h5>{{ tweet.user }}</h5>
+                {% } %}
+                {% if (typeof tweet.tweet !== 'undefined') { %}
+                    <p>{{ tweet.tweet }}</p>
+                {% } %}
+                {% if (typeof tweet.postedAt !== 'undefined') { %}
+                    <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd') }}</span>
+                {% } %}
+            </div>
+        {% }); %}
+    </section>
+</script>
+
 <script type="text/template" id="events-list-template">
     <div id="events-list" class="row">
         <section class="span16 columns list">
@@ -129,7 +150,6 @@
 
                     <footer class="lists">
                         <ul class="tabs">
-                            <li class="talks"><a href="javascript:void(0)">Talks</a></li>
                             <li class="tweets"><a href="javascript:void(0)">Tweets</a></li>
                         </ul>
 
