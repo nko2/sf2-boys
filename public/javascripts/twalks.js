@@ -76,7 +76,7 @@
             $list = this.$('.list');
 
             collection.each(function(event) {
-                var view = new EventsListEventView({ model: event });
+                var view = new App.Views.EventsListEvent({ model: event });
                 $list.append(view.render().el);
             });
 
@@ -128,7 +128,7 @@
             console.log(window.eventsList.current());
 
             var self = this;
-            window.eventsList.fetch({ success: function() {
+            eventsCollection.fetch({ success: function() {
                 self.$container.append(self.eventsListView.render().el);
             }});
         }
