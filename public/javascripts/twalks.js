@@ -43,6 +43,17 @@
         }
     });
 
+    App.Views.EventForm = Backbone.View.extend({
+        initialize: function() {
+            this.template = _.template($('#event-form-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template({ model : this.model }));
+
+            return this;
+        }
+    });
+
     App.Views.EventsListEvent = App.Views.Event.extend({
         tagName: 'article'
       , initialize: function() {
@@ -89,6 +100,8 @@
     App.Routers.Events = Backbone.Router.extend({
         routes: {
             '':             'home'
+          , 'event/new':    'createEvent'
+          , 'event/:id':    'editEvent'
           , 'events':       'listEvents'
           , 'events/:id':   'showEvent'
           , 'current':      'current'
@@ -102,6 +115,26 @@
             this.empty();
             this.$container.append($('#welcome-template').html());
         }
+      , createEvent: function() {
+            this.empty();
+            var eventFormView = new App.Views.EventForm({ model: new App.Models.Event() });
+            this.$container.append(eventFormView.render().el);
+      }
+      , editEvent: function(id) {
+            this.empty();
+            var event = new App.Models.Event({ id: id });
+
+            event.fetch({
+                success: function(model, res) {
+                    var eventFormView = new App.Views.EventForm({ model: event });
+                    self.$container.append(eventFormView.render().el);
+                }
+              , error: function() {
+                    new Error({ message: 'Could not find that event.' });
+                    window.location.hash = '#';
+                }
+            });
+      }
       , listEvents: function() {
             this.empty();
             $('li.all-events', this.$navigation).addClass('active');
