@@ -226,6 +226,16 @@ app.get('/currentEvents.json', function(req, res){
     });
 });
 
+app.get('/upcomingEvents.json', function(req, res){
+    schema.Event.getUpcoming(function (err, events) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(events));
+    });
+});
+
 function andRequireUser(req, res, next) {
     req.loggedIn ? next() : next(new Error('Unauthorized'));
 }
