@@ -134,7 +134,7 @@
             $(this.el).html(this.template(this.model.toJSON()));
 
             var self         = this,
-                $tabsContent = this.$('.event-footer-content');
+                $tabsContent = this.$('.tabs .event-footer-content');
 
             this.$('.tabs .talks a').click(function() {
                 self.$('.tabs li.active').removeClass('active');
