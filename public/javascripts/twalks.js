@@ -353,7 +353,7 @@
                         });
                     }
                     clearTimeout(timeout);
-                }, 1000);
+                }, 500);
             });
         }
       , home: function() {
