@@ -121,6 +121,10 @@
                                 No description provided
                             {% } %}
                         {% } %}
+
+                        {% if (USERNAME === author) { %}
+                            <a href="#events/{{ _id }}/edit">edit</a>
+                        {% } %}
                     </p>
 
                     <footer class="lists">

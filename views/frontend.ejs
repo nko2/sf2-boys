@@ -63,6 +63,7 @@
         </center>
 
         <script type="text/javascript">
+            window.USERNAME = '<% if (everyauth.loggedIn) { %><%= everyauth.twitter.user.name %><% } %>';
             $(function(){ App.init(); });
         </script>
     </body>
