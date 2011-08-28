@@ -33,8 +33,7 @@
     <section id="photos">
         {% _.each(videos, function(video) { %}
             <a target="_blank" href="{{ video.url }}">
-                <h5>{{ video.description }}</h5>
-                <img width="400px" src="https://i.ytimg.com/vi/{{ video.url.replace(/^.*v=/, '') }}/hqdefault.jpg"/>
+                <img width="278px" src="https://i.ytimg.com/vi/{{ video.url.replace(/^.*v=/, '') }}/hqdefault.jpg"/>
             </a>
         {% }); %}
     </section>
