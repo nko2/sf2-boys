@@ -171,6 +171,13 @@ body {
     padding-left:20px;
     text-align:left;
 }
+#events-list.empty {
+    content: '';
+    z-index: 1;
+    background: white;
+    margin: 15px auto;
+    text-align: center;
+}
 #events-list .list article .time i {
     font-weight:bold;
     font-style:normal;
