@@ -231,7 +231,9 @@ app.get('/events.json', function(req, res){
             }
 
             event.set("tweetsCount", event.tweets.length);
+            event.set("assetsCount", event.assets.length);
             event.tweets = [];
+            event.assets = [];
 
             eventList.push(event);
         });
@@ -259,7 +261,9 @@ app.get('/events/my.json', andRequireUser, function(req, res) {
             return aTime > bTime ? -1 : 1
         }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
+            event.set("assetsCount", event.assets.length);
             event.tweets = [];
+            event.assets = [];
 
             eventList.push(event);
         });
@@ -287,7 +291,9 @@ app.get('/events/current.json', function(req, res){
             return aTime > bTime ? -1 : 1
         }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
+            event.set("assetsCount", event.assets.length);
             event.tweets = [];
+            event.assets = [];
 
             eventList.push(event);
         });
@@ -315,7 +321,9 @@ app.get('/events/upcoming.json', function(req, res){
             return aTime > bTime ? -1 : 1
         }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
+            event.set("assetsCount", event.assets.length);
             event.tweets = [];
+            event.assets = [];
 
             eventList.push(event);
         });
@@ -333,7 +341,9 @@ app.get('/events/:id.json', function(req, res) {
         }
 
         event.set("tweetsCount", event.tweets.length);
+        event.set("assetsCount", event.assets.length);
         event.tweets = [];
+        event.assets = [];
 
         res.json(event, 200);
     });
