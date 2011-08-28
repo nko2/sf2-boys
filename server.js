@@ -131,6 +131,39 @@ app.get('/events/:id/talks.json', function(req, res) {
     });
 });
 
+app.get('/events/:id/talks/:num.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+
+        talk = event.talks[req.params.num];
+        talk.set('num', req.params.num);
+        talk.set('event', {
+            '_id':       event._id
+          , 'name':      event.name
+          , 'hash':      event.hash
+          , 'location':  event.location
+        });
+
+        res.end(JSON.stringify(talk));
+    });
+});
+
+app.get('/events/:id/talks/:num/tweets.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+
+        talk = event.talks[req.params.num];
+
+        res.end(JSON.stringify(talk.tweets));
+    });
+});
+
 app.get('/events/:id/tweets.json', function(req, res) {
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
         res.contentType('json');

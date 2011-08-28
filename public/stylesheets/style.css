@@ -1,6 +1,10 @@
 html {
     background:none;
 }
+#event-show h3 {
+    line-height:30px;
+    margin-top:-10px;
+}
 body {
     background:url(../images/light-tile.gif);
     padding-top:40px;

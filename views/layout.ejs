@@ -84,6 +84,55 @@
             </div>
         </script>
 
+        <script type="text/template" id="talk-template">
+            <div id="event-show" class="row">
+                <section class="span16 columns item">
+                    <article>
+                        <header class="map">
+                            <span class="time">
+                                {{ dateFormat(startsAt, 'd mmmm') }}<br/>
+                                <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
+                            </span>
+                            <img src="http://maps.google.com/maps/api/staticmap?center={{ event.location }}&zoom=13&size=300x300&sensor=false" />
+                        </header>
+                        <section>
+                            <h1>
+                                {{ name }} <small>{{ hash }}</small>
+                            </h1>
+                            <h3>
+                                at <a href="#events/{{ event._id }}">{{ event.name }}</a> <small>{{ event.hash }}</small>
+                            </h3>
+                            <ul class="infobar">
+                                <li class="place">
+                                    {{ event.location }}
+                                </li>
+                                <li class="author">
+                                    {% _.each(speakers, function(speaker) { %}
+                                        <a href="https://twitter.com/{{ speaker }}">
+                                            @{{ speaker }}
+                                        </a>
+                                    {% }); %}
+                                </li>
+                            </ul>
+
+                            <hr />
+
+                            <p>{{ description }}</p>
+
+                            <footer class="lists">
+                                <ul class="tabs">
+                                    <li class="tweets"><a href="javascript:void(0)">Tweets</a></li>
+                                </ul>
+
+                                <div class="talk-footer-content"></div>
+
+                            </footer>
+                        </section>
+                    </article>
+                </section>
+            </div>
+        </script>
+
         <script type="text/template" id="talks-list-template">
             <section id="talks">
                 <table class="common-table">
@@ -92,12 +141,12 @@
                             <tr>
                                 <td class="date" colspan="4">{{ day }}</td>
                             </tr>
-                            {% _.each(talks, function(talk) { %}
+                            {% _.each(talks, function(talk, num) { %}
                                 <tr>
                                     <td class="time">{{ dateFormat(talk.startsAt, 'h:MM') }}</td>
                                     <td class="name">
                                         <h5>
-                                            <a href="#events/{{ talk.eventId }}/talks/{{ talk._id }}">
+                                            <a href="#events/{{ talk.eventId }}/talks/{{ num }}">
                                                 {{ talk.name }}
                                             </a>
                                             <small>{{ talk.hash }}</small>

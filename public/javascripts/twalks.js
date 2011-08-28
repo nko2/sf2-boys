@@ -63,10 +63,10 @@
 
     App.Models.Talk = Backbone.Model.extend({
         url: function() {
-            return '/events/' + this.eventId + '/' + (this.isNew() ? 'new' : this.id) + '.json';
+            return '/events/' + this.eventId + '/talks/' + (this.isNew() ? 'new' : this.id) + '.json';
         }
-      , initialize: function(attributes, options) {
-            this.eventId = options.eventId;
+      , initialize: function(attributes) {
+            this.eventId = attributes.eventId;
         }
     });
 
@@ -155,6 +155,31 @@
                     $tabsContent.empty().append(view.render().el);
                 }});
             });
+
+            return this;
+        }
+    });
+
+    App.Views.Talk = Backbone.View.extend({
+        initialize: function(options) {
+            this.tweetsCollection = options.tweetsCollection;
+            this.template         = _.template($('#talk-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template(this.model.toJSON()));
+
+            var self         = this,
+                $tabsContent = this.$('.talk-footer-content');
+
+            this.$('.tabs .tweets a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.tweetsCollection.fetch({ success: function() {
+                    var view = new App.Views.TweetsList({ collection: self.tweetsCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            }).click();
 
             return this;
         }
@@ -271,13 +296,14 @@
      */
     App.Routers.Events = Backbone.Router.extend({
         routes: {
-            '':                 'home'
-          , 'events/new':       'createEvent'
-          , 'events/:id/edit':  'editEvent'
-          , 'events':           'listEvents'
-          , 'events/:id':       'showEvent'
-          , 'current':          'current'
-          , 'upcoming':         'upcoming'
+            '':                                 'home'
+          , 'events/new':                       'createEvent'
+          , 'events/:eventId/edit':             'editEvent'
+          , 'events':                           'listEvents'
+          , 'events/:eventId':                  'showEvent'
+          , 'events/:eventId/talks/:talkId':    'showTalk'
+          , 'current':                          'current'
+          , 'upcoming':                         'upcoming'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
@@ -352,6 +378,28 @@
             ;
 
             event.fetch({ success: function() {
+                self.hideAndEmptyContainer(function(){
+                    self.displayContainer(view.render().el);
+                });
+            }});
+        }
+      , showTalk: function(eventId, talkId) {
+            this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
+
+            var talk = new App.Models.Talk({ 'id': talkId, 'eventId': eventId })
+              , view = new App.Views.Talk({
+                    model:             talk
+                  , tweetsCollection:  new App.Collections.TalkTweets([], {
+                      'eventId':  eventId
+                    , 'talkId':   talkId
+                  })
+                })
+              , self  = this
+            ;
+
+            talk.fetch({ success: function() {
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
                 });
