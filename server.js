@@ -57,101 +57,18 @@ var app  = module.exports = express.createServer()
         access_token_secret: parameters.twitter.accessTokenSecret
     });
 
-// start polling existing events
+// queue polling jobs for the poller script
 schema.Event.find({}, function (err, events) {
-    var mapper = function(tweet) {
-        return tweet.tweet_id
-    };
-    var tweetToDoc = function(tweet) {
-        return {
-            tweet_id: tweet.id_str,
-            tweet: tweet.text,
-            postedAt: new Date(tweet.created_at),
-            user: tweet.from_user,
-            avatarUrl: tweet.profile_image_url,
-            hashes: tweet.text.split(' ').filter(function(word) {
-                        return word[0] === "#";
-                    }).map(function(hashCandidate) {
-                        return hashCandidate.replace(/[^A-z0-9]/g, '');
-                    })
-        }
-    }
     events.forEach(function(event) {
-        var poll = poller.createPoller(twit, event.hash);
-        poll.on('data', function(response) {
-            if (typeof response.results !== "undefined") {
-                response.results.forEach(function(tweet) {
-                    var tweet_doc = tweetToDoc(tweet);
-                    if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
-                        if (event.participants.indexOf(tweet_doc.user) === -1) {
-                            event.participants.push(tweet_doc.user);
-                        }
-                        event.tweets.push(tweet_doc);
-                        links.parse(tweet_doc.tweet, function(media) {
-                            if (media.type === "error") {
-                                return;
-                            }
-                            if (event.assets.map(function(asset) {
-                                    return asset.url;
-                                }).indexOf(media.url) !== -1) {
-                                return;
-                            }
-                            event.assets.push({
-                                author       : tweet_doc.user
-                              , type         : media.type
-                              , asset_author : (media.author_name || '')
-                              , provider     : (media.provider_name || '')
-                              , provider_url : (media.provider_url || '')
-                              , title        : (media.title || '')
-                              , description  : (media.description || '')
-                              , url          : (media.url || '')
-                              , height       : (media.height || '')
-                              , width        : (media.width || '')
-                              , html         : (media.html || '')
-                            });
-                            event.save();
-                        });
-                    }
-                    event.talks.forEach(function(talk) {
-                        if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1 &&
-                            talk.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
-                            if (talk.participants.indexOf(tweet_doc.user) === -1) {
-                                talk.participants.push(tweet_doc.user);
-                            }
-                            talk.tweets.push(tweet_doc);
-                            links.parse(tweet_doc.tweet, function(media) {
-                                if (media.type === "error") {
-                                    return;
-                                }
-                                if (talk.assets.map(function(asset) {
-                                        return asset.url;
-                                    }).indexOf(media.url) !== -1) {
-                                    return;
-                                }
-                                talk.assets.push({
-                                    author       : tweet_doc.user
-                                  , type         : media.type
-                                  , asset_author : (media.author_name || '')
-                                  , provider     : (media.provider_name || '')
-                                  , provider_url : (media.provider_url || '')
-                                  , title        : (media.title || '')
-                                  , description  : (media.description || '')
-                                  , url          : (media.url || '')
-                                  , height       : (media.height || '')
-                                  , width        : (media.width || '')
-                                  , html         : (media.html || '')
-                                });
-                                event.save();
-                            });
-                            
-                        }
-                    });
-                });
-                event.lastSync = new Date();
-                event.save();
+        schema.Job.count({status: 'run', id: event.id}, function(err, count) {
+            if (0 === count) {
+                new schema.Job({
+                    id:        event.id
+                  , createdAt: new Date()
+                  , status:    'new'
+                }).save();
             }
-        });
-        poll.startPolling();
+        })
     });
 });
 
