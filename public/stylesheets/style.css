@@ -27,6 +27,12 @@ body {
 #navigation h3 {
     font-family:Leckerli One;
 }
+#navigation li.progress {
+    display:none;
+    list-style:none;
+    padding-top:10px;
+    padding-right:2px;
+}
 #search-form span.glass {
     display: block;
     position: absolute;
