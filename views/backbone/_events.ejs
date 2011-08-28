@@ -143,7 +143,7 @@
                             No description provided
                         {% } %}
 
-                        {% if (USERNAME === author) { %}
+                        {% if (typeof author != 'undefined' && USERNAME === author) { %}
                             <a href="#events/{{ _id }}/edit">edit</a>
                         {% } %}
                     </p>
