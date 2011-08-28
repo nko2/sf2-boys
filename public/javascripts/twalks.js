@@ -9,6 +9,11 @@
     window.Events = Backbone.Collection.extend({
         model:  Event
       , url:    '/events.json'
+      , current: function() {
+            return this.filter(function(event) {
+                return true;
+            });
+        }
     });
     window.eventsList = new Events();
 
@@ -44,6 +49,19 @@
             $list = this.$('.list');
 
             this.collection.each(function(event) {
+                var view = new EventsListEventView({ model: event });
+                $list.append(view.render().el);
+            });
+
+            return this;
+        }
+      , renderCollection: function(collection) {
+            var $list;
+
+            $(this.el).html(this.template({}));
+            $list = this.$('.list');
+
+            collection.each(function(event) {
                 var view = new EventsListEventView({ model: event });
                 $list.append(view.render().el);
             });
@@ -91,10 +109,10 @@
             this.empty();
             $('li.current-events', this.$navigation).addClass('active');
 
-            var event = new Event()
-              , self = this;
+            console.log(window.eventsList.current());
 
-            window.eventsList.fetch({ startsAt: { $lte: new Date }, endsAt: { $gte: new Date }, success: function() {
+            var self = this;
+            window.eventsList.fetch({ success: function() {
                 self.$container.append(self.eventsListView.render().el);
             }});
         }
