@@ -331,10 +331,24 @@
             this.$secondaryNav  = $('.secondary-nav', this.$navigation);
             this.eventsListView = new App.Views.EventsList({ collection: eventsCollection });
             this.$errorNotif    = $('#error-notification');
+            this.$searchInput   = $('#search-form input');
 
-            var self = this;
+            var self = this
+              , timeout;
             $('#error-notification .close').click(function() {
                 self.$errorNotif.slideUp(200);
+            });
+
+            this.$searchInput.keyup(function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    if ('' !== self.$searchInput.val().replace(/^ +| +$/, '')) {
+                        self.hideAndEmptyContainer(function() {
+                            self.listEvents(true);
+                        });
+                    }
+                    clearTimeout(timeout);
+                }, 1000);
             });
         }
       , home: function() {
@@ -343,6 +357,7 @@
             var self = this;
             this.hideAndEmptyContainer(function() {
                 self.displayContainer($('#welcome-template').html());
+                self.$searchInput.val('');
             });
         }
       , createEvent: function() {
@@ -376,17 +391,28 @@
                 }
             });
       }
-      , listEvents: function() {
+      , listEvents: function(withoutAnimation) {
             this.showProgressBar();
 
             $('li.active', this.$navigation).removeClass('active');
             $('li.all-events', this.$navigation).addClass('active');
 
-            var self = this;
+            var self   = this
+              , filter = this.$searchInput.val().replace(/^ +| +$/, '');
+            if ('' !== filter) {
+                eventsCollection.url = '/events.json?q='+filter;
+            } else {
+                eventsCollection.url = '/events.json';
+            }
+
             eventsCollection.fetch({ success: function() {
-                self.hideAndEmptyContainer(function(){
+                if (withoutAnimation) {
                     self.displayContainer(self.eventsListView.render().el);
-                });
+                } else {
+                    self.hideAndEmptyContainer(function(){
+                        self.displayContainer(self.eventsListView.render().el);
+                    });
+                }
             }, error: function(){ this.displayErrorNotification('Events list', 'fetching failed'); } });
         }
       , listMy: function() {

@@ -206,12 +206,22 @@ app.get('/events.json', function(req, res){
 
         var eventList = [];
         events.sort(function(a, b) {
-            var aTime = a.endsAt.getTime()
+            var now = new Date().getTime()
+              , aTime = a.endsAt.getTime()
               , bTime = b.endsAt.getTime();
 
             if (aTime === bTime) {
                 return 0;
             }
+
+            if (now < aTime && now > bTime) {
+                return 1;
+            }
+
+            if (now < bTime && now > aTime) {
+                return 1;
+            }
+
             return aTime > bTime ? 1 : -1
         }).forEach(function(event, i) {
             if (typeof req.query.q !== "undefined" &&
