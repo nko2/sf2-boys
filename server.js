@@ -107,20 +107,24 @@ function andRequireUser(req, res, next) {
 }
 
 app.post('/events/new.json', andRequireUser, function(req, res){
-    // TODO: Add model validation and handle validation/unique errors
     var event = new schema.Event({
         hash:        req.body.hash
       , name:        req.body.name
       , startsAt:    new Date(req.body.startsAtDate + ' ' + req.body.startsAtTime)
       , endsAt:      new Date(req.body.endsAtDate + ' ' + req.body.endsAtTime)
       , imageUrl:    req.body.imageUrl
+      , overview:    req.body.overview
+      , location:    req.body.location
       , description: req.body.description
       , author:      req.session.auth.twitter.user.name
     });
 
     event.save(function(err, model){
-        res.contentType('json');
-        res.end(JSON.stringify(model));
+        if (err) {
+            res.send(JSON.stringify(err.errors), 403);
+        } else {
+            res.json(model);
+        }
     });
 });
 

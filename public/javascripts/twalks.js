@@ -272,37 +272,31 @@
               , msg   = this.model.isNew() ? 'Successfully created!' : 'Saved!'
               , data  = this.$('form').serializeObject();
 
-            this.formValid = true;
+            data.hash = '#' + data.hash;
+            console.log(data);
             this.$('form .error').removeClass('error');
 
-            this.validateString('name', data);
-            this.validateString('hash', data);
-            this.validateString('location', data);
+            this.model.save(data, {
+                success: function(model, err) {
+                    self.model = model;
+                    self.render();
+                    self.delegateEvents();
 
-            if (this.formValid) {
-                this.model.save(data, {
-                    success: function(model, res) {
-                        self.model = model;
-                        self.render();
-                        self.delegateEvents();
+                    window.App.router.navigate('events/' + model.get('_id'), true);
+                }
+              , error: function(model, err) {
+                    var errors = $.parseJSON(err.responseText)
+                      , self   = this;
 
-                        window.App.router.navigate('events/' + model.get('_id'), true);
-                    }
-                  , error: function(error) {
-                      console.log(error);
-                        alertMessage('error', 'An error occurred');
-                    }
-                });
-            }
+                    //alertMessage('error', 'An error occurred');
+                    _.each(errors, function(error, name) {
+                        var field = this.$('form .' + name);
+                        field.addClass('error');
+                    });
+                }
+            });
 
             return false;
-        }
-      , validateString: function(fieldName, data) {
-            if ('' === data[fieldName].replace('/^ +| +$/', '')) {
-                this.$('form .' + fieldName).addClass('error');
-
-                this.formValid = false;
-            }
         }
     });
 
