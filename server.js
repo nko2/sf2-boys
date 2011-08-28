@@ -131,6 +131,16 @@ app.get('/events/:id/talks.json', function(req, res) {
     });
 });
 
+app.get('/events/:id/tweets.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(event.tweets));
+    });
+});
+
 app.get('/currentEvents.json', function(req, res){
     schema.Event.getCurrent(function (err, events) {
         res.contentType('json');

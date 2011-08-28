@@ -71,22 +71,11 @@
 
                             <footer class="lists">
                                 <ul class="tabs">
-                                    <li class="active"><a href="#">Talks</a></li>
-                                    <li><a href="#">Tweets</a></li>
+                                    <li class="talks"><a href="javascript:void(0)">Talks</a></li>
+                                    <li class="tweets"><a href="javascript:void(0)">Tweets</a></li>
                                 </ul>
 
                                 <div id="talk-footer"></div>
-
-                                <section id="tweets" style="display:none">
-                                    <div class="tweet">
-                                        <img src="https://si0.twimg.com/profile_images/1281873417/ko_normal.png"/>
-                                        <h5>node_knockout</h5>
-                                        <p>
-                                            141 teams are still not deployed. If you're one of them, stop whatever you're doing and deploy now!
-                                        </p>
-                                        <span class="date">19.01.1988</span>
-                                    </div>
-                                </section>
 
                             </footer>
                         </section>
@@ -129,6 +118,19 @@
                         {% }); %}
                     </tbody>
                 </table>
+            </section>
+        </script>
+
+        <script type="text/template" id="tweets-list-template">
+            <section id="tweets">
+                {% _.each(tweets, function(tweet) { %}
+                    <div class="tweet">
+                        <img src="{{ tweet.avatarUrl }}"/>
+                        <h5>{{ tweet.user }}</h5>
+                        <p>{{ tweet.tweet }}</p>
+                        <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd') }}</span>
+                    </div>
+                {% }); %}
             </section>
         </script>
 

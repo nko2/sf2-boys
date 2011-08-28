@@ -69,10 +69,6 @@
 
     App.Models.Tweet = Backbone.Model.extend({});
 
-    App.Models.EventTweet = App.Models.Tweet.extend({});
-
-    App.Models.TalkTweet = App.Models.Tweet.extend({});
-
     /**
      * :: Collections
      */
@@ -95,6 +91,20 @@
         model: App.Models.Talk
       , url:   function() {
             return '/events/' + this.eventId + '/talks.json';
+        }
+    });
+
+    App.Collections.EventTweets = Backbone.Collection.extend({
+        model: App.Models.Tweet
+      , url:   function() {
+            return '/events/' + this.eventId + '/tweets.json';
+        }
+    });
+
+    App.Collections.TalkTweets = Backbone.Collection.extend({
+        model: App.Models.Tweet
+      , url:   function() {
+            return '/events/' + this.eventId + '/talks/' + this.talkId + '/tweets.json';
         }
     });
 
@@ -165,6 +175,17 @@
                 });
 
             $(this.el).html(this.template({ 'days': days }));
+
+            return this;
+        }
+    });
+
+    App.Views.TweetsList = App.Views.Event.extend({
+        initialize: function() {
+            this.template = _.template($('#tweets-list-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template({ 'tweets': this.collection.toJSON() }));
 
             return this;
         }
@@ -285,29 +306,49 @@
 
             var event = new App.Models.Event({ 'id': id })
               , view  = new App.Views.Event({ model: event })
-              , self  = this;
+              , self  = this
+              , eventTalksList = function(eventId) {
+                    self.showProgressBar();
+
+                    var collection = new App.Collections.Talks({ 'eventId': eventId })
+                      , listView   = new App.Views.TalksList({ collection: collection });
+                    collection.eventId = eventId;
+
+                    collection.fetch({ success: function() {
+                        self.hideProgressBar();
+                        $('#talk-footer').empty().append(listView.render().el);
+                    }});
+                }
+              , eventTweetsList = function(eventId) {
+                    self.showProgressBar();
+
+                    var collection = new App.Collections.EventTweets()
+                      , listView   = new App.Views.TweetsList({ collection: collection });
+                    collection.eventId = eventId;
+
+                    collection.fetch({ success: function() {
+                        self.hideProgressBar();
+                        $('#talk-footer').empty().append(listView.render().el);
+                    }});
+                }
+            ;
 
             event.fetch({ success: function() {
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
-                    self.talksList(id);
+
+                    $('#event-show footer .tabs .talks a').click(function() {
+                        $('#event-show footer .tabs li.active').removeClass('active');
+                        $(this).parent().addClass('active');
+                        eventTalksList(id);
+                    }).click();
+
+                    $('#event-show footer .tabs .tweets a').click(function() {
+                        $('#event-show footer .tabs li.active').removeClass('active');
+                        $(this).parent().addClass('active');
+                        eventTweetsList(id);
+                    });
                 });
-            }});
-        }
-      , talksList: function(eventId) {
-            this.showProgressBar();
-
-            var collection = new App.Collections.Talks({ 'eventId': eventId })
-              , listView   = new App.Views.TalksList({ collection: collection })
-              , self       = this;
-            collection.eventId = eventId;
-
-            collection.fetch({ success: function() {
-                self.hideProgressBar();
-
-                $('#talk-footer')
-                    .empty()
-                    .append(listView.render().el);
             }});
         }
       , current: function() {
