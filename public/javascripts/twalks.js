@@ -71,14 +71,16 @@
       , url:   '/events.json'
     });
 
-    App.Collections.EventsCurrent = Backbone.Collection.extend({
-        model: App.Models.Event
-      , url:   '/events/current.json'
+    App.Collections.EventsCurrent = App.Collections.Events.extend({
+        url:   '/events/current.json'
     });
 
     App.Collections.EventsUpcoming = Backbone.Collection.extend({
-        model: App.Models.Event
-      , url:   '/events/upcoming.json'
+        url:   '/events/upcoming.json'
+    });
+
+    App.Collections.EventsMy = Backbone.Collection.extend({
+        url:   '/events/my.json'
     });
 
     App.Collections.EventTweets = Backbone.Collection.extend({
@@ -215,6 +217,7 @@
             '':                     'home'
           , 'events/current':       'listCurrent'
           , 'events/upcoming':      'listUpcoming'
+          , 'events/my':            'listMy'
           , 'events/new':           'createEvent'
           , 'events/:id/edit':      'editEvent'
           , 'events':               'listEvents'
@@ -278,22 +281,19 @@
                 });
             }});
         }
-      , showEvent: function(id) {
+      , listMy: function() {
             this.showProgressBar();
 
             $('li.active', this.$navigation).removeClass('active');
+            $('li.my-events', this.$navigation).addClass('active');
 
-            var event = new App.Models.Event({ 'id': id })
-              , view  = new App.Views.Event({
-                    model:             event
-                  , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
-                })
-              , self  = this
-            ;
+            var self = this
+              , collection = new App.Collections.EventsMy
+              , listView = new App.Views.EventsList({ collection: collection });
 
-            event.fetch({ success: function() {
-                self.hideAndEmptyContainer(function(){
-                    self.displayContainer(view.render().el);
+            collection.fetch({ success: function() {
+                self.hideAndEmptyContainer(function() {
+                    self.displayContainer(listView.render().el);
                 });
             }});
         }
@@ -326,6 +326,25 @@
             collection.fetch({ success: function() {
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
+                });
+            }});
+        }
+      , showEvent: function(id) {
+            this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
+
+            var event = new App.Models.Event({ 'id': id })
+              , view  = new App.Views.Event({
+                    model:             event
+                  , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
+                })
+              , self  = this
+            ;
+
+            event.fetch({ success: function() {
+                self.hideAndEmptyContainer(function(){
+                    self.displayContainer(view.render().el);
                 });
             }});
         }
