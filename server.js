@@ -108,7 +108,18 @@ app.get('/events.json', function(req, res){
         if (err) {
             console.log(err);
         }
-        res.end(JSON.stringify(events));
+
+        var eventList = [];
+        events.forEach(function(event, i) {
+            event.set("numberOfTalks", event.talks.length);
+            event.set("numberOfTweets", event.tweets.length);
+            event.talks = [];
+            event.tweets = [];
+
+            eventList.push(event);
+        });
+
+        res.end(JSON.stringify(eventList));
     });
 });
 
