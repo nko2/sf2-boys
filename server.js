@@ -314,7 +314,15 @@ app.get('/events/:id/tweets.json', function(req, res) {
             return;
         }
 
-        res.json(event.tweets, 200);
+        res.json(event.tweets.sort(function(a, b) {
+            var aTime = a.postedAt.getTime()
+              , bTime = b.postedAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+            return aTime > bTime ? 1 : -1
+        }), 200);
     });
 });
 
