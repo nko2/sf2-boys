@@ -5,33 +5,47 @@
       , evaluate:    /\{\%(.+?)\%\}/g
     };
 
-    window.Event = Backbone.Model.extend({});
-    window.Events = Backbone.Collection.extend({
-        model:  Event
-      , url:    '/events.json'
-    });
-    window.eventsList = new Events();
+    var App = {
+        Collections: {}
+      , Models: {}
+      , Routers: {}
+      , Views: {}
+      , init: function() {
+            new App.Routers.Events();
+            Backbone.history.start();
+        }
+    }
 
-    window.EventView = Backbone.View.extend({
+    App.Models.Event = Backbone.Model.extend({
+        url : function() {
+            return this.isNew() ? 'events' : 'events/' + this.id;
+        }
+    });
+
+    App.Collections.Event = Backbone.Collection.extend({
+        model: App.Models.Event
+      , url:   '/events.json'
+    });
+
+    App.Views.Event = Backbone.View.extend({
         initialize: function() {
             this.template = _.template($('#event-show-template').html());
         }
       , render: function() {
-            var content = this.template(this.model.toJSON());
-            $(this.el).html(content);
+            $(this.el).html(this.template(this.model.toJSON()));
 
             return this;
         }
     });
 
-    window.EventsListEventView = EventView.extend({
+    App.Views.EventsListEvent = App.Views.Event.extend({
         tagName: 'article'
       , initialize: function() {
             this.template = _.template($('#events-list-event-template').html());
         }
     });
 
-    window.EventsListView = Backbone.View.extend({
+    App.Views.EventsList = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
             this.template = _.template($('#events-list-template').html());
@@ -44,7 +58,7 @@
             $list = this.$('.list');
 
             this.collection.each(function(event) {
-                var view = new EventsListEventView({ model: event });
+                var view = new App.Views.EventsListEvent({ model: event });
                 $list.append(view.render().el);
             });
 
@@ -52,34 +66,36 @@
         }
     });
 
-    window.Twalks = Backbone.Router.extend({
+    var eventsCollection = new App.Collections.Event();
+
+    App.Routers.Events = Backbone.Router.extend({
         routes: {
             '':             'home'
-          , 'events':       'events'
-          , 'events/:id':   'event'
+          , 'events':       'listEvents'
+          , 'events/:id':   'showEvent'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
             this.$navigation    = $('#navigation');
-            this.eventsListView = new EventsListView({ collection: window.eventsList });
+            this.eventsListView = new App.Views.EventsList({ collection: eventsCollection });
         }
       , home: function() {
             this.empty();
             this.$container.append($('#welcome-template').html());
         }
-      , events: function() {
+      , listEvents: function() {
             this.empty();
             $('li.all-events', this.$navigation).addClass('active');
 
             var self = this;
-            window.eventsList.fetch({ success: function() {
+            eventsCollection.fetch({ success: function() {
                 self.$container.append(self.eventsListView.render().el);
             }});
         }
-      , event: function(id) {
+      , showEvent: function(id) {
             this.empty();
-            var event = new Event()
-              , view  = new EventView({ model: event })
+            var event = new App.Models.Event()
+              , view  = new App.Views.Event({ model: event })
               , self  = this;
 
             event.fetch({ url: '/events/'+id+'.json' , success: function() {
@@ -92,4 +108,5 @@
         }
     });
 
+    window.App = App;
 })(jQuery);
