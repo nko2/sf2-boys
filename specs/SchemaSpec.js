@@ -16,14 +16,6 @@ describe('event', function(){
         event.description = 'test event description';
         event.location = 'New York, NY';
         event.tweets.push({tweet_id: 5, tweet: 'test'});
-        event.talks.push({
-              name: 'test talk'
-            , hash: '#testtalk'
-            , tweets: [{
-                tweet_id: 6
-              , tweet: 'another test'
-            }]});
-
         expect(event.name).toEqual('test event');
         expect(event.createdBy).toEqual('jmikola');
         expect(event.startsAt).toEqual(startDate);
@@ -34,11 +26,5 @@ describe('event', function(){
         expect(event.tweets.length).toEqual(1);
         expect(event.tweets[0].tweet_id).toEqual(5);
         expect(event.tweets[0].tweet).toEqual('test');
-        expect(event.talks.length).toEqual(1);
-        expect(event.talks[0].hash).toEqual('#testtalk');
-        expect(event.talks[0].name).toEqual('test talk');
-        expect(event.talks[0].tweets.length).toEqual(1);
-        expect(event.talks[0].tweets[0].tweet_id).toEqual(6);
-        expect(event.talks[0].tweets[0].tweet).toEqual('another test');
     });
 });
