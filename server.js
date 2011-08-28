@@ -4,7 +4,7 @@
 require('nko')('UJuIrlX5JM5B0V/g');
 
 /**
- * Parameters
+ * Params
  */
 var parameters = {
     twitter: {
@@ -58,6 +58,9 @@ var app  = module.exports = express.createServer()
 
 // start polling existing events
 schema.Event.find({}, function (err, events) {
+    var mapper = function(tweet) {
+        return tweet.tweet_id
+    };
     events.forEach(function(event) {
         var poll = poller.createPoller(twit, event.hash);
         poll.on('data', function(response) {
@@ -74,14 +77,20 @@ schema.Event.find({}, function (err, events) {
                                     return hashCandidate.replace(/[^A-z0-9]/g, '');
                                 })
                     }
-                    event.tweets.push(tweet_doc);
-                    event.talks.forEach(function(talk) {
-                        if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1) {
-                            talk.tweets.push(tweet_doc);
+                    if (tweet_doc.postedAt.getTime() > event.lastSync.getTime()) {
+                        if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                            event.tweets.push(tweet_doc);
                         }
-                    });
-                    event.save();
+                        event.talks.forEach(function(talk) {
+                            if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1 &&
+                                talk.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                                talk.tweets.push(tweet_doc);
+                            }
+                        });
+                    }
                 });
+                event.lastSync = new Date();
+                event.save();
             }
         });
         poll.startPolling();
