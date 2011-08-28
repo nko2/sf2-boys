@@ -343,7 +343,9 @@
                 clearTimeout(timeout);
                 timeout = setTimeout(function() {
                     if ('' !== self.$searchInput.val().replace(/^ +| +$/, '')) {
-                        self.listEvents(true);
+                        self.hideAndEmptyContainer(function() {
+                            self.listEvents(true);
+                        });
                     }
                     clearTimeout(timeout);
                 }, 1000);
@@ -355,6 +357,7 @@
             var self = this;
             this.hideAndEmptyContainer(function() {
                 self.displayContainer($('#welcome-template').html());
+                self.$searchInput.val('');
             });
         }
       , createEvent: function() {
