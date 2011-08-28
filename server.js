@@ -83,11 +83,12 @@ function startPolling() {
     child = spawn('node', ['scripts/poller.js']);
 
     child.on('exit', function (code) {
+        jobs.forEach(function(job) {
+            job.status = 'old';
+            job.save();
+        });
+
         if (restart) {
-            jobs.forEach(function(job) {
-                job.status = 'old';
-                job.save();
-            });
             startPolling();
         }
     });
@@ -313,7 +314,15 @@ app.get('/events/:id/tweets.json', function(req, res) {
             return;
         }
 
-        res.json(event.tweets, 200);
+        res.json(event.tweets.sort(function(a, b) {
+            var aTime = a.postedAt.getTime()
+              , bTime = b.postedAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+            return aTime > bTime ? 1 : -1
+        }), 200);
     });
 });
 
@@ -335,4 +344,4 @@ everyauth.helpExpress(app);
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
-// deploy please
+// deploy

@@ -45,20 +45,6 @@ db.open(function(err, client) {
     });
 })
 
-process.on('uncaughtException', function (err) {
-    console.log(err.message);
-    console.log(new Error().stack);
-    process.exit(1);
-});
-
-process.on('SIGINT', function () {
-    process.exit();
-});
-
-process.on('SIGTERM', function() {
-    process.exit();
-})
-
 function mapper(field) {
     return function(object) {
         return object[field];
@@ -67,12 +53,6 @@ function mapper(field) {
 
 function processEvent(job, collection, event, eventsCollection) {
     var poll = poller.createPoller(twit, event.hash);
-
-    process.on('exit', function () {
-        poll.stopPolling();
-        job.status = 'old';
-        collection.save(job);                        
-    });
 
     poll.on('data', function(res) {
         console.log(res);
