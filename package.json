@@ -12,6 +12,7 @@
     , "nko":        "0.0.9"
     , "embedly":    "0.3.4"
     , "mongodb":    "0.9.3"
+    , "log":        "1.2.0"
   }
   , "scripts": {
       "start": "node scripts/poller.js & ; node server.js"
