@@ -193,9 +193,10 @@ app.put('/events/:id.json', andRequireUser, function(req, res){
 
 app.get('/events.json', function(req, res){
     schema.Event.find({}, function (err, events) {
-        res.contentType('json');
         if (err) {
             console.log(err);
+            res.json({error: true}, 500);
+            return;
         }
 
         var eventList = [];
@@ -206,40 +207,51 @@ app.get('/events.json', function(req, res){
             eventList.push(event);
         });
 
-        res.end(JSON.stringify(eventList));
+        res.json(eventList, 200);
     });
+});
+
+app.get('/events/my.json', andRequireUser, function(req, res) {
+    schema.Event.find({author: req.session.auth.twitter.user.name}, function(err, events) {
+        if (err) {
+            console.log(err);
+            res.json({error: true}, 500);
+            return;
+        }
+
+        var eventList = [];
+        events.forEach(function(event, i) {
+            event.set("tweetsCount", event.tweets.length);
+            event.tweets = [];
+
+            eventList.push(event);
+        });
+
+        res.json(eventList, 200);
+    })
 });
 
 app.get('/events/:id.json', function(req, res) {
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
-        res.contentType('json');
         if (err) {
             console.log(err);
+            res.json({error: true}, 500);
+            return;
         }
 
         event.set("tweetsCount", event.tweets.length);
         event.tweets = [];
 
-        res.end(JSON.stringify(event));
+        res.json(event, 200);
     });
 });
 
-app.get('/events/:id/tweets.json', function(req, res) {
-    schema.Event.findOne({_id: req.params.id}, function(err, event) {
-        res.contentType('json');
-        if (err) {
-            console.log(err);
-        }
-
-        res.end(JSON.stringify(event.tweets));
-    });
-});
-
-app.get('/currentEvents.json', function(req, res){
+app.get('/events/current.json', function(req, res){
     schema.Event.getCurrent(function (err, events) {
-        res.contentType('json');
         if (err) {
             console.log(err);
+            res.json({error: true}, 500);
+            return;
         }
 
         var eventList = [];
@@ -250,15 +262,16 @@ app.get('/currentEvents.json', function(req, res){
             eventList.push(event);
         });
 
-        res.end(JSON.stringify(eventList));
+        res.json(eventList, 200);
     });
 });
 
-app.get('/upcomingEvents.json', function(req, res){
+app.get('/events/upcoming.json', function(req, res){
     schema.Event.getUpcoming(function (err, events) {
-        res.contentType('json');
         if (err) {
             console.log(err);
+            res.json({error: true}, 500);
+            return;
         }
 
         var eventList = [];
@@ -269,7 +282,7 @@ app.get('/upcomingEvents.json', function(req, res){
             eventList.push(event);
         });
 
-        res.end(JSON.stringify(eventList));
+        res.json(eventList, 200);
     });
 });
 
