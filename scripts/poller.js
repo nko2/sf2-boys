@@ -13,7 +13,7 @@ var poller = require('../lib/poller')
   , Server = mongodb.Server
   ;
 
-var db = new Db('twalks', new Server('staff.mongohq.com', 10090, {}), {native_parser:true});
+var db = new Db('twalks', new Server('staff.mongohq.com', 10090, {}));
 db.open(function(err, client) {
     db.authenticate('user', '111111', function() {
         db.collectionNames(function(err, names) {
