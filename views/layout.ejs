@@ -46,28 +46,61 @@
                 <section class="span16 columns item">
                     <article>
                         <header class="map">
-                        <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&markers=size:mid|color:blue|{{ location }}&zoom=13&size=300x300&sensor=false" />
+                        {% if (typeof location != 'undefined') { %}
+                            <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&markers=size:mid|color:blue|{{ location }}&zoom=13&size=300x300&sensor=false" />
+                        {% } else { %}
+                            <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center=Unknown&markers=size:mid|color:blue|Unknown&zoom=13&size=300x300&sensor=false" />
+                        {% } %}
                         </header>
                         <section>
                             <img width="90px" height="90px" class="image" src="{{ imageUrl }}" />
                             <h1>
-                                {{ name }} <small>{{ hash }}</small>
+                                {% if (typeof name != 'undefined') { %}
+                                    {{ name }}
+                                {% } else { %}
+                                    Noname
+                                {% } %}
+                                {% if (typeof hash != 'undefined') { %}
+                                    <small>{{ hash }}</small>
+                                {% } %}
                             </h1>
                             <ul class="infobar">
                                 <li class="time-precise">
-                                    {{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}
+                                    {% if (typeof startsAt != 'undefined') { %}
+                                        {{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}
+                                    {% } else { %}
+                                        xxxx-xx-xx, x:xx
+                                    {% } %}
+                                    &mdash;
+                                    {% if (typeof endsAt != 'undefined') { %}
+                                        {{ dateFormat(endsAt, 'yyyy-mm-dd, h:MM') }}
+                                    {% } else { %}
+                                        xxxx-xx-xx, x:xx
+                                    {% } %}
                                 </li>
-                                <li class="place">
-                                    {{ location }}
-                                </li>
+                                {% if (typeof location != 'undefined') { %}
+                                    <li class="place">
+                                        {{ location }}
+                                    </li>
+                                {% } %}
                                 <li class="author">
-                                    <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
+                                    {% if (typeof author != 'undefined') { %}
+                                        <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
+                                    {% } else { %}
+                                        anonymous
+                                    {% } %}
                                 </li>
                             </ul>
 
                             <hr />
 
-                            <p>{{ description }}</p>
+                            <p>
+                                {% if (typeof description != 'undefined') { %}
+                                    {{ description }}
+                                {% } else { %}
+                                    No description provided
+                                {% } %}
+                            </p>
 
                             <footer class="lists">
                                 <ul class="tabs">
@@ -90,34 +123,66 @@
                     <article>
                         <header class="map">
                             <span class="time">
-                                {{ dateFormat(startsAt, 'd mmmm') }}<br/>
-                                <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
+                                {% if (typeof startsAt !== 'undefined') { %}
+                                    {{ dateFormat(startsAt, 'd mmmm') }}<br/>
+                                    <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
+                                {% } else { %}
+                                    anytime
+                                {% } %}
                             </span>
-                            <img src="http://maps.google.com/maps/api/staticmap?center={{ event.location }}&zoom=13&size=300x300&sensor=false" />
+                            {% if (typeof event.location != 'undefined') { %}
+                                <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center={{ event.location }}&zoom=13&size=300x300&sensor=false" />
+                            {% } else { %}
+                                <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center=Unknown&zoom=13&size=300x300&sensor=false" />
+                            {% } %}
                         </header>
                         <section>
                             <h1>
-                                {{ name }} <small>{{ hash }}</small>
+                                {% if (typeof name != 'undefined') { %}
+                                    {{ name }}
+                                {% } else { %}
+                                    Noname
+                                {% } %}
+                                {% if (typeof hash != 'undefined') { %}
+                                    <small>{{ hash }}</small>
+                                {% } %}
                             </h1>
                             <h3>
-                                at <a href="#events/{{ event._id }}">{{ event.name }}</a> <small>{{ event.hash }}</small>
+                                {% if (typeof event.name != 'undefined') { %}
+                                    {{ event.name }}
+                                {% } else { %}
+                                    Noname
+                                {% } %}
+                                {% if (typeof event.hash != 'undefined') { %}
+                                    <small>{{ event.hash }}</small>
+                                {% } %}
                             </h3>
                             <ul class="infobar">
-                                <li class="place">
-                                    {{ event.location }}
-                                </li>
-                                <li class="author">
-                                    {% _.each(speakers, function(speaker) { %}
-                                        <a href="https://twitter.com/{{ speaker }}">
-                                            @{{ speaker }}
-                                        </a>
-                                    {% }); %}
-                                </li>
+                                {% if (typeof event.location != 'undefined') { %}
+                                    <li class="place">
+                                        {{ event.location }}
+                                    </li>
+                                {% } %}
+                                {% if (typeof speakers != 'undefined') { %}
+                                    <li class="author">
+                                        {% _.each(speakers, function(speaker) { %}
+                                            <a href="https://twitter.com/{{ speaker }}">
+                                                @{{ speaker }}
+                                            </a>
+                                        {% }); %}
+                                    </li>
+                                {% } %}
                             </ul>
 
                             <hr />
 
-                            <p>{{ description }}</p>
+                            <p>
+                                {% if (typeof description != 'undefined') { %}
+                                    {{ description }}
+                                {% } else { %}
+                                    No description provided
+                                {% } %}
+                            </p>
 
                             <footer class="lists">
                                 <ul class="tabs">
@@ -143,24 +208,44 @@
                             </tr>
                             {% _.each(talks, function(talk, num) { %}
                                 <tr>
-                                    <td class="time">{{ dateFormat(talk.startsAt, 'h:MM') }}</td>
+                                    <td class="time">
+                                        {% if (typeof talk.startsAt != 'undefined' ) { %}
+                                            {{ dateFormat(talk.startsAt, 'h:MM') }}
+                                        {% } else { %}
+                                            x:xx
+                                        {% } %}
+                                    </td>
                                     <td class="name">
                                         <h5>
                                             <a href="#events/{{ talk.eventId }}/talks/{{ num }}">
-                                                {{ talk.name }}
+                                                {% if (typeof talk.name !== 'undefined') { %}
+                                                    {{ talk.name }}
+                                                {% } else { %}
+                                                    Noname
+                                                {% } %}
                                             </a>
-                                            <small>{{ talk.hash }}</small>
+                                            {% if (typeof talk.hash !== 'undefined') { %}
+                                                <small>{{ talk.hash }}</small>
+                                            {% } %}
                                         </h5>
                                     </td>
                                     <td class="author">
-                                        {% _.each(talk.speakers, function(speaker) { %}
-                                            <a href="https://twitter.com/{{ speaker }}">
-                                                @{{ speaker }}
-                                            </a>
-                                        {% }); %}
+                                        {% if (typeof talk.speakers !== 'undefined') { %}
+                                            {% _.each(talk.speakers, function(speaker) { %}
+                                                <a href="https://twitter.com/{{ speaker }}">
+                                                    @{{ speaker }}
+                                                </a>
+                                            {% }); %}
+                                        {% } else { %}
+                                            anonymous
+                                        {% } %}
                                     </td>
                                     <td class="tweets">
-                                        {{ talk.tweets.length }}
+                                        {% if (typeof talk.tweets !== 'undefined') { %}
+                                            {{ talk.tweets.length }}
+                                        {% } else { %}
+                                            0
+                                        {% } %}
                                     </td>
                                 </tr>
                             {% }); %}
@@ -174,10 +259,18 @@
             <section id="tweets">
                 {% _.each(tweets, function(tweet) { %}
                     <div class="tweet">
-                        <img src="{{ tweet.avatarUrl }}"/>
-                        <h5>{{ tweet.user }}</h5>
-                        <p>{{ tweet.tweet }}</p>
-                        <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd') }}</span>
+                        {% if (typeof tweet.avatarUrl !== 'undefined') { %}
+                            <img src="{{ tweet.avatarUrl }}"/>
+                        {% } %}
+                        {% if (typeof tweet.user !== 'undefined') { %}
+                            <h5>{{ tweet.user }}</h5>
+                        {% } %}
+                        {% if (typeof tweet.tweet !== 'undefined') { %}
+                            <p>{{ tweet.tweet }}</p>
+                        {% } %}
+                        {% if (typeof tweet.postedAt !== 'undefined') { %}
+                            <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd') }}</span>
+                        {% } %}
                     </div>
                 {% }); %}
             </section>
@@ -186,21 +279,50 @@
         <script type="text/template" id="events-list-event-template">
             <header class="map">
                 <span class="time">
-                    {{ dateFormat(startsAt, 'd mmmm') }}<br/>
-                    <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
+                    {% if (typeof startsAt !== 'undefined') { %}
+                        {{ dateFormat(startsAt, 'd mmmm') }}<br/>
+                        <i>{{ dateFormat(startsAt, 'h:MM') }}</i>
+                    {% } else { %}
+                        anytime
+                    {% } %}
                 </span>
-                <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&zoom=13&size=150x150&sensor=false" />
+                {% if (typeof location != 'undefined') { %}
+                    <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&zoom=13&size=150x150&sensor=false" />
+                {% } else { %}
+                    <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center=Unknown&zoom=13&size=150x150&sensor=false" />
+                {% } %}
             </header>
             <section>
                 <h3>
-                    <a href="#events/{{ _id }}">{{ name }}</a> <small>{{ hash }}</small>
+                    <a href="#events/{{ _id }}">
+                        {% if (typeof name !== 'undefined') { %}
+                            {{ name }}
+                        {% } else { %}
+                            Noname
+                        {% } %}
+                    </a>
+                    {% if (typeof hash !== 'undefined') { %}
+                        <small>{{ hash }}</small>
+                    {% } %}
                 </h3>
                 <p>{{ description }}</p>
                 <ul class="infobar">
-                    <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
-                    <li class="people">23</li>
-                    <li class="tweets">120</li>
-                    <li class="author"><a href="https://twitter.com/{{ author }}">@{{ author }}</a></li>
+                    {% if (typeof startsAt !== 'undefined') { %}
+                        <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
+                    {% } %}
+                    {% if (typeof participants !== 'undefined') { %}
+                        <li class="people">{{ participants.length }}</li>
+                    {% } %}
+                    {% if (typeof tweetsCount !== 'undefined') { %}
+                        <li class="tweets">{{ tweetsCount }}</li>
+                    {% } %}
+                    <li class="author">
+                        {% if (typeof author !== 'undefined') { %}
+                            <a href="https://twitter.com/{{ author }}">@{{ author }}</a>
+                        {% } else { %}
+                            anonymous
+                        {% } %}
+                    </li>
                 </ul>
             </section>
         </script>
