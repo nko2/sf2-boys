@@ -32,7 +32,7 @@ var express   = require('express')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
   , Twitter   = require('twitter')
-  , links     = require('./lib/links_parser')
+  , links     = require('./lib/links_parser').Parser
 ;
 
 everyauth.twitter
@@ -62,38 +62,73 @@ schema.Event.find({}, function (err, events) {
     var mapper = function(tweet) {
         return tweet.tweet_id
     };
+    var tweetToDoc = function(tweet) {
+        return {
+            tweet_id: tweet.id_str,
+            tweet: tweet.text,
+            postedAt: new Date(tweet.created_at),
+            user: tweet.from_user,
+            avatarUrl: tweet.profile_image_url,
+            hashes: tweet.text.split(' ').filter(function(word) {
+                        return word[0] === "#";
+                    }).map(function(hashCandidate) {
+                        return hashCandidate.replace(/[^A-z0-9]/g, '');
+                    })
+        }
+    }
     events.forEach(function(event) {
         var poll = poller.createPoller(twit, event.hash);
         poll.on('data', function(response) {
             if (typeof response.results !== "undefined") {
                 response.results.forEach(function(tweet) {
-                    var tweet_doc = {
-                        tweet_id: tweet.id_str,
-                        tweet: tweet.text,
-                        postedAt: new Date(tweet.created_at),
-                        user: tweet.from_user,
-                        avatarUrl: tweet.profile_image_url,
-                        hashes: tweet.text.split(' ').filter(function(word) {
-                                    return word[0] === "#";
-                                }).map(function(hashCandidate) {
-                                    return hashCandidate.replace(/[^A-z0-9]/g, '');
-                                })
-                    }
-                    if (tweet_doc.postedAt.getTime() > event.lastSync.getTime()) {
-                        if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
-                            if (event.participants.indexOf(tweet_doc.user) === -1) {
-                                event.participants.push(tweet_doc.user);
+                    var tweet_doc = tweetToDoc(tweet);
+                    if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                        if (event.participants.indexOf(tweet_doc.user) === -1) {
+                            event.participants.push(tweet_doc.user);
+                        }
+                        event.tweets.push(tweet_doc);
+                        links.parse(tweet_doc.tweet, function(media) {
+                            if (media.type === "error") {
+                                return;
                             }
+                            if (event.assets.map(function(asset) {
+                                    return asset.url;
+                                }).indexOf(media.url) !== -1) {
+                                return;
+                            }
+                            event.assets.push({
+                                author       : tweet_doc.user
+                              , type         : media.type
+                              , asset_author : (media.author_name || '')
+                              , provider     : (media.provider_name || '')
+                              , provider_url : (media.provider_url || '')
+                              , title        : (media.title || '')
+                              , description  : (media.description || '')
+                              , url          : (media.url || '')
+                              , height       : (media.height || '')
+                              , width        : (media.width || '')
+                              , html         : (media.html || '')
+                            });
+                            event.save();
+                        });
+                    }
+                    event.talks.forEach(function(talk) {
+                        if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1 &&
+                            talk.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                            if (talk.participants.indexOf(tweet_doc.user) === -1) {
+                                talk.participants.push(tweet_doc.user);
+                            }
+                            talk.tweets.push(tweet_doc);
                             links.parse(tweet_doc.tweet, function(media) {
                                 if (media.type === "error") {
                                     return;
                                 }
-                                if (event.assets.map(function(asset) {
+                                if (talk.assets.map(function(asset) {
                                         return asset.url;
                                     }).indexOf(media.url) !== -1) {
                                     return;
                                 }
-                                event.assets.push({
+                                talk.assets.push({
                                     author       : tweet_doc.user
                                   , type         : media.type
                                   , asset_author : (media.author_name || '')
@@ -106,42 +141,11 @@ schema.Event.find({}, function (err, events) {
                                   , width        : (media.width || '')
                                   , html         : (media.html || '')
                                 });
+                                event.save();
                             });
-                            event.tweets.push(tweet_doc);
+                            
                         }
-                        event.talks.forEach(function(talk) {
-                            if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1 &&
-                                talk.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
-                                if (talk.participants.indexOf(tweet_doc.user) === -1) {
-                                    talk.participants.push(tweet_doc.user);
-                                }
-                                links.parse(tweet_doc.tweet, function(media) {
-                                    if (media.type === "error") {
-                                        return;
-                                    }
-                                    if (talk.assets.map(function(asset) {
-                                            return asset.url;
-                                        }).indexOf(media.url) !== -1) {
-                                        return;
-                                    }
-                                    talk.assets.push({
-                                        author       : tweet_doc.user
-                                      , type         : media.type
-                                      , asset_author : (media.author_name || '')
-                                      , provider     : (media.provider_name || '')
-                                      , provider_url : (media.provider_url || '')
-                                      , title        : (media.title || '')
-                                      , description  : (media.description || '')
-                                      , url          : (media.url || '')
-                                      , height       : (media.height || '')
-                                      , width        : (media.width || '')
-                                      , html         : (media.html || '')
-                                    });
-                                });
-                                talk.tweets.push(tweet_doc);
-                            }
-                        });
-                    }
+                    });
                 });
                 event.lastSync = new Date();
                 event.save();
