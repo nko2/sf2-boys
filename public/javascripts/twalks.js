@@ -173,6 +173,8 @@
             });
         }
       , createEvent: function() {
+            $('li.active', this.$navigation).removeClass('active');
+
             var self = this;
             this.hideAndEmptyContainer(function() {
                 var eventFormView = new App.Views.EventForm({ model: new App.Models.Event() });
@@ -181,6 +183,8 @@
       }
       , editEvent: function(id) {
             this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
 
             var event = new App.Models.Event({ id: id })
               , self  = this;
@@ -213,6 +217,8 @@
         }
       , showEvent: function(id) {
             this.showProgressBar();
+
+            $('li.active', this.$navigation).removeClass('active');
 
             var event = new App.Models.Event()
               , view  = new App.Views.Event({ model: event })

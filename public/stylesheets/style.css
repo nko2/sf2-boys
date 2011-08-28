@@ -30,8 +30,9 @@ body {
 #navigation li.progress {
     display:none;
     list-style:none;
-    padding-top:10px;
-    padding-right:2px;
+    padding: 10px 10px 11px;
+    line-height: 19px;
+    height:20px;
 }
 #search-form span.glass {
     display: block;
