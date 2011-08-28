@@ -73,12 +73,12 @@
 
     App.Collections.EventsCurrent = Backbone.Collection.extend({
         model: App.Models.Event
-      , url:   '/currentEvents.json'
+      , url:   '/events/current.json'
     });
 
     App.Collections.EventsUpcoming = Backbone.Collection.extend({
         model: App.Models.Event
-      , url:   '/upcomingEvents.json'
+      , url:   '/events/upcoming.json'
     });
 
     App.Collections.EventTweets = Backbone.Collection.extend({
@@ -212,13 +212,13 @@
      */
     App.Routers.Events = Backbone.Router.extend({
         routes: {
-            '':                                 'home'
-          , 'events/new':                       'createEvent'
-          , 'events/:eventId/edit':             'editEvent'
-          , 'events':                           'listEvents'
-          , 'events/:eventId':                  'showEvent'
-          , 'current':                          'current'
-          , 'upcoming':                         'upcoming'
+            '':                     'home'
+          , 'events/current':       'listCurrent'
+          , 'events/upcoming':      'listUpcoming'
+          , 'events/new':           'createEvent'
+          , 'events/:id/edit':      'editEvent'
+          , 'events':               'listEvents'
+          , 'events/:id':           'showEvent'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
@@ -297,7 +297,7 @@
                 });
             }});
         }
-      , current: function() {
+      , listCurrent: function() {
             this.showProgressBar();
 
             $('li.active', this.$navigation).removeClass('active');
@@ -313,7 +313,7 @@
                 });
             }});
         }
-      , upcoming: function() {
+      , listUpcoming: function() {
             this.showProgressBar();
 
             $('li.active', this.$navigation).removeClass('active');
