@@ -357,6 +357,11 @@
             });
         }
       , home: function() {
+            if ($('#navigation .user.menu.loggedIn').length) {
+                this.navigate('events/my', true);
+                return;
+            }
+
             $('li.active', this.$navigation).removeClass('active');
 
             var self = this;
