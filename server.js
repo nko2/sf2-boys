@@ -118,7 +118,17 @@ app.get('/events/:id.json', function(req, res) {
             console.log(err);
         }
         res.end(JSON.stringify(event));
-    })
+    });
+});
+
+app.get('/events/:id/talks.json', function(req, res) {
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(event.talks));
+    });
 });
 
 app.get('/currentEvents.json', function(req, res){

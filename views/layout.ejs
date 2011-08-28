@@ -75,32 +75,7 @@
                                     <li><a href="#">Tweets</a></li>
                                 </ul>
 
-                                <section id="talks">
-                                    <table class="common-table">
-                                        <tbody>
-                                            <tr>
-                                                <td class="date" colspan="4">
-                                                    7 October 2011
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="name">
-                                                    <h5>
-                                                        <a href="#">Security</a>
-                                                        <small>#sec</small>
-                                                    </h5>
-                                                </td>
-                                                <td class="time">9:30</td>
-                                                <td class="author">
-                                                    <a href="#">@arne</a>
-                                                </td>
-                                                <td class="tweets">
-                                                    23
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </section>
+                                <div id="talk-footer"></div>
 
                                 <section id="tweets" style="display:none">
                                     <div class="tweet">
@@ -118,6 +93,43 @@
                     </article>
                 </section>
             </div>
+        </script>
+
+        <script type="text/template" id="talks-list-template">
+            <section id="talks">
+                <table class="common-table">
+                    <tbody>
+                        {% _.each(days, function(talks, day) { %}
+                            <tr>
+                                <td class="date" colspan="4">{{ day }}</td>
+                            </tr>
+                            {% _.each(talks, function(talk) { %}
+                                <tr>
+                                    <td class="time">{{ dateFormat(talk.startsAt, 'h:MM') }}</td>
+                                    <td class="name">
+                                        <h5>
+                                            <a href="#events/{{ talk.eventId }}/talks/{{ talk._id }}">
+                                                {{ talk.name }}
+                                            </a>
+                                            <small>{{ talk.hash }}</small>
+                                        </h5>
+                                    </td>
+                                    <td class="author">
+                                        {% _.each(talk.speakers, function(speaker) { %}
+                                            <a href="https://twitter.com/{{ speaker }}">
+                                                @{{ speaker }}
+                                            </a>
+                                        {% }); %}
+                                    </td>
+                                    <td class="tweets">
+                                        {{ talk.tweets.length }}
+                                    </td>
+                                </tr>
+                            {% }); %}
+                        {% }); %}
+                    </tbody>
+                </table>
+            </section>
         </script>
 
         <script type="text/template" id="events-list-event-template">

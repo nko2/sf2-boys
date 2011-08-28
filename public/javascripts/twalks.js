@@ -52,13 +52,31 @@
         }
     }
 
+    /**
+     * :: Models
+     */
     App.Models.Event = Backbone.Model.extend({
-        url : function() {
-            return this.isNew() ? 'event/new' : 'event/' + this.id;
+        url: function() {
+            return '/events/' + (this.isNew() ? 'new' : this.id) + '.json';
         }
     });
 
-    App.Collections.Event = Backbone.Collection.extend({
+    App.Models.Talk = Backbone.Model.extend({
+        url: function() {
+            return '/events/' + this.eventId + '/' + (this.isNew() ? 'new' : this.id) + '.json';
+        }
+    });
+
+    App.Models.Tweet = Backbone.Model.extend({});
+
+    App.Models.EventTweet = App.Models.Tweet.extend({});
+
+    App.Models.TalkTweet = App.Models.Tweet.extend({});
+
+    /**
+     * :: Collections
+     */
+    App.Collections.Events = Backbone.Collection.extend({
         model: App.Models.Event
       , url:   '/events.json'
     });
@@ -69,10 +87,20 @@
     });
 
     App.Collections.EventsUpcoming = Backbone.Collection.extend({
-        model: App.ModelsEvent
+        model: App.Models.Event
       , url:   '/upcomingEvents.json'
     });
 
+    App.Collections.Talks = Backbone.Collection.extend({
+        model: App.Models.Talk
+      , url:   function() {
+            return '/events/' + this.eventId + '/talks.json';
+        }
+    });
+
+    /**
+     * :: Views
+     */
     App.Views.Event = Backbone.View.extend({
         initialize: function() {
             this.template = _.template($('#event-show-template').html());
@@ -84,6 +112,65 @@
         }
     });
 
+    App.Views.EventsListEvent = App.Views.Event.extend({
+        tagName: 'article'
+      , initialize: function() {
+            this.template = _.template($('#events-list-event-template').html());
+        }
+    });
+
+    App.Views.EventsList = Backbone.View.extend({
+        initialize: function() {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#events-list-template').html());
+            this.collection.bind('reset', this.render);
+        }
+      , render: function() {
+            var $list;
+
+            $(this.el).html(this.template({}));
+            $list = this.$('.list');
+
+            this.collection.each(function(event) {
+                var view = new App.Views.EventsListEvent({ model: event });
+                $list.append(view.render().el);
+            });
+
+            return this;
+        }
+    });
+
+    App.Views.TalksList = App.Views.Event.extend({
+        initialize: function() {
+            this.template = _.template($('#talks-list-template').html());
+        }
+      , render: function() {
+            var days = {}
+              , self = this;
+
+            this.collection
+                .sortBy(function(talk) {
+                    return talk.startsAt;
+                })
+                .forEach(function(talk) {
+                    var day  = dateFormat(talk.startsAt, 'd mmmm yyyy')
+                      , json = talk.toJSON();
+                    json.eventId = self.collection.eventId;
+
+                    if (!(day in days)) {
+                        days[day] = [];
+                    }
+
+                    days[day].push(json);
+                });
+
+            $(this.el).html(this.template({ 'days': days }));
+
+            return this;
+        }
+    });
+
+    // :: Forms
     App.Views.EventForm = Backbone.View.extend({
         initialize: function() {
             this.template = _.template($('#event-form-template').html());
@@ -118,36 +205,11 @@
         }
     });
 
-    App.Views.EventsListEvent = App.Views.Event.extend({
-        tagName: 'article'
-      , initialize: function() {
-            this.template = _.template($('#events-list-event-template').html());
-        }
-    });
+    var eventsCollection = new App.Collections.Events();
 
-    App.Views.EventsList = Backbone.View.extend({
-        initialize: function() {
-            _.bindAll(this, 'render');
-            this.template = _.template($('#events-list-template').html());
-            this.collection.bind('reset', this.render);
-        }
-      , render: function() {
-            var $list;
-
-            $(this.el).html(this.template({}));
-            $list = this.$('.list');
-
-            this.collection.each(function(event) {
-                var view = new App.Views.EventsListEvent({ model: event });
-                $list.append(view.render().el);
-            });
-
-            return this;
-        }
-    });
-
-    var eventsCollection = new App.Collections.Event();
-
+    /**
+     * :: Routers
+     */
     App.Routers.Events = Backbone.Router.extend({
         routes: {
             '':                 'home'
@@ -187,7 +249,7 @@
 
             $('li.active', this.$navigation).removeClass('active');
 
-            var event = new App.Models.Event({ id: id })
+            var event = new App.Models.Event({ 'id': id })
               , self  = this;
 
             event.fetch({
@@ -221,14 +283,31 @@
 
             $('li.active', this.$navigation).removeClass('active');
 
-            var event = new App.Models.Event()
+            var event = new App.Models.Event({ 'id': id })
               , view  = new App.Views.Event({ model: event })
               , self  = this;
 
-            event.fetch({ url: '/events/'+id+'.json' , success: function() {
+            event.fetch({ success: function() {
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
+                    self.talksList(id);
                 });
+            }});
+        }
+      , talksList: function(eventId) {
+            this.showProgressBar();
+
+            var collection = new App.Collections.Talks({ 'eventId': eventId })
+              , listView   = new App.Views.TalksList({ collection: collection })
+              , self       = this;
+            collection.eventId = eventId;
+
+            collection.fetch({ success: function() {
+                self.hideProgressBar();
+
+                $('#talk-footer')
+                    .empty()
+                    .append(listView.render().el);
             }});
         }
       , current: function() {

@@ -436,12 +436,21 @@ body {
     background:url(../images/info-tweets.png) no-repeat -1px 8px;
 }
 #event-show #talks td.author {
+    width:40%;
     padding-left:18px;
     vertical-align:top;
     background:url(../images/info-author.png) no-repeat -1px 8px;
 }
+#event-show #talks td.time {
+    width:0%;
+    padding-left:2px;
+    color:#000;
+}
+#event-show #talks td.tweets {
+    width:0%;
+}
 #event-show #talks td.name {
-    width:60%;
+    width:50%;
 }
 #tweets .tweet .date {
     position:absolute;
