@@ -32,6 +32,7 @@ var express   = require('express')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
   , Twitter   = require('twitter')
+  , links     = require('./lib/links_parser')
 ;
 
 everyauth.twitter
@@ -83,6 +84,29 @@ schema.Event.find({}, function (err, events) {
                             if (event.participants.indexOf(tweet_doc.user) === -1) {
                                 event.participants.push(tweet_doc.user);
                             }
+                            links.parse(tweet_doc.tweet, function(media) {
+                                if (media.type === "error") {
+                                    return;
+                                }
+                                if (event.assets.map(function(asset) {
+                                        return asset.url;
+                                    }).indexOf(media.url) !== -1) {
+                                    return;
+                                }
+                                event.assets.push({
+                                    author       : tweet_doc.user
+                                  , type         : media.type
+                                  , asset_author : (media.author_name || '')
+                                  , provider     : (media.provider_name || '')
+                                  , provider_url : (media.provider_url || '')
+                                  , title        : (media.title || '')
+                                  , description  : (media.description || '')
+                                  , url          : (media.url || '')
+                                  , height       : (media.height || '')
+                                  , width        : (media.width || '')
+                                  , html         : (media.html || '')
+                                });
+                            });
                             event.tweets.push(tweet_doc);
                         }
                         event.talks.forEach(function(talk) {
@@ -91,6 +115,29 @@ schema.Event.find({}, function (err, events) {
                                 if (talk.participants.indexOf(tweet_doc.user) === -1) {
                                     talk.participants.push(tweet_doc.user);
                                 }
+                                links.parse(tweet_doc.tweet, function(media) {
+                                    if (media.type === "error") {
+                                        return;
+                                    }
+                                    if (talk.assets.map(function(asset) {
+                                            return asset.url;
+                                        }).indexOf(media.url) !== -1) {
+                                        return;
+                                    }
+                                    talk.assets.push({
+                                        author       : tweet_doc.user
+                                      , type         : media.type
+                                      , asset_author : (media.author_name || '')
+                                      , provider     : (media.provider_name || '')
+                                      , provider_url : (media.provider_url || '')
+                                      , title        : (media.title || '')
+                                      , description  : (media.description || '')
+                                      , url          : (media.url || '')
+                                      , height       : (media.height || '')
+                                      , width        : (media.width || '')
+                                      , html         : (media.html || '')
+                                    });
+                                });
                                 talk.tweets.push(tweet_doc);
                             }
                         });
