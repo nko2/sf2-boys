@@ -4,7 +4,7 @@
 require('nko')('UJuIrlX5JM5B0V/g');
 
 /**
- * Parameters
+ * Params
  */
 var parameters = {
     twitter: {
