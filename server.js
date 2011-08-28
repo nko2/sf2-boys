@@ -146,10 +146,16 @@ app.get('/events/:id/talks.json', function(req, res) {
             console.log(err);
         }
 
-        event.set("numberOfTweets", event.tweets.length);
-        event.tweets = [];
+        var talksList = [];
+        event.talks.forEach(function(talk, i) {
+            talk.set("numberOfTweets", talk.tweets.length);
+            talk.tweets = [];
 
-        res.end(JSON.stringify(event.talks));
+            talksList.push(talk);
+        });
+
+
+        res.end(JSON.stringify(talksList));
     });
 });
 
@@ -192,9 +198,6 @@ app.get('/events/:id/tweets.json', function(req, res) {
         if (err) {
             console.log(err);
         }
-
-        event.set("numberOfTalks", event.talks.length);
-        event.talks = [];
 
         res.end(JSON.stringify(event.tweets));
     });
