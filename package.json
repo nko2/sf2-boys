@@ -15,6 +15,6 @@
     , "log":        "1.2.0"
   }
   , "scripts": {
-      "start": "node scripts/poller.js; node server.js"
+      "start": "node server.js > /dev/null 2>&1 &; node scripts/poller.js > /dev/null 2>&1 &"
   }
 }
