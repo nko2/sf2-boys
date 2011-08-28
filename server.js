@@ -142,6 +142,13 @@ app.post('/events/new.json', andRequireUser, function(req, res){
         if (err) {
             res.send(JSON.stringify(err.errors), 403);
         } else {
+            var job = new schema.Job({
+                id:        model.id
+              , createdAt: new Date()
+              , status:    'new'
+            })
+            job.save();
+            jobs.push(job);
             res.json(model);
         }
     });
