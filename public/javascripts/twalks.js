@@ -12,16 +12,22 @@
     });
     window.eventsList = new Events();
 
-    window.EventsListEventView = Backbone.View.extend({
-        tagName: 'article'
-      , initialize: function() {
-            this.template = _.template($('#events-list-event-template').html());
+    window.EventView = Backbone.View.extend({
+        initialize: function() {
+            this.template = _.template($('#event-show-template').html());
         }
       , render: function() {
             var content = this.template(this.model.toJSON());
             $(this.el).html(content);
 
             return this;
+        }
+    });
+
+    window.EventsListEventView = EventView.extend({
+        tagName: 'article'
+      , initialize: function() {
+            this.template = _.template($('#events-list-event-template').html());
         }
     });
 
@@ -48,8 +54,9 @@
 
     window.Twalks = Backbone.Router.extend({
         routes: {
-            '':        'home'
-          , 'events':  'events'
+            '':             'home'
+          , 'events':       'events'
+          , 'events/:id':   'event'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
@@ -63,8 +70,21 @@
       , events: function() {
             this.empty();
             $('li.all-events', this.$navigation).addClass('active');
-            this.$container.append(this.eventsListView.render().el);
-            window.eventsList.fetch();
+
+            var self = this;
+            window.eventsList.fetch({ success: function() {
+                self.$container.append(self.eventsListView.render().el);
+            }});
+        }
+      , event: function(id) {
+            this.empty();
+            var event = new Event()
+              , view  = new EventView({ model: event })
+              , self  = this;
+
+            event.fetch({ url: '/events/'+id+'.json' , success: function() {
+                self.$container.append(view.render().el);
+            }});
         }
       , empty: function() {
             $('li.active', this.$navigation).removeClass('active');
