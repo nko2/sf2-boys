@@ -211,15 +211,19 @@
             this.collection.bind('reset', this.render);
         }
       , render: function() {
-            var $list;
+            if (this.collection.length > 0) {
+                var $list;
 
-            $(this.el).html(this.template({}));
-            $list = this.$('.list');
+                $(this.el).html(this.template({}));
+                $list = this.$('.list');
 
-            this.collection.each(function(event) {
-                var view = new App.Views.EventsListEvent({ model: event });
-                $list.append(view.render().el);
-            });
+                this.collection.each(function(event) {
+                    var view = new App.Views.EventsListEvent({ model: event });
+                    $list.append(view.render().el);
+                });
+            } else {
+                $(this.el).html($('#events-list-empty-template').html());
+            }
 
             return this;
         }
