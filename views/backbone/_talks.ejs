@@ -86,11 +86,13 @@
                         {% } %}
                     </h1>
                     <h3>
-                        {% if (typeof event.name != 'undefined') { %}
-                            {{ event.name }}
-                        {% } else { %}
-                            Noname
-                        {% } %}
+                        <a href="#events/{{ event._id }}">
+                            {% if (typeof event.name != 'undefined') { %}
+                                {{ event.name }}
+                            {% } else { %}
+                                Noname
+                            {% } %}
+                        </a>
                         {% if (typeof event.hash != 'undefined') { %}
                             <small>{{ event.hash }}</small>
                         {% } %}
