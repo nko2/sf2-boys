@@ -13,13 +13,26 @@ var poller = require('../lib/poller')
   , Server = mongodb.Server
   ;
 
+// start poll
 var db = new Db('twalks', new Server('staff.mongohq.com', 10090, {}));
 db.open(function(err, client) {
+    if (err) {
+        throw err;
+    }
+
     db.authenticate('user', '111111', function() {
         db.collectionNames(function(err, names) {
+            if (err) {
+                throw err;
+            }
+
             var callback = function(job, collection) {
                 var events = new mongodb.Collection(client, 'events');
                 events.findOne({_id: job.id}, function(err, event) {
+                    if (err) {
+                        throw err;
+                    }
+
                     processEvent(job, collection, event, events);
                 });
             };
@@ -145,11 +158,19 @@ function processEvent(job, collection, event, eventsCollection) {
 
 function createJob(callback) {
     return function (err, collection) {
+        if (err) {
+            throw err;
+        }
+
         var lastCreatedAt;
         collection.find({status: 'old'})
             .sort({'$natural': 1})
             .limit(1)
             .nextObject(function(err, lastJob) {
+                if (err) {
+                    throw err;
+                }
+
                 lastCreatedAt = ((lastJob || {}).createdAt || new Date(0));
 
                 console.log(lastCreatedAt);
@@ -157,10 +178,18 @@ function createJob(callback) {
                 var cursor = collection.find({status: 'new', 'createdAt': {'$gte': lastCreatedAt}}, {tailable: true, timeout: false});
 
                 cursor.each(function(err, job) {
+                    if (err) {
+                        throw err;
+                    }
+
                     console.log(job);
                     job.status = 'run';
 
                     collection.save(job, function(err, job) {
+                        if (err) {
+                            throw err;
+                        }
+
                         console.log(job);
 
                         callback(job, collection);
