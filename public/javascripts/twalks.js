@@ -7,7 +7,7 @@
 
     // Enable close button on alert messages
     $('.alert-message a.close').live('click', function(ev) {
-        $(this).parent().remove();
+        $(this).parent().slideUp('fast', function(){ $(this).remove(); });
         ev.preventDefault();
     });
 
@@ -211,15 +211,19 @@
             this.collection.bind('reset', this.render);
         }
       , render: function() {
-            var $list;
+            if (this.collection.length > 0) {
+                var $list;
 
-            $(this.el).html(this.template({}));
-            $list = this.$('.list');
+                $(this.el).html(this.template({}));
+                $list = this.$('.list');
 
-            this.collection.each(function(event) {
-                var view = new App.Views.EventsListEvent({ model: event });
-                $list.append(view.render().el);
-            });
+                this.collection.each(function(event) {
+                    var view = new App.Views.EventsListEvent({ model: event });
+                    $list.append(view.render().el);
+                });
+            } else {
+                $(this.el).html($('#events-list-empty-template').html());
+            }
 
             return this;
         }
@@ -330,14 +334,10 @@
             this.$navigation    = $('#navigation');
             this.$secondaryNav  = $('.secondary-nav', this.$navigation);
             this.eventsListView = new App.Views.EventsList({ collection: eventsCollection });
-            this.$errorNotif    = $('#error-notification');
             this.$searchInput   = $('#search-form input');
 
             var self = this
               , timeout;
-            $('#error-notification .close').click(function() {
-                self.$errorNotif.slideUp(200);
-            });
 
             this.$searchInput.keyup(function() {
                 clearTimeout(timeout);
@@ -413,7 +413,7 @@
                         self.displayContainer(self.eventsListView.render().el);
                     });
                 }
-            }, error: function(){ this.displayErrorNotification('Events list', 'fetching failed'); } });
+            }, error: function(){ alertMessage('warning', 'We encountered an error fetching your events.'); });
         }
       , listMy: function() {
             this.showProgressBar();
@@ -429,7 +429,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }, error: function(){ this.displayErrorNotification('My events', 'fetching failed'); } });
+            }, error: function(){ alertMessage('warning', 'We encountered an error fetching your events.'); });
         }
       , listCurrent: function() {
             this.showProgressBar();
@@ -445,7 +445,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }, error: function(){ this.displayErrorNotification('Current events', 'fetching failed'); } });
+            }, error: function(){ alertMessage('warning', 'We encountered an error fetching ongoing events.'); });
         }
       , listUpcoming: function() {
             this.showProgressBar();
@@ -461,7 +461,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }, error: function(){ this.displayErrorNotification('Upcoming events', 'fetching failed'); } });
+            }, error: function(){ alertMessage('warning', 'We encountered an error fetching upcoming events.'); });
         }
       , showEvent: function(id) {
             this.showProgressBar();
@@ -482,11 +482,7 @@
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
                 });
-            }, error: function(){ this.displayErrorNotification('Event', 'fetching failed'); } });
-        }
-      , displayErrorNotification: function(title, description) {
-            this.$errorNotif.find('p').empty().append('<strong>'+title+'</strong> '+description);
-            this.$errorNotif.slideDown(300);
+            }, error: function(){ alertMessage('warning', 'We encountered an error fetching this event.'); });
         }
       , showProgressBar: function() {
             $('li.user', this.$secondaryNav).stop().hide();

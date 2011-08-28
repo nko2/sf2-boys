@@ -23,13 +23,6 @@ body {
     text-align:center;
     margin-top:250px;
 }
-#error-notification {
-    margin-top:-3px;
-    position:fixed;
-    width:910px;
-    z-index:5;
-    display:none;
-}
 #intro .logo h1 {
     font-family:Leckerli One;
     font-size:128px;
@@ -173,6 +166,13 @@ body {
     background:url(../images/info-clock.png) no-repeat 0px 8px;
     padding-left:20px;
     text-align:left;
+}
+#events-list.empty {
+    content: '';
+    z-index: 1;
+    background: white;
+    margin: 15px auto;
+    text-align: center;
 }
 #events-list .list article .time i {
     font-weight:bold;
@@ -551,6 +551,10 @@ body {
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
     -o-border-radius:10px;
+}
+
+div.input {
+    position: relative;
 }
 
 #flash {
