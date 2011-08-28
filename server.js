@@ -206,6 +206,15 @@ app.get('/events.json', function(req, res){
 
         var eventList = [];
         events.forEach(function(event, i) {
+            if (typeof req.query.q !== "undefined" &&
+                [  event.hash
+                 , event.name
+                 , event.description
+                 , event.author
+                ].join(" ").search(new RegExp(req.query.q)) === -1) {
+                return;
+            }
+
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
@@ -314,7 +323,15 @@ app.get('/events/:id/tweets.json', function(req, res) {
             return;
         }
 
-        res.json(event.tweets, 200);
+        res.json(event.tweets.sort(function(a, b) {
+            var aTime = a.postedAt.getTime()
+              , bTime = b.postedAt.getTime();
+
+            if (aTime === bTime) {
+                return 0;
+            }
+            return aTime > bTime ? 1 : -1
+        }), 200);
     });
 });
 

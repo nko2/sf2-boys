@@ -81,7 +81,7 @@
             this.router = new App.Routers.Events();
             Backbone.history.start();
         }
-    }
+    };
 
     /**
      * :: Models
@@ -93,6 +93,8 @@
     });
 
     App.Models.Tweet = Backbone.Model.extend({});
+
+    App.Models.Asset = Backbone.Model.extend({});
 
     /**
      * :: Collections
@@ -124,6 +126,26 @@
         }
     });
 
+    App.Collections.EventPhotos = Backbone.Collection.extend({
+        model: App.Models.Asset
+      , url:   function() {
+            return '/events/' + this.eventId + '/assets/photo.json';
+        }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
+        }
+    });
+
+    App.Collections.EventVideos = Backbone.Collection.extend({
+        model: App.Models.Asset
+      , url:   function() {
+            return '/events/' + this.eventId + '/assets/video.json';
+        }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
+        }
+    });
+
     /**
      * :: Views
      */
@@ -131,6 +153,8 @@
         initialize: function(options) {
             this.talksCollection  = options.talksCollection;
             this.tweetsCollection = options.tweetsCollection;
+            this.photosCollection = options.photosCollection;
+            this.videosCollection = options.videosCollection;
             this.template         = _.template($('#event-show-template').html());
         }
       , render: function() {
@@ -148,6 +172,26 @@
                     $tabsContent.empty().append(view.render().el);
                 }});
             }).click();
+
+            this.$('.tabs .photos a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.photosCollection.fetch({ success: function() {
+                    var view = new App.Views.PhotosList({ collection: self.photosCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            });
+
+            this.$('.tabs .videos a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.videosCollection.fetch({ success: function() {
+                    var view = new App.Views.VideosList({ collection: self.videosCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            });
 
             return this;
         }
@@ -187,6 +231,28 @@
         }
       , render: function() {
             $(this.el).html(this.template({ 'tweets': this.collection.toJSON() }));
+
+            return this;
+        }
+    });
+
+    App.Views.PhotosList = App.Views.Event.extend({
+        initialize: function() {
+            this.template = _.template($('#photos-list-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template({ 'photos': this.collection.toJSON() }));
+
+            return this;
+        }
+    });
+
+    App.Views.VideosList = App.Views.Event.extend({
+        initialize: function() {
+            this.template = _.template($('#videos-list-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template({ 'videos': this.collection.toJSON() }));
 
             return this;
         }
@@ -264,6 +330,12 @@
             this.$navigation    = $('#navigation');
             this.$secondaryNav  = $('.secondary-nav', this.$navigation);
             this.eventsListView = new App.Views.EventsList({ collection: eventsCollection });
+            this.$errorNotif    = $('#error-notification');
+
+            var self = this;
+            $('#error-notification .close').click(function() {
+                self.$errorNotif.slideUp(200);
+            });
         }
       , home: function() {
             $('li.active', this.$navigation).removeClass('active');
@@ -299,8 +371,8 @@
                     });
                 }
               , error: function() {
-                    new Error({ message: 'Could not find that event.' });
-                    this.navigate('', true);
+                    self.hideProgressBar();
+                    self.navigate('', true);
                 }
             });
       }
@@ -315,7 +387,7 @@
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(self.eventsListView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Events list', 'fetching failed'); } });
         }
       , listMy: function() {
             this.showProgressBar();
@@ -331,7 +403,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('My events', 'fetching failed'); } });
         }
       , listCurrent: function() {
             this.showProgressBar();
@@ -347,7 +419,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Current events', 'fetching failed'); } });
         }
       , listUpcoming: function() {
             this.showProgressBar();
@@ -363,7 +435,7 @@
                 self.hideAndEmptyContainer(function() {
                     self.displayContainer(listView.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Upcoming events', 'fetching failed'); } });
         }
       , showEvent: function(id) {
             this.showProgressBar();
@@ -374,6 +446,8 @@
               , view  = new App.Views.Event({
                     model:             event
                   , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
+                  , photosCollection:  new App.Collections.EventPhotos([], { 'eventId': id })
+                  , videosCollection:  new App.Collections.EventVideos([], { 'eventId': id })
                 })
               , self  = this
             ;
@@ -382,7 +456,11 @@
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
                 });
-            }});
+            }, error: function(){ this.displayErrorNotification('Event', 'fetching failed'); } });
+        }
+      , displayErrorNotification: function(title, description) {
+            this.$errorNotif.find('p').empty().append('<strong>'+title+'</strong> '+description);
+            this.$errorNotif.slideDown(300);
         }
       , showProgressBar: function() {
             $('li.user', this.$secondaryNav).stop().hide();
