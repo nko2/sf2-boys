@@ -206,6 +206,15 @@ app.get('/events.json', function(req, res){
 
         var eventList = [];
         events.forEach(function(event, i) {
+            if (typeof req.query.q !== "undefined" &&
+                [  event.hash
+                 , event.name
+                 , event.description
+                 , event.author
+                ].join(" ").search(new RegExp(req.query.q)) === -1) {
+                return;
+            }
+
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
 
