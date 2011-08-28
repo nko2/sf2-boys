@@ -74,14 +74,17 @@ schema.Event.find({}, function (err, events) {
                                     return hashCandidate.replace(/[^A-z0-9]/g, '');
                                 })
                     }
-                    event.tweets.push(tweet_doc);
-                    event.talks.forEach(function(talk) {
-                        if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1) {
-                            talk.tweets.push(tweet_doc);
-                        }
-                    });
-                    event.save();
+                    if (tweet_doc.postedAt.getTime() > event.lastSync.getTime()) {
+                        event.tweets.push(tweet_doc);
+                        event.talks.forEach(function(talk) {
+                            if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1) {
+                                talk.tweets.push(tweet_doc);
+                            }
+                        });
+                    }
                 });
+                event.lastSync = new Date();
+                event.save();
             }
         });
         poll.startPolling();
