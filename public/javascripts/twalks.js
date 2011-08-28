@@ -5,6 +5,12 @@
       , evaluate:    /\{\%(.+?)\%\}/g
     };
 
+    // Enable close button on alert messages
+    $('.alert-message a.close').live('click', function(ev) {
+        $(this).parent().remove();
+        ev.preventDefault();
+    });
+
     var App = {
         Collections: {}
       , Models: {}
@@ -148,6 +154,18 @@
       , empty: function() {
             $('li.active', this.$navigation).removeClass('active');
             this.$container.empty();
+        }
+      , alertMessage: function(type, msg) {
+            if (-1 == ['error', 'info' , 'success', 'warning'].indexOf(type)) {
+                return;
+            }
+
+            $('<div class="alert-message"><a href="#" class="close">×</a><p></p></div>')
+                .addClass(type)
+                .children('p')
+                    .text(msg)
+                    .end()
+                .prependTo(this.$container);
         }
     });
 
