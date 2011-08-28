@@ -87,6 +87,18 @@ function startPolling() {
         });
         startPolling();
     });
+
+    process.on('exit', function(code) {
+        child.kill();
+    })
+
+    process.on('SIGINT', function () {
+        child.kill();
+    });
+
+    process.on('SIGTERM', function() {
+        child.kill();
+    })
 }
 
 startPolling();

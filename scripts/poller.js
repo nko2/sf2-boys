@@ -55,6 +55,10 @@ process.on('SIGINT', function () {
     process.exit();
 });
 
+process.on('SIGTERM', function() {
+    process.exit();
+})
+
 function mapper(field) {
     return function(object) {
         return object[field];
