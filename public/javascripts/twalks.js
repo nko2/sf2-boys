@@ -343,7 +343,9 @@
                 clearTimeout(timeout);
                 timeout = setTimeout(function() {
                     if ('' !== self.$searchInput.val().replace(/^ +| +$/, '')) {
-                        self.listEvents(true);
+                        self.hideAndEmptyContainer(function() {
+                            self.listEvents(true);
+                        });
                     }
                     clearTimeout(timeout);
                 }, 1000);
