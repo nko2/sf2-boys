@@ -295,6 +295,7 @@
                     window.App.router.navigate('events/' + model.get('_id'), true);
                 }
               , error: function(model, err) {
+                    console.log(err);
                     alertMessage('error', 'Oops! There was a problem submitting this form. Please fix the errors below and try again.');
                     var errors = $.parseJSON(err.responseText)
                       , self   = this;
@@ -405,15 +406,20 @@
                 eventsCollection.url = '/events.json';
             }
 
-            eventsCollection.fetch({ success: function() {
-                if (withoutAnimation) {
-                    self.displayContainer(self.eventsListView.render().el);
-                } else {
-                    self.hideAndEmptyContainer(function(){
+            eventsCollection.fetch({
+                success: function() {
+                    if (withoutAnimation) {
                         self.displayContainer(self.eventsListView.render().el);
-                    });
+                    } else {
+                        self.hideAndEmptyContainer(function(){
+                            self.displayContainer(self.eventsListView.render().el);
+                        });
+                    }
                 }
-            }, error: function(){ alertMessage('warning', 'We encountered an error fetching your events.'); });
+              , error: function(){
+                    alertMessage('warning', 'We encountered an error fetching your events.');
+                }
+            });
         }
       , listMy: function() {
             this.showProgressBar();
@@ -425,11 +431,16 @@
               , collection = new App.Collections.EventsMy
               , listView = new App.Views.EventsList({ collection: collection });
 
-            collection.fetch({ success: function() {
-                self.hideAndEmptyContainer(function() {
-                    self.displayContainer(listView.render().el);
-                });
-            }, error: function(){ alertMessage('warning', 'We encountered an error fetching your events.'); });
+            collection.fetch({
+                success: function() {
+                    self.hideAndEmptyContainer(function() {
+                        self.displayContainer(listView.render().el);
+                    });
+                }
+              , error: function(){
+                    alertMessage('warning', 'We encountered an error fetching your events.');
+                }
+            });
         }
       , listCurrent: function() {
             this.showProgressBar();
@@ -441,11 +452,16 @@
               , collection = new App.Collections.EventsCurrent
               , listView = new App.Views.EventsList({ collection: collection });
 
-            collection.fetch({ success: function() {
-                self.hideAndEmptyContainer(function() {
-                    self.displayContainer(listView.render().el);
-                });
-            }, error: function(){ alertMessage('warning', 'We encountered an error fetching ongoing events.'); });
+            collection.fetch({
+                success: function() {
+                    self.hideAndEmptyContainer(function() {
+                        self.displayContainer(listView.render().el);
+                    });
+                }
+              , error: function(){
+                    alertMessage('warning', 'We encountered an error fetching ongoing events.');
+                }
+            });
         }
       , listUpcoming: function() {
             this.showProgressBar();
@@ -457,11 +473,16 @@
               , collection = new App.Collections.EventsUpcoming
               , listView = new App.Views.EventsList({ collection: collection });
 
-            collection.fetch({ success: function() {
-                self.hideAndEmptyContainer(function() {
-                    self.displayContainer(listView.render().el);
-                });
-            }, error: function(){ alertMessage('warning', 'We encountered an error fetching upcoming events.'); });
+            collection.fetch({
+                success: function() {
+                    self.hideAndEmptyContainer(function() {
+                        self.displayContainer(listView.render().el);
+                    });
+                }
+              , error: function(){
+                    alertMessage('warning', 'We encountered an error fetching upcoming events.');
+                }
+            });
         }
       , showEvent: function(id) {
             this.showProgressBar();
@@ -478,11 +499,16 @@
               , self  = this
             ;
 
-            event.fetch({ success: function() {
-                self.hideAndEmptyContainer(function(){
-                    self.displayContainer(view.render().el);
-                });
-            }, error: function(){ alertMessage('warning', 'We encountered an error fetching this event.'); });
+            event.fetch({
+                success: function() {
+                    self.hideAndEmptyContainer(function(){
+                        self.displayContainer(view.render().el);
+                    });
+                }
+              , error: function(){
+                    alertMessage('warning', 'We encountered an error fetching this event.');
+                }
+            });
         }
       , showProgressBar: function() {
             $('li.user', this.$secondaryNav).stop().hide();
