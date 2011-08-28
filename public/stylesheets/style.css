@@ -93,6 +93,7 @@ body {
     border-radius:10px;
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
+    -o-border-radius:10px;
 }
 #intro .columns h4 {
     margin-top:10px;
@@ -132,6 +133,7 @@ body {
 #events-list .list {
     border-radius:5px;
     -moz-border-radius:5px;
+    -o-border-radius:5px;
     -webkit-border-radius:5px;
     padding:10px 0px;
 }
@@ -161,6 +163,7 @@ body {
     width:100px;
     height:75px;
     border-radius:100px;
+    -o-border-radius:100px;
     -moz-border-radius:100px;
     -webkit-border-radius:100px;
     text-align:center;
@@ -196,14 +199,16 @@ body {
     overflow:hidden;
     border:8px solid #fff;
     border-radius:160px;
+    -o-border-radius:160px;
     -moz-border-radius:160px;
     -webkit-border-radius:160px;
     background:#fff;
 }
-#events-list .list article .map img {
+#events-list .list article .map .img {
     border-radius:150px;
     -moz-border-radius:150px;
     -webkit-border-radius:150px;
+    -o-border-radius:150px;
 }
 #events-list .list article > section {
     margin-top: 26px;
@@ -228,6 +233,7 @@ body {
     background: white;
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
     -webkit-box-shadow: 0px 0px 2px #CCC;
     box-shadow: 0px 0px 2px #CCC;
@@ -299,6 +305,7 @@ body {
     border-radius:5px;
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
+    -o-border-radius:5px;
     padding:10px 0px;
 }
 #event-show .item article {
@@ -324,12 +331,14 @@ body {
     border-radius:160px;
     -moz-border-radius:160px;
     -webkit-border-radius:160px;
+    -o-border-radius:160px;
     background:#fff;
 }
-#event-show .item article .map img {
+#event-show .item article .map .img {
     border-radius:150px;
     -moz-border-radius:150px;
     -webkit-border-radius:150px;
+    -o-border-radius:150px;
 }
 #event-show img.image {
     float:left;
@@ -363,6 +372,7 @@ body {
     background: white;
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
     -webkit-box-shadow: 0px 0px 2px #CCC;
     box-shadow: 0px 0px 2px #CCC;
@@ -515,6 +525,7 @@ body {
     border-radius:200px;
     -webkit-border-radius:200px;
     -moz-border-radius:200px;
+    -o-border-radius:200px;
     text-align:center;
 }
 #event-show .item article .map .time i {
@@ -539,6 +550,7 @@ body {
     border-radius:10px;
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
+    -o-border-radius:10px;
 }
 
 #flash {

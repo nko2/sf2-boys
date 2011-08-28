@@ -57,9 +57,9 @@
             {% } %}
         </span>
         {% if (typeof location != 'undefined') { %}
-            <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&zoom=13&size=150x150&sensor=false" />
+            <div class="img" style="width:150px; height:150px; background:url(http://maps.google.com/maps/api/staticmap?center={{ location }}&zoom=13&size=150x150&sensor=false);"></div>
         {% } else { %}
-            <img width="150" height="150" src="http://maps.google.com/maps/api/staticmap?center=Unknown&zoom=13&size=150x150&sensor=false" />
+            <div class="img" style="width:150px; height:150px; background:url(http://maps.google.com/maps/api/staticmap?center=Unknown&zoom=13&size=150x150&sensor=false);"></div>
         {% } %}
     </header>
     <section>
@@ -115,9 +115,9 @@
             <article>
                 <header class="map">
                 {% if (typeof location != 'undefined') { %}
-                    <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center={{ location }}&markers=size:mid|color:blue|{{ location }}&zoom=13&size=300x300&sensor=false" />
+                    <div class="img" style="width:300px; height:300px; background:url(http://maps.google.com/maps/api/staticmap?center={{ location }}&markers=size:mid|color:blue|{{ location }}&zoom=13&size=300x300&sensor=false);"></div>
                 {% } else { %}
-                    <img width="300" height="300" src="http://maps.google.com/maps/api/staticmap?center=Unknown&markers=size:mid|color:blue|Unknown&zoom=13&size=300x300&sensor=false" />
+                    <div class="img" style="width:300px; height:300px; background:url(http://maps.google.com/maps/api/staticmap?center=Unknown&markers=size:mid|color:blue|Unknown&zoom=13&size=300x300&sensor=false);"></div>
                 {% } %}
                 </header>
                 <section>
