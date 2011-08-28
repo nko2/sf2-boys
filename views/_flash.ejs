@@ -1,0 +1,25 @@
+<% if (flash) { %>
+    <div id="flash" class="row">
+        <section class="span16 columns">
+            <% ['error', 'warning', 'success', 'info'].forEach(function(type){ %>
+                <% if (flash[type]) { %>
+                    <% flash[type].forEach(function(message){ %>
+                        <div class="alert-message <%= type %>">
+                            <a href="#" class="close">×</a>
+                            <p><%= message %></p>
+                        </div>
+                    <% }) %>
+                <% } %>
+            <% }) %>
+        </section>
+    </div>
+
+    <script type="text/javascript">
+    $(function(){
+        $('.alert-message a.close').click(function(ev) {
+            $(this).parent().remove();
+            ev.stopPropagation();
+        });
+    });
+    </script>
+<% } %>
