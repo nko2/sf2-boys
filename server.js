@@ -136,7 +136,7 @@ app.get('/', function(req, res){
 });
 
 function andRequireUser(req, res, next) {
-    req.loggedIn ? next() : next(new Error('Unauthorized'));
+    req.loggedIn ? next() : res.send('Unauthorized', 403);
 }
 
 app.post('/events/new.json', andRequireUser, function(req, res){
@@ -148,7 +148,7 @@ app.post('/events/new.json', andRequireUser, function(req, res){
       , imageUrl:    req.body.imageUrl
       , location:    req.body.location
       , description: req.body.description
-      , author:      req.session.auth.twitter.user.name
+      , author:      req.session.auth.twitter.user.screen_name
     });
 
     event.save(function(err, model){
@@ -171,7 +171,7 @@ app.put('/events/:id.json', andRequireUser, function(req, res){
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
         if (err) {
             res.send('Can not find event', 404);
-        } else if (event.get('author') !== req.session.auth.twitter.user.name) {
+        } else if (event.get('author') !== req.session.auth.twitter.user.screen_name) {
             res.send('You have no rights', 403);
         } else {
             event.set('name'        , req.body.name);
@@ -243,7 +243,7 @@ app.get('/events.json', function(req, res){
 });
 
 app.get('/events/my.json', andRequireUser, function(req, res) {
-    schema.Event.find({author: req.session.auth.twitter.user.name}, function(err, events) {
+    schema.Event.find({author: req.session.auth.twitter.user.screen_name}, function(err, events) {
         if (err) {
             console.log(err);
             res.json({error: true}, 500);
