@@ -65,6 +65,9 @@
         url: function() {
             return '/events/' + this.eventId + '/' + (this.isNew() ? 'new' : this.id) + '.json';
         }
+      , initialize: function(attributes, options) {
+            this.eventId = options.eventId;
+        }
     });
 
     App.Models.Tweet = Backbone.Model.extend({});
@@ -92,12 +95,18 @@
       , url:   function() {
             return '/events/' + this.eventId + '/talks.json';
         }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
+        }
     });
 
     App.Collections.EventTweets = Backbone.Collection.extend({
         model: App.Models.Tweet
       , url:   function() {
             return '/events/' + this.eventId + '/tweets.json';
+        }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
         }
     });
 
@@ -106,17 +115,46 @@
       , url:   function() {
             return '/events/' + this.eventId + '/talks/' + this.talkId + '/tweets.json';
         }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
+            this.talkId  = options.talkId;
+        }
     });
 
     /**
      * :: Views
      */
     App.Views.Event = Backbone.View.extend({
-        initialize: function() {
-            this.template = _.template($('#event-show-template').html());
+        initialize: function(options) {
+            this.talksCollection  = options.talksCollection;
+            this.tweetsCollection = options.tweetsCollection;
+            this.template         = _.template($('#event-show-template').html());
         }
       , render: function() {
             $(this.el).html(this.template(this.model.toJSON()));
+
+            var self         = this,
+                $tabsContent = this.$('.event-footer-content');
+
+            this.$('.tabs .talks a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.talksCollection.fetch({ success: function() {
+                    var view = new App.Views.TalksList({ collection: self.talksCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            }).click();
+
+            this.$('.tabs .tweets a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.tweetsCollection.fetch({ success: function() {
+                    var view = new App.Views.TweetsList({ collection: self.tweetsCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            });
 
             return this;
         }
@@ -305,49 +343,17 @@
             $('li.active', this.$navigation).removeClass('active');
 
             var event = new App.Models.Event({ 'id': id })
-              , view  = new App.Views.Event({ model: event })
+              , view  = new App.Views.Event({
+                    model:             event
+                  , talksCollection:   new App.Collections.Talks([], { 'eventId': id })
+                  , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
+                })
               , self  = this
-              , eventTalksList = function(eventId) {
-                    self.showProgressBar();
-
-                    var collection = new App.Collections.Talks({ 'eventId': eventId })
-                      , listView   = new App.Views.TalksList({ collection: collection });
-                    collection.eventId = eventId;
-
-                    collection.fetch({ success: function() {
-                        self.hideProgressBar();
-                        $('#talk-footer').empty().append(listView.render().el);
-                    }});
-                }
-              , eventTweetsList = function(eventId) {
-                    self.showProgressBar();
-
-                    var collection = new App.Collections.EventTweets()
-                      , listView   = new App.Views.TweetsList({ collection: collection });
-                    collection.eventId = eventId;
-
-                    collection.fetch({ success: function() {
-                        self.hideProgressBar();
-                        $('#talk-footer').empty().append(listView.render().el);
-                    }});
-                }
             ;
 
             event.fetch({ success: function() {
                 self.hideAndEmptyContainer(function(){
                     self.displayContainer(view.render().el);
-
-                    $('#event-show footer .tabs .talks a').click(function() {
-                        $('#event-show footer .tabs li.active').removeClass('active');
-                        $(this).parent().addClass('active');
-                        eventTalksList(id);
-                    }).click();
-
-                    $('#event-show footer .tabs .tweets a').click(function() {
-                        $('#event-show footer .tabs li.active').removeClass('active');
-                        $(this).parent().addClass('active');
-                        eventTweetsList(id);
-                    });
                 });
             }});
         }
