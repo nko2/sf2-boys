@@ -81,9 +81,17 @@
             {% } %}
         </p>
         <ul class="infobar">
-            {% if (typeof startsAt !== 'undefined') { %}
-                <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
-            {% } %}
+            <li class="time-precise">
+                {% if (typeof startsAt !== 'undefined') { %}
+                    {{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}
+                {% } %}
+                &mdash;
+                {% if (typeof endsAt != 'undefined') { %}
+                    {{ dateFormat(endsAt, 'yyyy-mm-dd, h:MM') }}
+                {% } else { %}
+                    xxxx-xx-xx, x:xx
+                {% } %}
+            </li>
             {% if (typeof participants !== 'undefined') { %}
                 <li class="people">{{ participants.length }}</li>
             {% } %}
