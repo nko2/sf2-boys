@@ -128,14 +128,31 @@ app.post('/events/new.json', andRequireUser, function(req, res){
     });
 });
 
-app.put('/events/:id', andRequireUser, function(req, res){
+app.put('/events/:id.json', andRequireUser, function(req, res){
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
         if (err) {
-            console.log(err);
+            res.send('Can not find event', 404);
+        } else if (event.get('author') !== req.session.auth.twitter.user.name) {
+            res.send('You have no rights', 403);
         } else {
-            // TODO: save edited fields
+            event.set('name'        , req.body.name);
+            event.set('hash'        , req.body.hash);
+            event.set('startsAt'    , new Date(req.body.startsAtDate + ' ' + req.body.startsAtTime));
+            event.set('endsAt'      , new Date(req.body.endsAtDate + ' ' + req.body.endsAtTime));
+            event.set('imageUrl'    , req.body.imageUrl);
+            event.set('overview'    , req.body.overview);
+            event.set('location'    , req.body.location);
+            event.set('description' , req.body.description);
+
+            event.save(function(err, model){
+                if (err) {
+                    res.send(JSON.stringify(err.errors), 403);
+                } else {
+                    res.json(model);
+                }
+            });
         }
-    })
+    });
 });
 
 app.get('/events.json', function(req, res){

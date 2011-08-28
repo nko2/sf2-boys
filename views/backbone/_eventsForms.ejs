@@ -16,7 +16,7 @@
                         <div class="input">
                             <div class="input-prepend">
                                 <span class="add-on">#</span>
-                                <input type="text" name="hash" id="event_hash" size="30" value="{{ model.get('hash') }}">
+                                <input type="text" name="hash" id="event_hash" size="30" value="{{ model.get('hash').replace(/^#/, '') }}">
                             </div>
                         </div>
                     </div>
