@@ -71,6 +71,7 @@ schema.Event.find({}, function (err, events) {
                         tweet: tweet.text,
                         postedAt: new Date(tweet.created_at),
                         user: tweet.from_user,
+                        avatarUrl: tweet.profile_image_url,
                         hashes: tweet.text.split(' ').filter(function(word) {
                                     return word[0] === "#";
                                 }).map(function(hashCandidate) {
@@ -79,11 +80,17 @@ schema.Event.find({}, function (err, events) {
                     }
                     if (tweet_doc.postedAt.getTime() > event.lastSync.getTime()) {
                         if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                            if (event.participants.indexOf(tweet_doc.user) === -1) {
+                                event.participants.push(tweet_doc.user);
+                            }
                             event.tweets.push(tweet_doc);
                         }
                         event.talks.forEach(function(talk) {
                             if (tweet_doc.hashes.indexOf(talk.hash.substring(1)) !== -1 &&
                                 talk.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
+                                if (talk.participants.indexOf(tweet_doc.user) === -1) {
+                                    talk.participants.push(tweet_doc.user);
+                                }
                                 talk.tweets.push(tweet_doc);
                             }
                         });
