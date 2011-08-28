@@ -86,6 +86,16 @@
         }
     });
 
+    App.Collections.EventVideos = Backbone.Collection.extend({
+        model: App.Models.Asset
+      , url:   function() {
+            return '/events/' + this.eventId + '/assets/video.json';
+        }
+      , initialize: function(models, options) {
+            this.eventId = options.eventId;
+        }
+    });
+
     /**
      * :: Views
      */
@@ -94,6 +104,7 @@
             this.talksCollection  = options.talksCollection;
             this.tweetsCollection = options.tweetsCollection;
             this.photosCollection = options.photosCollection;
+            this.videosCollection = options.videosCollection;
             this.template         = _.template($('#event-show-template').html());
         }
       , render: function() {
@@ -118,6 +129,16 @@
 
                 self.photosCollection.fetch({ success: function() {
                     var view = new App.Views.PhotosList({ collection: self.photosCollection });
+                    $tabsContent.empty().append(view.render().el);
+                }});
+            });
+
+            this.$('.tabs .videos a').click(function() {
+                self.$('.tabs li.active').removeClass('active');
+                $(this).parent().addClass('active');
+
+                self.videosCollection.fetch({ success: function() {
+                    var view = new App.Views.VideosList({ collection: self.videosCollection });
                     $tabsContent.empty().append(view.render().el);
                 }});
             });
@@ -171,6 +192,17 @@
         }
       , render: function() {
             $(this.el).html(this.template({ 'photos': this.collection.toJSON() }));
+
+            return this;
+        }
+    });
+
+    App.Views.VideosList = App.Views.Event.extend({
+        initialize: function() {
+            this.template = _.template($('#videos-list-template').html());
+        }
+      , render: function() {
+            $(this.el).html(this.template({ 'videos': this.collection.toJSON() }));
 
             return this;
         }
@@ -359,6 +391,7 @@
                     model:             event
                   , tweetsCollection:  new App.Collections.EventTweets([], { 'eventId': id })
                   , photosCollection:  new App.Collections.EventPhotos([], { 'eventId': id })
+                  , videosCollection:  new App.Collections.EventVideos([], { 'eventId': id })
                 })
               , self  = this
             ;

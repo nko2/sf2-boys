@@ -29,6 +29,17 @@
     </section>
 </script>
 
+<script type="text/template" id="videos-list-template">
+    <section id="photos">
+        {% _.each(videos, function(video) { %}
+            <a target="_blank" href="{{ video.url }}">
+                <h5>{{ video.description }}</h5>
+                <img width="400px" src="https://i.ytimg.com/vi/{{ video.url.replace(/^.*v=/, '') }}/hqdefault.jpg"/>
+            </a>
+        {% }); %}
+    </section>
+</script>
+
 <script type="text/template" id="events-list-template">
     <div id="events-list" class="row">
         <section class="span16 columns list">
@@ -162,6 +173,7 @@
                         <ul class="tabs">
                             <li class="tweets"><a href="javascript:void(0)">Tweets</a></li>
                             <li class="photos"><a href="javascript:void(0)">Photos</a></li>
+                            <li class="videos"><a href="javascript:void(0)">Videos</a></li>
                         </ul>
 
                         <div class="event-footer-content"></div>
