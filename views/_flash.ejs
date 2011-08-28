@@ -1,4 +1,4 @@
-<% if (flash) { %>
+<% if (typeof(flash) != 'undefined') { %>
     <div id="flash" class="row">
         <section class="span16 columns">
             <% ['error', 'warning', 'success', 'info'].forEach(function(type){ %>
