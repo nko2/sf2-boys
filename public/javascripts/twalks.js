@@ -268,24 +268,42 @@
             return this;
         }
       , save: function() {
-            var self = this
-              , msg = this.model.isNew() ? 'Successfully created!' : 'Saved!';
+            var self  = this
+              , msg   = this.model.isNew() ? 'Successfully created!' : 'Saved!'
+              , data  = this.$('form').serializeObject();
 
-            this.model.save(this.$('form').serializeObject(), {
-                success: function(model, res) {
-                    alertMessage('info', msg);
-                    self.model = model;
-                    self.render();
-                    self.delegateEvents();
+            this.formValid = true;
+            this.$('form .error').removeClass('error');
 
-                    Backbone.history.navigate('#event/' + model.id);
-                }
-              , error: function() {
-                    alertMessage('error', 'An error occurred');
-                }
-            });
+            this.validateString('name', data);
+            this.validateString('hash', data);
+            this.validateString('location', data);
+            this.validateString('imageUrl', data);
+            this.validateString('description', data);
+
+            if (this.formValid) {
+                this.model.save(data, {
+                    success: function(model, res) {
+                        self.model = model;
+                        self.render();
+                        self.delegateEvents();
+
+                        window.App.Routers.Events.navigate('#events/' + model.id, true);
+                    }
+                  , error: function() {
+                        alertMessage('error', 'An error occurred');
+                    }
+                });
+            }
 
             return false;
+        }
+      , validateString: function(fieldName, data) {
+            if ('' === data[fieldName].replace('/^ +| +$/', '')) {
+                this.$('form .' + fieldName).addClass('error');
+
+                this.formValid = false;
+            }
         }
     });
 

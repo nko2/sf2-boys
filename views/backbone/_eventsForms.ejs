@@ -4,73 +4,62 @@
             <form>
                 <h1>{{ model.isNew() ? 'Create' : 'Edit' }} an Event</h1>
                 <fieldset>
-                    <div class="clearfix">
+                    <div class="clearfix name">
                         <label for="event_name">Name</label>
                         <div class="input">
                             <input type="text" name="name" id="event_name" size="30" value="{{ model.get('name') }}">
                         </div>
                     </div>
 
-                    <div class="clearfix">
+                    <div class="clearfix hash">
                         <label for="event_hash">Hash Tag</label>
                         <div class="input">
                             <div class="input-prepend">
                                 <span class="add-on">#</span>
-                                <input type="text" name="createdBy" id="event_hash" size="30" value="{{ model.get('hash') }}">
+                                <input type="text" name="hash" id="event_hash" size="30" value="{{ model.get('hash') }}">
                             </div>
                         </div>
                     </div>
 
-                    <div class="clearfix">
-                        <label for="event_createdBy">Creator</label>
-                        <div class="input">
-                            <div class="input-prepend">
-                                <span class="add-on">@</span>
-                                <input type="text" name="createdBy" id="event_createdBy" size="15" readonly="readonly" class="medium" value="{{ model.isNew() ? '' : model.get('createdBy')}}">
-                                <span class="help-block">We've filled this in automatically.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clearfix">
+                    <div class="clearfix location">
                         <label for="event_location">Location</label>
                         <div class="input">
                             <input type="text" name="location" id="event_location" size="30" class="xlarge" value="{{ model.get('location') }}">
+                            <span class="help-inline">Text representation of location.</span>
                         </div>
                     </div>
 
-                    <div class="clearfix">
+                    <div class="clearfix date">
                         <label>Date Range</label>
                         <div class="input">
                             <div class="inline-inputs">
-                                <input type="text" value="{{ dateFormat(model.get('startsAt'), 'yyyy-mm-dd') }}" class="small">
-                                <input type="text" value="{{ dateFormat(model.get('startsAt'), 'h:MM') }}" class="mini">
+                                <input type="text" name="startsAtDate" value="{{ dateFormat(model.get('startsAt'), 'yyyy-mm-dd') }}" class="small">
+                                <input type="text" name="startsAtTime" value="{{ dateFormat(model.get('startsAt'), 'h:MM') }}" class="mini">
                                 to
-                                <input type="text" value="{{ dateFormat(model.get('endsAt'), 'yyyy-mm-dd') }}" class="small">
-                                <input type="text" value="{{ dateFormat(model.get('endsAt'), 'h:MM') }}" class="mini">
+                                <input type="text" name="endsAtDate" value="{{ dateFormat(model.get('endsAt'), 'yyyy-mm-dd') }}" class="small">
+                                <input type="text" name="endsAtTime" value="{{ dateFormat(model.get('endsAt'), 'h:MM') }}" class="mini">
                                 <span class="help-inline">All times are local to the location.</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="clearfix">
+                    <div class="clearfix imageUrl">
                         <label for="event_imageUrl">Image URL</label>
                         <div class="input">
                             <input type="text" name="imageUrl" id="event_imageUrl" size="30" class="xlarge" value="{{ model.get('imageUrl') }}">
+                            <span class="help-inline">Should be 90x90 image for better readability.</span>
                         </div>
                     </div>
 
-                    <div class="clearfix">
+                    <div class="clearfix description">
                         <label for="event_description">Description</label>
                         <div class="input">
-                            <textarea name="description" id="event_description" class="xxlarge">{{ model.get('description') }}</textarea>
-                            <span class="help-block">This may or may not support Markdown syntax.</span>
+                            <textarea style="height:100px" name="description" id="event_description" class="xxlarge">{{ model.get('description') }}</textarea>
                         </div>
                     </div>
 
                     <div class="actions">
                         <button class="btn primary" type="submit">{{ model.isNew() ? 'Create' : 'Save' }}</button>
-                        <button class="btn" type="reset">Cancel</button>
                     </div>
                 </fieldset>
             </form>

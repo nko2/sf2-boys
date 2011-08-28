@@ -249,7 +249,7 @@ function andRequireUser(req, res, next) {
     req.loggedIn ? next() : next(new Error('Unauthorized'));
 }
 
-app.post('/event/new', andRequireUser, function(req, res){
+app.post('/events/new', andRequireUser, function(req, res){
     console.log(req.user);
     // TODO: Add model validation and handle validation/unique errors
     var event = new schema.Event({
@@ -271,7 +271,7 @@ app.post('/event/new', andRequireUser, function(req, res){
     res.end(JSON.stringify(event));
 });
 
-app.put('/event/:id', andRequireUser, function(req, res){
+app.put('/events/:id', andRequireUser, function(req, res){
     schema.Event.findOne({_id: req.params.id}, function(err, event) {
         if (err) {
             console.log(err);
