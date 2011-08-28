@@ -490,4 +490,22 @@
     });
 
     window.App = App;
+
+    String.prototype.parseTweet = function() {
+        var parsed =  this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+            return url.link(url);
+        });
+
+        parsed = parsed.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+            var username = u.replace("@","")
+            return u.link("http://twitter.com/" + username);
+        });
+
+        parsed =  parsed.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+            var tag = t.replace("#", "%23")
+            return t.link("http://search.twitter.com/search?q=" + tag);
+        });
+
+        return parsed;
+    }
 })(jQuery);

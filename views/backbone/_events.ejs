@@ -9,7 +9,7 @@
                     <h5>{{ tweet.user }}</h5>
                 {% } %}
                 {% if (typeof tweet.tweet !== 'undefined') { %}
-                    <p>{{ tweet.tweet }}</p>
+                    <p>{{ tweet.tweet.parseTweet() }}</p>
                 {% } %}
                 {% if (typeof tweet.postedAt !== 'undefined') { %}
                     <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd, h:MM') }}</span>
