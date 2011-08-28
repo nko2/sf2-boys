@@ -228,8 +228,36 @@ function andRequireUser(req, res, next) {
     req.loggedIn ? next() : next(new Error('Unauthorized'));
 }
 
-app.get('/form', andRequireUser, function(req, res){
-    res.render('form', { layout: 'staticLayout' });
+app.post('/event/new', andRequireUser, function(req, res){
+    console.log(req.user);
+    // TODO: Add model validation and handle validation/unique errors
+    var event = new schema.Event({
+        hash:        req.body.hash
+      , name:        req.body.name
+      // TODO: frontend needs to combine date fields into a single string
+      , startsAt:    new Date(req.body.startsAt)
+      , endsAt:      new Date(req.body.endsAt)
+      , imageUrl:    req.body.imageUrl
+      , description: req.body.description
+      , author:      req.body.createdAt
+    });
+    event.save(function(err){
+        console.log(err);
+    });
+
+    // TODO: Event has no id when returned, perhaps it needs to be a promise
+    res.contentType('json');
+    res.end(JSON.stringify(event));
+});
+
+app.put('/event/:id', andRequireUser, function(req, res){
+    schema.Event.findOne({_id: req.params.id}, function(err, event) {
+        if (err) {
+            console.log(err);
+        } else {
+            // TODO: save edited fields
+        }
+    })
 });
 
 everyauth.helpExpress(app);

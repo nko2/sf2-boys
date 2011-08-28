@@ -11,6 +11,36 @@
         ev.preventDefault();
     });
 
+    var alertMessage = function(type, msg) {
+        if (-1 == ['error', 'info' , 'success', 'warning'].indexOf(type)) {
+            return;
+        }
+
+        $('<div class="alert-message"><a href="#" class="close">×</a><p></p></div>')
+            .addClass(type)
+            .children('p')
+                .text(msg)
+                .end()
+            .prependTo('#bb-content');
+    }
+
+    // see: http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
+    $.fn.serializeObject = function() {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
     var App = {
         Collections: {}
       , Models: {}
@@ -24,7 +54,7 @@
 
     App.Models.Event = Backbone.Model.extend({
         url : function() {
-            return this.isNew() ? 'events' : 'events/' + this.id;
+            return this.isNew() ? 'event/new' : 'event/' + this.id;
         }
     });
 
@@ -58,10 +88,33 @@
         initialize: function() {
             this.template = _.template($('#event-form-template').html());
         }
+      , events: {
+            'submit form': 'save'
+        }
       , render: function() {
             $(this.el).html(this.template({ model : this.model }));
 
             return this;
+        }
+      , save: function() {
+            var self = this;
+            var msg = this.model.isNew() ? 'Successfully created!' : 'Saved!';
+
+            this.model.save(this.$('form').serializeObject(), {
+                success: function(model, res) {
+                    alertMessage('info', msg);
+                    self.model = model;
+                    self.render();
+                    self.delegateEvents();
+
+                    Backbone.history.navigate('#event/' + model.id);
+                }
+              , error: function() {
+                    alertMessage('error', 'An error occurred');
+                }
+            });
+
+            return false;
         }
     });
 
@@ -180,18 +233,6 @@
       , empty: function() {
             $('li.active', this.$navigation).removeClass('active');
             this.$container.empty();
-        }
-      , alertMessage: function(type, msg) {
-            if (-1 == ['error', 'info' , 'success', 'warning'].indexOf(type)) {
-                return;
-            }
-
-            $('<div class="alert-message"><a href="#" class="close">×</a><p></p></div>')
-                .addClass(type)
-                .children('p')
-                    .text(msg)
-                    .end()
-                .prependTo(this.$container);
         }
     });
 
