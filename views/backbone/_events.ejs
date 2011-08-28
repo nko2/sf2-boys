@@ -22,7 +22,7 @@
 <script type="text/template" id="photos-list-template">
     <section id="photos">
         {% _.each(photos, function(photo) { %}
-            <a target="_blank" href="{{ photo.url }}">
+            <a target="_blank" href="{{ photo.url }}" class="fancybox-group">
                 <img width="62px" height="62px" src="{{ photo.url }}"/>
             </a>
         {% }); %}
@@ -30,7 +30,7 @@
 </script>
 
 <script type="text/template" id="videos-list-template">
-    <section id="photos">
+    <section id="videos">
         {% _.each(videos, function(video) { %}
             <a target="_blank" href="{{ video.url }}">
                 <img width="278px" src="https://i.ytimg.com/vi/{{ video.url.replace(/^.*v=/, '') }}/hqdefault.jpg"/>
