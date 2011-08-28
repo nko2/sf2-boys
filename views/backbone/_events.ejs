@@ -12,7 +12,7 @@
                     <p>{{ tweet.tweet }}</p>
                 {% } %}
                 {% if (typeof tweet.postedAt !== 'undefined') { %}
-                    <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd') }}</span>
+                    <span class="date">{{ dateFormat(tweet.postedAt, 'yyyy-mm-dd, h:MM') }}</span>
                 {% } %}
             </div>
         {% }); %}
