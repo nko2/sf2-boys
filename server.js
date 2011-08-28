@@ -166,12 +166,10 @@ app.get('/events.json', function(req, res){
 });
 
 function andRequireUser(req, res, next) {
-    if (req.loggedIn) {
-        next();
-    }
-
-    req.flash('info', 'You must be signed in to continue.');
-    res.redirect('home');
+    req.loggedIn
+        ? next()
+        : next(new Error('Unauthorized'))
+    ;
 }
 
 app.get('/form', andRequireUser, function(req, res){
