@@ -204,16 +204,24 @@ app.get('/events/:id.json', function(req, res) {
     })
 });
 
-app.get('/events/1', function(req, res){
-    res.render('event', {});
+app.get('/currentEvents.json', function(req, res){
+    schema.Event.getCurrent(function (err, events) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(events));
+    });
 });
 
-app.get('/events/1/1', function(req, res){
-    res.render('talk', {});
-});
-
-app.get('/events.json', function(req, res){
-    res.send(schema.Event.getAll());
+app.get('/upcomingEvents.json', function(req, res){
+    schema.Event.getUpcoming(function (err, events) {
+        res.contentType('json');
+        if (err) {
+            console.log(err);
+        }
+        res.end(JSON.stringify(events));
+    });
 });
 
 function andRequireUser(req, res, next) {

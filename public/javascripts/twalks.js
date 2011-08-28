@@ -33,6 +33,16 @@
       , url:   '/events.json'
     });
 
+    App.Collections.EventsCurrent = Backbone.Collection.extend({
+        model: App.Models.Event
+      , url:   '/currentEvents.json'
+    });
+
+    App.Collections.EventsUpcoming = Backbone.Collection.extend({
+        model: App.ModelsEvent
+      , url:   '/upcomingEvents.json'
+    });
+
     App.Views.Event = Backbone.View.extend({
         initialize: function() {
             this.template = _.template($('#event-show-template').html());
@@ -93,6 +103,7 @@
           , 'events':       'listEvents'
           , 'events/:id':   'showEvent'
           , 'current':      'current'
+          , 'upcoming':     'upcoming'
         }
       , initialize: function() {
             this.$container     = $('#bb-content');
@@ -146,9 +157,24 @@
             this.empty();
             $('li.current-events', this.$navigation).addClass('active');
 
-            var self = this;
-            eventsCollection.fetch({ success: function() {
-                self.$container.append(self.eventsListView.render().el);
+            var self = this
+              , collection = new App.Collections.EventsCurrent
+              , listView = new App.Views.EventsList({ collection: collection });
+
+            collection.fetch({ success: function() {
+                self.$container.append(listView.render().el);
+            }});
+        }
+      , upcoming: function() {
+            this.empty();
+            $('li.upcoming-events', this.$navigation).addClass('active');
+
+            var self = this
+              , collection = new App.Collections.EventsUpcoming
+              , listView = new App.Views.EventsList({ collection: collection });
+
+            collection.fetch({ success: function() {
+                self.$container.append(listView.render().el);
             }});
         }
       , empty: function() {
