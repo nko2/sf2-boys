@@ -249,7 +249,7 @@ app.get('/events/my.json', andRequireUser, function(req, res) {
             if (aTime === bTime) {
                 return 0;
             }
-            return aTime > bTime ? 1 : -1
+            return aTime > bTime ? -1 : 1
         }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
@@ -277,7 +277,7 @@ app.get('/events/current.json', function(req, res){
             if (aTime === bTime) {
                 return 0;
             }
-            return aTime > bTime ? 1 : -1
+            return aTime > bTime ? -1 : 1
         }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
@@ -305,7 +305,7 @@ app.get('/events/upcoming.json', function(req, res){
             if (aTime === bTime) {
                 return 0;
             }
-            return aTime > bTime ? 1 : -1
+            return aTime > bTime ? -1 : 1
         }).forEach(function(event, i) {
             event.set("tweetsCount", event.tweets.length);
             event.tweets = [];
