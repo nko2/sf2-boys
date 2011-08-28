@@ -246,6 +246,7 @@
         }
       , render: function() {
             $(this.el).html(this.template({ 'photos': this.collection.toJSON() }));
+            $(this.el).find('a.fancybox-group').attr('rel', 'gallery').fancybox();
 
             return this;
         }
