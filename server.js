@@ -161,6 +161,12 @@ app.get('/events/:id.json', function(req, res) {
         if (err) {
             console.log(err);
         }
+
+        event.set("numberOfTalks", event.talks.length);
+        event.set("numberOfTweets", event.tweets.length);
+        event.talks = [];
+        event.tweets = [];
+
         res.end(JSON.stringify(event));
     });
 });
@@ -171,7 +177,17 @@ app.get('/events/:id/talks.json', function(req, res) {
         if (err) {
             console.log(err);
         }
-        res.end(JSON.stringify(event.talks));
+
+        var talksList = [];
+        event.talks.forEach(function(talk, i) {
+            talk.set("numberOfTweets", talk.tweets.length);
+            talk.tweets = [];
+
+            talksList.push(talk);
+        });
+
+
+        res.end(JSON.stringify(talksList));
     });
 });
 
@@ -214,6 +230,7 @@ app.get('/events/:id/tweets.json', function(req, res) {
         if (err) {
             console.log(err);
         }
+
         res.end(JSON.stringify(event.tweets));
     });
 });
@@ -224,7 +241,18 @@ app.get('/currentEvents.json', function(req, res){
         if (err) {
             console.log(err);
         }
-        res.end(JSON.stringify(events));
+
+        var eventList = [];
+        events.forEach(function(event, i) {
+            event.set("numberOfTalks", event.talks.length);
+            event.set("numberOfTweets", event.tweets.length);
+            event.talks = [];
+            event.tweets = [];
+
+            eventList.push(event);
+        });
+
+        res.end(JSON.stringify(eventList));
     });
 });
 
@@ -234,7 +262,18 @@ app.get('/upcomingEvents.json', function(req, res){
         if (err) {
             console.log(err);
         }
-        res.end(JSON.stringify(events));
+
+        var eventList = [];
+        events.forEach(function(event, i) {
+            event.set("numberOfTalks", event.talks.length);
+            event.set("numberOfTweets", event.tweets.length);
+            event.talks = [];
+            event.tweets = [];
+
+            eventList.push(event);
+        });
+
+        res.end(JSON.stringify(eventList));
     });
 });
 
