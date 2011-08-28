@@ -32,7 +32,7 @@ var express   = require('express')
   , mongoose  = require('mongoose')
   , sys       = require('sys')
   , Twitter   = require('twitter')
-  , links     = require('./lib/links_parser')
+  , links     = require('./lib/links_parser').Parser
 ;
 
 everyauth.twitter
@@ -62,23 +62,26 @@ schema.Event.find({}, function (err, events) {
     var mapper = function(tweet) {
         return tweet.tweet_id
     };
+    var tweetToDoc = function(tweet) {
+        return {
+            tweet_id: tweet.id_str,
+            tweet: tweet.text,
+            postedAt: new Date(tweet.created_at),
+            user: tweet.from_user,
+            avatarUrl: tweet.profile_image_url,
+            hashes: tweet.text.split(' ').filter(function(word) {
+                        return word[0] === "#";
+                    }).map(function(hashCandidate) {
+                        return hashCandidate.replace(/[^A-z0-9]/g, '');
+                    })
+        }
+    }
     events.forEach(function(event) {
         var poll = poller.createPoller(twit, event.hash);
         poll.on('data', function(response) {
             if (typeof response.results !== "undefined") {
                 response.results.forEach(function(tweet) {
-                    var tweet_doc = {
-                        tweet_id: tweet.id_str,
-                        tweet: tweet.text,
-                        postedAt: new Date(tweet.created_at),
-                        user: tweet.from_user,
-                        avatarUrl: tweet.profile_image_url,
-                        hashes: tweet.text.split(' ').filter(function(word) {
-                                    return word[0] === "#";
-                                }).map(function(hashCandidate) {
-                                    return hashCandidate.replace(/[^A-z0-9]/g, '');
-                                })
-                    }
+                    var tweet_doc = tweetToDoc(tweet);
                     if (tweet_doc.postedAt.getTime() > event.lastSync.getTime()) {
                         if (event.tweets.map(mapper).indexOf(tweet_doc.tweet_id) === -1) {
                             if (event.participants.indexOf(tweet_doc.user) === -1) {
