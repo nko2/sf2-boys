@@ -68,7 +68,9 @@
                 {% } %}
                 </header>
                 <section>
-                    <img width="90px" height="90px" class="image" src="{{ imageUrl }}" />
+                    {% if (typeof imageUrl != 'undefined' && '' !== imageUrl) { %}
+                        <img width="90px" height="90px" class="image" src="{{ imageUrl }}" />
+                    {% } %}
                     <h1>
                         {% if (typeof name != 'undefined') { %}
                             {{ name }}
