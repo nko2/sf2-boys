@@ -33,6 +33,7 @@ var express   = require('express')
   , sys       = require('sys')
   , Twitter   = require('twitter')
   , links     = require('./lib/links_parser').Parser
+  , spawn     = require('child_process').spawn
 ;
 
 everyauth.twitter
@@ -57,20 +58,38 @@ var app  = module.exports = express.createServer()
         access_token_secret: parameters.twitter.accessTokenSecret
     });
 
-// Queue polling jobs for the poller script
-schema.Event.find({}, function (err, events) {
-    events.forEach(function(event) {
-        schema.Job.count({status: 'run', id: event.id}, function(err, count) {
-            if (0 === count) {
-                new schema.Job({
-                    id:        event.id
-                  , createdAt: new Date()
-                  , status:    'new'
-                }).save();
-            }
-        })
+var child, jobs = [];
+
+function startPolling() {
+    // Queue polling jobs for the poller script
+    schema.Event.find({}, function (err, events) {
+        events.forEach(function(event) {
+            schema.Job.count({status: 'run', id: event.id}, function(err, count) {
+                if (0 === count) {
+                    var job = new schema.Job({
+                        id:        event.id
+                      , createdAt: new Date()
+                      , status:    'new'
+                    })
+                    job.save();
+                    jobs.push(job);
+                }
+            })
+        });
     });
-});
+
+    child = spawn('node', ['scripts/poller.js']);
+
+    child.on('exit', function (code) {
+        jobs.forEach(function(job) {
+            job.status = 'old';
+            job.save();
+        });
+        startPolling();
+    });
+}
+
+startPolling();
 
 // Configuration
 app.configure(function(){
