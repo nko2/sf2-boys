@@ -34,7 +34,7 @@
                 <small>{{ hash }}</small>
             {% } %}
         </h3>
-        <p>{{ description }}</p>
+        <p>{% if (typeof overview !== 'undefined' ) { %}{{ overview }}{% } %}</p>
         <ul class="infobar">
             {% if (typeof startsAt !== 'undefined') { %}
                 <li class="time-precise">{{ dateFormat(startsAt, 'yyyy-mm-dd, h:MM') }}</li>
@@ -110,10 +110,14 @@
                     <hr />
 
                     <p>
-                        {% if (typeof description != 'undefined') { %}
+                        {% if (typeof description != 'undefined' && '' !== description) { %}
                             {{ description }}
                         {% } else { %}
-                            No description provided
+                            {% if (typeof overview != 'undefined') { %}
+                                {{ overview }}
+                            {% } else { %}
+                                No description provided
+                            {% } %}
                         {% } %}
                     </p>
 
