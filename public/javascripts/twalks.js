@@ -355,6 +355,7 @@
             var self = this;
             this.hideAndEmptyContainer(function() {
                 self.displayContainer($('#welcome-template').html());
+                self.$searchInput.val('');
             });
         }
       , createEvent: function() {
