@@ -33,6 +33,9 @@ body {
     padding: 10px 10px 11px;
     line-height: 19px;
 }
+#navigation .topbar .fill {
+    height:40px;
+}
 #search-form span.glass {
     display: block;
     position: absolute;
